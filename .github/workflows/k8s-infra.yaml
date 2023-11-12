@@ -6,7 +6,7 @@ on:
 
 jobs:
   deploy-infra:
-    runs-on: sefl-hosted 
+    runs-on: self-hosted 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
