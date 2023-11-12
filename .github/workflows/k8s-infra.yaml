@@ -1,0 +1,14 @@
+name: k8s-infra
+on:
+  push:
+    paths:
+      - "k8s-infra/**"
+
+jobs:
+  deploy-infra:
+    runs-on: sefl-hosted 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Deploy Kubernetes Infrastructure
+        run: kubectl apply -f ./k8s-infra/
