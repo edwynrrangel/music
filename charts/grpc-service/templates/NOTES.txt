@@ -1,0 +1,31 @@
+Your gRPC application has been deployed successfully.
+
+{{- if .Values.global.enabled }}
+
+Deployment Information:
+  - Project: {{ .Values.global.projectName }}
+  - Cluster: {{ .Values.global.clusterName }}
+  - Namespace: {{ .Release.Namespace }}
+
+{{- if .Values.app.service.type }}
+
+To access your gRPC service:
+- Service Type: {{ .Values.app.service.type }}
+- Port: {{ .Values.app.service.port }}
+
+{{- end }}
+
+{{- if (and .Values.global.enabled (eq .Values.app.service.type "ClusterIP")) }}
+Note: As the service type is ClusterIP, the service is only accessible within the cluster.
+{{- end }}
+
+{{- if (and .Values.global.enabled (eq .Values.app.service.type "LoadBalancer")) }}
+Note: To get the external IP of your LoadBalancer service, run:
+kubectl get svc -n {{ .Release.Namespace }} {{ include "grpc-service.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+{{- end }}
+
+Check your application's documentation for more details on how to interact with the gRPC service.
+
+{{- else }}
+The chart is disabled. Please check the 'global.enabled' setting in your values.yaml.
+{{- end }}

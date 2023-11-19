@@ -1,0 +1,4 @@
+apiVersion: v2
+name: grpc-service
+description: A Helm chart for gRPC service
+version: 0.0.1
