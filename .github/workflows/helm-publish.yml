@@ -28,13 +28,13 @@ jobs:
 
       - name: Package Helm Chart
         run: |
-          mkdir -p charts/package
+          mkdir -p chart-repo
           for dir in charts/*; do
             if [ -d "$dir" ]; then
-              helm package "$dir" --destination charts/package
+              helm package "$dir" --destination chart-repo
             fi
           done
-          helm repo index charts/package --url https://edwynrrangel.github.io/grpc/charts/package
+          helm repo index chart-repo --url https://edwynrrangel.github.io/grpc/charts/package
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
@@ -42,7 +42,7 @@ jobs:
       - name: Upload artifact to GitHub Pages
         uses: actions/upload-pages-artifact@v2
         with:
-          path: 'charts/package'
+          path: 'chart-repo'
 
       - name: Deploy to GitHub Pages
         id: deployment
