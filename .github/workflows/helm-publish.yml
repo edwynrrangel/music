@@ -36,6 +36,12 @@ jobs:
           done
           helm repo index chart-repo --url https://edwynrrangel.github.io/grpc/chart-repo
 
+      - name: Commit and Push the Chart Repository Files
+        run: |
+          git add chart-repo/
+          git commit -m "Update Helm chart packages"
+          git push
+      
       - name: Setup Pages
         uses: actions/configure-pages@v3
 
