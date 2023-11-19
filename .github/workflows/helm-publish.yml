@@ -40,7 +40,11 @@ jobs:
         run: |
           git add chart-repo/
           git commit -m "Update Helm chart packages"
-          git push
+          - name: Push to GitHub
+            run: |
+              git config --global user.name "Your Name"
+              git config --global user.email "youremail@example.com"
+              git push https://${{ secrets.PAT_SECRET }}@github.com/edwynrrangel/grpc.git
       
       - name: Setup Pages
         uses: actions/configure-pages@v3
