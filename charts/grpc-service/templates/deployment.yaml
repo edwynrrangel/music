@@ -31,9 +31,6 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if and .Values.global.serviceAccount (default false .Values.global.serviceAccount.create) -}}
-      serviceAccountName: {{ include "grpc-service.serviceAccountName" . }}
-      {{- end }}
       securityContext:
         {{- toYaml .Values.app.securityContext | nindent 8 }}
       containers:
