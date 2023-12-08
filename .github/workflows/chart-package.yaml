@@ -1,4 +1,4 @@
-name: chart-package
+name: Charts Package
 
 on:
   push:
