@@ -27,13 +27,13 @@ jobs:
       - name: Get author info
         id: get_author
         run: |
-          echo "author_name=$(git log -1 --pretty=format:'%an')"
-          echo "author_email=$(git log -1 --pretty=format:'%ae')"
+          echo "author_name=$(git log -1 --pretty=format:'%an')" >> $GITHUB_ENV
+          echo "author_email=$(git log -1 --pretty=format:'%ae')" >> $GITHUB_ENV
 
       - name: Print author info
         run: |
-          echo "The author name is ${{ steps.get_author.outputs.author_name }}"
-          echo "The author email is ${{ steps.get_author.outputs.author_email }}"
+          echo "The author name is $author_name"
+          echo "The author email is $author_email"
         
 
    
