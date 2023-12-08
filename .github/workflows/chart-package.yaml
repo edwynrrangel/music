@@ -14,7 +14,9 @@ jobs:
         uses: actions/checkout@v2
       - name: Package charts
         run: |
-          charts_path=$(pwd)/charts
+          echo "Packaging charts"
+          echo $(pwd)
+          charts_path=$(pwd)/charts/*
           echo $charts_path
           for chart in $charts_path; do
             if [ -d "$chart" ]; then
