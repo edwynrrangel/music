@@ -45,7 +45,7 @@ jobs:
           git config --local user.name $author_email
           git add chart-repo/
           git commit -m "Update chart repository" -a || echo "No changes to commit"
-          git push origin HEAD:main
+          git push https://${{ secrets.PAT_SECRET }}@github.com/edwynrrangel/grpc.git
         
 
    
