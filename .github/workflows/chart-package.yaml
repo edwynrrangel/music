@@ -27,8 +27,8 @@ jobs:
       - name: Get author info
         id: get_author
         run: |
-          echo "::set-output name=author_name::$(git log -1 --pretty=format:'%an')"
-          echo "::set-output name=author_email::$(git log -1 --pretty=format:'%ae')"
+          echo "author_name=$(git log -1 --pretty=format:'%an')"
+          echo "author_email=$(git log -1 --pretty=format:'%ae')"
 
       - name: Print author info
         run: |
