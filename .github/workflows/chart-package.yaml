@@ -23,6 +23,10 @@ jobs:
               helm package $chart --destination chart_repo/
             fi
           done
+      
+      - name: Update index file
+        run: |
+          helm repo index chart-repo --url https://edwynrrangel.github.io/grpc/chart-repo
 
       - name: Get author info
         id: get_author
@@ -34,6 +38,14 @@ jobs:
         run: |
           echo "The author name is $author_name"
           echo "The author email is $author_email"
+
+      - name: Commit and push chart packages and index file
+        run: |
+          git config --local user.email $author_name
+          git config --local user.name $author_email
+          git add chart-repo/
+          git commit -m "Update chart repository" -a || echo "No changes to commit"
+          git push origin HEAD:main
         
 
    
