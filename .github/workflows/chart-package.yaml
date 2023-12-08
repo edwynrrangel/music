@@ -1,4 +1,4 @@
-name: Charts Package
+name: Package Charts
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      - name: Package charts
+      - name: Packaging charts
         run: |
           echo "Packaging charts"
           echo $(pwd)
@@ -23,6 +23,17 @@ jobs:
               helm package $chart --destination chart_repo/
             fi
           done
+
+      - name: Get author info
+        id: get_author
+        run: |
+          echo "::set-output name=author_name::$(git log -1 --pretty=format:'%an')"
+          echo "::set-output name=author_email::$(git log -1 --pretty=format:'%ae')"
+
+      - name: Print author info
+        run: |
+          echo "The author name is ${{ steps.get_author.outputs.author_name }}"
+          echo "The author email is ${{ steps.get_author.outputs.author_email }}"
         
 
    
