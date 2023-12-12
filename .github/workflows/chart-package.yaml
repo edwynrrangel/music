@@ -8,10 +8,17 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted 
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      
+      - name: Set up Helm
+        run: |
+          curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+          chmod 700 get_helm.sh
+          ./get_helm.sh
+      
       - name: Packaging charts
         run: |
           echo "Packaging charts"
@@ -26,7 +33,7 @@ jobs:
       
       - name: Update index file
         run: |
-          helm repo index chart-repo --url https://edwynrrangel.github.io/grpc/chart-repo
+          helm repo index chart-repo --url https://edwynrrangel.github.io/charts/
 
       - name: Get author info
         id: get_author
