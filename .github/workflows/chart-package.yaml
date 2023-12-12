@@ -47,7 +47,7 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           git remote add deploy git@github.com:edwynrrangel/charts.git
-          git checkout -M master
+          git branch -M master
           git config --local --replace-all user.email "$author_email"
           git config --local --replace-all user.name "$author_name"
           git config --local --list
