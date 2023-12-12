@@ -52,7 +52,7 @@ jobs:
           echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan github.com >> ~/.ssh/known_hosts
-          ssh-agent -s
+          eval $(ssh-agent -s)
           ssh-add ~/.ssh/deploy_key
           git config --global user.email "$author_email"
           git config --global user.name "$author_name"
