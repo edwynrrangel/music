@@ -50,9 +50,9 @@ jobs:
         run: |
           mkdir -p ~/.ssh/
           echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
-          more ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan github.com >> ~/.ssh/known_hosts
+          ssh-agent -s
           if git remote | grep -q deploy; then
             git remote remove deploy
           fi
