@@ -57,14 +57,18 @@ jobs:
           if git remote | grep -q deploy; then
             git remote remove deploy
           fi
-          git remote add deploy git@github.com:edwynrrangel/charts.git
-          git branch -M master
           git config --local --replace-all user.email "$author_email"
           git config --local --replace-all user.name "$author_name"
           git config --local --list
           git add chart-repo/
           git commit -m "Update chart repository" -a || echo "No changes to commit"
-          git push deploy HEAD:master
+          git remote add deploy git@github.com:edwynrrangel/charts.git || echo "Remote already exists"
+          git fetch deploy
+          if git branch -r | grep -q "deploy/master"; then
+            git push deploy HEAD:master
+          else
+            git push deploy HEAD:master --set-upstream
+          fi
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
 
