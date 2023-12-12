@@ -41,11 +41,22 @@ jobs:
 
       - name: Commit and push chart packages and index file
         run: |
-          git config --local --replace-all user.email "${{ env.author_email }}"
-          git config --local --replace-all user.name "${{ env.author_name }}"
+          mkdir -p ~/.ssh/
+          echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
+          more ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          git remote add deploy git@github.com:edwynrrangel/charts.git
+          git checkout -M master
+          git config --local --replace-all user.email "$author_email"
+          git config --local --replace-all user.name "$author_name"
+          git config --local --list
           git add chart-repo/
           git commit -m "Update chart repository" -a || echo "No changes to commit"
-          git push https://${{ secrets.PAT_SECRET }}@github.com/edwynrrangel/grpc.git HEAD:main
+          git push deploy HEAD:master
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+
         
 
    
