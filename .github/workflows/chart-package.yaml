@@ -46,38 +46,41 @@ jobs:
           echo "The author name is $author_name"
           echo "The author email is $author_email"
 
-      - name: Checkout chart repo
-        uses: actions/checkout@v2
-        with:
-          repository: edwynrrangel/charts
-          path: chart-repo
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Commit and push chart packages and index file
+      - name: Clone chart repo
         run: |
-          mkdir -p ~/.ssh/
-          echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
-          eval $(ssh-agent -s)
-          ssh-add ~/.ssh/deploy_key
-          if git remote | grep -q deploy; then
-            git remote remove deploy
-          fi
-          git config --local --replace-all user.email "$author_email"
-          git config --local --replace-all user.name "$author_name"
-          git config --local --list
-          git add chart-repo/
-          git commit -m "Update chart repository" -a || echo "No changes to commit"
-          git remote add deploy git@github.com:edwynrrangel/charts.git || echo "Remote already exists"
-          git fetch deploy
-          if git branch -r | grep -q "deploy/master"; then
-            git push deploy HEAD:master
-          else
-            git push deploy HEAD:master --set-upstream
-          fi
-        env:
-          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          git clone https://github.com/edwynrrangel/charts.git temp_charts_repo
+      # - name: Checkout chart repo
+      #   uses: actions/checkout@v2
+      #   with:
+      #     repository: edwynrrangel/charts
+      #     path: chart-repo
+      #     token: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Commit and push chart packages and index file
+      #   run: |
+      #     mkdir -p ~/.ssh/
+      #     echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
+      #     chmod 600 ~/.ssh/deploy_key
+      #     ssh-keyscan github.com >> ~/.ssh/known_hosts
+      #     eval $(ssh-agent -s)
+      #     ssh-add ~/.ssh/deploy_key
+      #     if git remote | grep -q deploy; then
+      #       git remote remove deploy
+      #     fi
+      #     git config --local --replace-all user.email "$author_email"
+      #     git config --local --replace-all user.name "$author_name"
+      #     git config --local --list
+      #     git add chart-repo/
+      #     git commit -m "Update chart repository" -a || echo "No changes to commit"
+      #     git remote add deploy git@github.com:edwynrrangel/charts.git || echo "Remote already exists"
+      #     git fetch deploy
+      #     if git branch -r | grep -q "deploy/master"; then
+      #       git push deploy HEAD:master
+      #     else
+      #       git push deploy HEAD:master --set-upstream
+      #     fi
+      #   env:
+      #     DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
 
         
 
