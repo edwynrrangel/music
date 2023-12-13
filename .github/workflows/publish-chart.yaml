@@ -18,6 +18,7 @@ jobs:
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/deploy_key
+          ssh -T git@github.com
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
 
