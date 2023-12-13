@@ -52,8 +52,7 @@ jobs:
         run: |
           git config --local --replace-all user.email "$author_email"
           git config --local --replace-all user.name "$author_name"
-          git config --local --list
           git add chart-repo/
-          git commit -m "Update chart repository" -a || echo "No changes to commit"
+          git commit -m "Update chart repository by $author_email" -a || echo "No changes to commit"
           git push https://${{ secrets.GITHUB_TOKEN }}@github.com/edwynrrangel/grpc HEAD:master
         
