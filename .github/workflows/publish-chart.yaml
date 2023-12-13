@@ -12,17 +12,10 @@ jobs:
     steps:
       - name: Setup SSH for GitHub Access
         run: |
-          SSH_AUTH_SOCK=/tmp/ssh_agent.sock
-          ssh-agent -a $SSH_AUTH_SOCK
-          echo "SSH_AUTH_SOCK=$SSH_AUTH_SOCK" >> $GITHUB_ENV
-          echo "SSH_AGENT_PID=$(echo $SSH_AGENT_PID)" >> $GITHUB_ENV
-
           mkdir -p ~/.ssh/
           echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-add ~/.ssh/deploy_key
           ssh-keyscan github.com >> ~/.ssh/known_hosts
-          echo $(ssh -T git@github.com)
         env:
           DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
 
@@ -42,8 +35,9 @@ jobs:
 
       - name: Clone charts repository
         run: |
-          export SSH_AUTH_SOCK=$SSH_AUTH_SOCK
-          rm -rf temp_charts_repo
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/deploy_key
+          echo $(ssh -T git@github.com)
           git clone git@github.com:edwynrrangel/charts.git temp_charts_repo
 
       - name: Copy chart packages to charts repository
