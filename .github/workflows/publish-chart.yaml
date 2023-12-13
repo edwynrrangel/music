@@ -10,6 +10,17 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Setup SSH for GitHub Access
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/deploy_key
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+
       - name: Checkout code
         uses: actions/checkout@v2
       
@@ -30,24 +41,16 @@ jobs:
 
       - name: Copy chart packages to charts repository
         run: |
-            mkdir -p temp_charts_repo
-            cp chart-repo/* temp_charts_repo/
-            ls -la temp_charts_repo/
+          mkdir -p temp_charts_repo
+          cp chart-repo/* temp_charts_repo/
+          ls -la temp_charts_repo/
       
       - name: Push chart packages to charts repository
         run: |
-            mkdir -p ~/.ssh/
-            echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
-            chmod 600 ~/.ssh/deploy_key
-            ssh-keyscan github.com >> ~/.ssh/known_hosts
-            eval $(ssh-agent -s)
-            ssh-add ~/.ssh/deploy_key
-            cd temp_charts_repo
-            git config --local --replace-all user.email "$author_email"
-            git config --local --replace-all user.name "$author_name"
-            git add .
-            git commit -m "Update chart repository" -a || echo "No changes to commit"
-            git branch -M master
-            git push origin HEAD:master
-        env:
-          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+          cd temp_charts_repo
+          git config --local --replace-all user.email "$author_email"
+          git config --local --replace-all user.name "$author_name"
+          git add .
+          git commit -m "Update chart repository" -a || echo "No changes to commit"
+          git branch -M master
+          git push origin HEAD:master
