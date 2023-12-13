@@ -46,6 +46,13 @@ jobs:
           echo "The author name is $author_name"
           echo "The author email is $author_email"
 
+      - name: Checkout chart repo
+        uses: actions/checkout@v2
+        with:
+          repository: edwynrrangel/charts
+          path: chart-repo
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Commit and push chart packages and index file
         run: |
           mkdir -p ~/.ssh/
