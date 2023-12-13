@@ -55,6 +55,6 @@ jobs:
           git config --local --replace-all user.email "$author_email"
           git config --local --replace-all user.name "$author_name"
           git add .
-          git commit -m "Update chart repository" -a || echo "No changes to commit"
+          git commit -m "Update charts repository by $author_email" -a || echo "No changes to commit"
           git branch -M master
           git push origin HEAD:master
