@@ -6,6 +6,9 @@ on:
       - "charts/**"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -52,5 +55,5 @@ jobs:
           git config --local --list
           git add chart-repo/
           git commit -m "Update chart repo"
-          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/edwynrrangel/grpc HEAD:main
+          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/edwynrrangel/grpc HEAD:master
         
