@@ -48,6 +48,9 @@ jobs:
       
       - name: Push chart packages to charts repository
         run: |
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/deploy_key
+          echo $(ssh -T git@github.com)
           cd temp_charts_repo
           git config --local --replace-all user.email "$author_email"
           git config --local --replace-all user.name "$author_name"
