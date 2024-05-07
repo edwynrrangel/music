@@ -39,15 +39,6 @@ jobs:
           done
           helm repo index chart-repo --url https://edwynrrangel.github.io/grpc/chart-repo
 
-      # - name: Commit and Push the Chart Repository Files
-      #   run: |
-      #     git config --global user.name "Edwyn Rangel"
-      #     git config --global user.email "edwynrangel@gmail.com"
-      #     git add chart-repo/
-      #     git commit -m "Update Helm chart packages"
-      #     git push https://${{ secrets.PAT_SECRET }}@github.com/edwynrrangel/grpc.git
-         
-      
       - name: Setup Pages
         uses: actions/configure-pages@v3
 
