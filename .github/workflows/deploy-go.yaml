@@ -27,7 +27,7 @@ jobs:
       - name: Set path
         id: set_path
         run: |
-          echo "::set-output name=base_path::go"
+          echo "base_path=go" >> $GITHUB_OUTPUT
 
       - name: Set Project Name
         id: set_project_name
@@ -37,7 +37,7 @@ jobs:
           else
             project_name="${{ github.event.inputs.directory_name }}"
           fi
-          echo "::set-output name=project_name::$project_name"
+          echo "project_name=$project_name" >> $GITHUB_OUTPUT
 
   build:
     needs: setup
