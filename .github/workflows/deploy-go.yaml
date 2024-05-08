@@ -21,4 +21,13 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Docker build and push image
+        run: |
+          DIRECTORY_NAME=$(basename $PWD)
+          echo "Building image for directory: $DIRECTORY_NAME"
+          docker build -t $username/$DIRECTORY_NAME:latest -f k8s/Dockerfile .
+          docker push $username/$DIRECTORY_NAME:latest
+        env:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+
       
