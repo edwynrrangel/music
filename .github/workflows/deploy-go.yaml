@@ -8,19 +8,41 @@ on:
       - "go/**"
   workflow_dispatch:
     inputs:
-      directoryName:
+      directory_name:
         description: 'Enter the directory name under go/ to build and push'
         required: true
 
 jobs:
-  build:
-    runs-on: self-hosted
+  setup:
+    runs-on: ubuntu-latest
+    outputs:
+      base_path: ${{ steps.set_path.outputs.base_path }}
+      project_name: ${{ steps.set_project_name.outputs.project_name }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 2
 
+      - name: Set path
+        id: set_path
+        run: |
+          echo "::set-output name=base_path::go"
+
+      - name: Set Project Name
+        id: set_project_name
+        run: |
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
+            project_name=$(git diff --name-only HEAD^ HEAD | grep '^go/' | cut -d '/' -f 2 | uniq)
+          else
+            project_name="${{ github.event.inputs.directory_name }}"
+          fi
+          echo "::set-output name=project_name::$project_name"
+
+  build:
+    needs: setup
+    runs-on: self-hosted
+    steps:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -29,30 +51,27 @@ jobs:
 
       - name: Docker build and push image
         run: |
-          if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
-            DIRECTORY_NAME=$(git diff --name-only HEAD^ HEAD | grep '^go/' | cut -d '/' -f 2 | uniq)
-          else
-            DIRECTORY_NAME="${{ github.event.inputs.directoryName }}"
-          fi
-          echo "Building image for directory: $DIRECTORY_NAME"
-          cd go/$DIRECTORY_NAME
-          ls -l
-          docker build -t $username/$DIRECTORY_NAME:latest --no-cache -f ./k8s/Dockerfile .
-          docker push $username/$DIRECTORY_NAME:latest
+          echo "Building image for directory: $project_name"
+          cd $base_path/$project_name
+          docker build -t $username/$project_name":latest --no-cache -f ./k8s/Dockerfile .
+          docker push $username/$project_name":latest
         env:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
+          base_path: ${{ needs.setup.outputs.base_path }}
+          project_name: ${{ needs.setup.outputs.project_name }}
       
+  deploy:
+    needs: [setup, build]
+    runs-on: self-hosted
+    steps:
       - name: Deploy to Kubernetes
         run: |
-          if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
-            DIRECTORY_NAME=$(git diff --name-only HEAD^ HEAD | grep '^go/' | cut -d '/' -f 2 | uniq)
-          else
-            DIRECTORY_NAME="${{ github.event.inputs.directoryName }}"
-          fi
-          echo "Deploying image for directory: $DIRECTORY_NAME"
-          helm install $HELM_CHART --namespace HELM_NAMESPACE --create-namespace --debug --name-template $DIRECTORY_NAME -f ./$DIRECTORY_NAME/k8s/values.yaml
+          echo "Deploying image for directory: $base_path/$project_name"
+          helm install $helm_chart --namespace helm_namespace --create-namespace --debug --name-template $project_name -f ./$base_path/$project_name/k8s/values.yaml
         env:
-          HELM_CHART: ${{ secrets.HELM_CHART }}
-          HELM_NAMESPACE: ${{ secrets.HELM_NAMESPACE }}
+          base_path: ${{ needs.setup.outputs.base_path }}
+          project_name: ${{ needs.setup.outputs.project_name }}
+          helm_chart: ${{ secrets.HELM_CHART }}
+          helm_namespace: ${{ secrets.HELM_NAMESPACE }}
 
       
