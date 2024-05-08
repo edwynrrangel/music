@@ -23,7 +23,11 @@ jobs:
 
       - name: Docker build and push image
         run: |
-          DIRECTORY_NAME=$(basename $PWD)
+          DIRECTORY_NAME=$(git diff --name-only HEAD^ HEAD | grep '^go/' | cut -d '/' -f 2 | uniq)
+          if [ -z "$DIRECTORY_NAME" ]; then
+            echo "No changes in 'go/' directories"
+            exit 1
+          fi
           echo "Building image for directory: $DIRECTORY_NAME"
           docker build -t $username/$DIRECTORY_NAME:latest -f k8s/Dockerfile .
           docker push $username/$DIRECTORY_NAME:latest
