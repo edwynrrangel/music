@@ -51,14 +51,14 @@ jobs:
 
       - name: Docker build and push image
         run: |
-          echo "Building image for directory: $project_name"
+          echo "Building image for directory: $base_path/$project_name"
           cd $base_path/$project_name
-          docker build -t $username/$project_name":latest --no-cache -f ./k8s/Dockerfile .
-          docker push $username/$project_name":latest
+          docker build -t $username/$project_name:latest --no-cache -f ./k8s/Dockerfile .
+          docker push $username/$project_name:latest
         env:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
           base_path: ${{ needs.setup.outputs.base_path }}
           project_name: ${{ needs.setup.outputs.project_name }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
       
   deploy:
     needs: [setup, build]
