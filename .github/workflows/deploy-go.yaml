@@ -41,5 +41,18 @@ jobs:
           docker push $username/$DIRECTORY_NAME:latest
         env:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
+      
+      - name: Deploy to Kubernetes
+        run: |
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
+            DIRECTORY_NAME=$(git diff --name-only HEAD^ HEAD | grep '^go/' | cut -d '/' -f 2 | uniq)
+          else
+            DIRECTORY_NAME="${{ github.event.inputs.directoryName }}"
+          fi
+          echo "Deploying image for directory: $DIRECTORY_NAME"
+          helm install $HELM_CHART --namespace HELM_NAMESPACE --create-namespace --debug --name-template $DIRECTORY_NAME -f ./$DIRECTORY_NAME/k8s/values.yaml
+        env:
+          HELM_CHART: ${{ secrets.HELM_CHART }}
+          HELM_NAMESPACE: ${{ secrets.HELM_NAMESPACE }}
 
       
