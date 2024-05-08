@@ -7,6 +7,10 @@ on:
     paths:
       - "go/**"
   workflow_dispatch:
+    inputs:
+      directoryName:
+        description: 'Enter the directory name under go/ to build and push'
+        required: true
 
 jobs:
   build:
@@ -23,10 +27,10 @@ jobs:
 
       - name: Docker build and push image
         run: |
-          DIRECTORY_NAME=$(git diff --name-only HEAD^ HEAD | grep '^go/' | cut -d '/' -f 2 | uniq)
-          if [ -z "$DIRECTORY_NAME" ]; then
-            echo "No changes in 'go/' directories"
-            exit 1
+          if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
+            DIRECTORY_NAME=$(git diff --name-only HEAD^ HEAD | grep '^go/' | cut -d '/' -f 2 | uniq)
+          else
+            DIRECTORY_NAME="${{ github.event.inputs.directoryName }}"
           fi
           echo "Building image for directory: $DIRECTORY_NAME"
           docker build -t $username/$DIRECTORY_NAME:latest -f k8s/Dockerfile .
