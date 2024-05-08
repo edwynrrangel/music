@@ -1,11 +1,11 @@
 global:
   enabled: true
-  projectName: multimedia-service
+  projectName: multimedia
   clusterName: grpc
 
   # Configuración de la imagen Docker de la aplicación
   image:
-    repository: edwynrangel/multimedia-service
+    repository: edwynrangel/multimedia
     tag: "latest"
     pullPolicy: Always
   imagePullSecrets: 
