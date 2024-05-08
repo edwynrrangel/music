@@ -33,7 +33,7 @@ jobs:
             DIRECTORY_NAME="${{ github.event.inputs.directoryName }}"
           fi
           echo "Building image for directory: $DIRECTORY_NAME"
-          docker build -t $username/$DIRECTORY_NAME:latest -f k8s/Dockerfile .
+          docker build -t $username/$DIRECTORY_NAME:latest -f ./go/$DIRECTORY_NAME/k8s/Dockerfile .
           docker push $username/$DIRECTORY_NAME:latest
         env:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
