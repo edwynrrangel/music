@@ -67,7 +67,8 @@ jobs:
       - name: Deploy to Kubernetes
         run: |
           echo "Deploying image for directory: $base_path/$project_name"
-          helm upgrade --install $project_name $helm_chart \ 
+          helm upgrade $project_name $helm_chart \
+            --install \
             --namespace $helm_namespace \
             --create-namespace \
             --debug \
