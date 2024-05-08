@@ -35,7 +35,7 @@ jobs:
           echo "Building image for directory: $DIRECTORY_NAME"
           cd go/$DIRECTORY_NAME
           ls -l
-          docker build -t $username/$DIRECTORY_NAME:latest -f ./k8s/Dockerfile .
+          docker build -t $username/$DIRECTORY_NAME:latest --no-cache -f ./k8s/Dockerfile .
           docker push $username/$DIRECTORY_NAME:latest
         env:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
