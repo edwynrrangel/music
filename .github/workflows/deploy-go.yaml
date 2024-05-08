@@ -67,7 +67,11 @@ jobs:
       - name: Deploy to Kubernetes
         run: |
           echo "Deploying image for directory: $base_path/$project_name"
-          helm install $helm_chart --namespace $helm_namespace --create-namespace --debug --name-template $project_name -f ./$base_path/$project_name/k8s/values.yaml
+          helm upgrade --install $project_name $helm_chart \ 
+            --namespace $helm_namespace \
+            --create-namespace \
+            --debug \
+            -f ./$base_path/$project_name/k8s/values.yaml
         env:
           base_path: ${{ needs.setup.outputs.base_path }}
           project_name: ${{ needs.setup.outputs.project_name }}
