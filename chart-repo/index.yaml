@@ -2,11 +2,11 @@ apiVersion: v1
 entries:
   grpc-service:
   - apiVersion: v2
-    created: "2023-12-13T02:24:50.591977135Z"
+    created: "2024-05-09T23:53:02.823325533Z"
     description: A Helm chart for gRPC service
     digest: d2bfd7b0f031a9206259c8105c36e0f09b4a9a0cc48e80f1902b3bc6434b8fc7
     name: grpc-service
     urls:
     - https://edwynrrangel.github.io/charts/grpc-service-0.0.1.tgz
     version: 0.0.1
-generated: "2023-12-13T02:24:50.591488827Z"
+generated: "2024-05-09T23:53:02.822850861Z"
