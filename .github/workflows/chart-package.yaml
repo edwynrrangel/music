@@ -30,7 +30,7 @@ jobs:
           echo $charts_path
           for chart in $charts_path; do
             if [ -d "$chart" ]; then
-              helm package $chart --destination chart_repo/
+              helm package $chart --destination chart-repo/
             fi
           done
       
