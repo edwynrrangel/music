@@ -1,0 +1,126 @@
+# Global configuration that affects all components of the chart.
+global:
+  # Flag to enable or disable the chart globally.
+  enabled: true
+  # fullnameOverride allows you to override the full resource names.
+  # fullnameOverride: "banking-service-nginx"
+  # The name of the project, used in various naming conventions.
+  projectName: nginx
+  # The name of the Kubernetes cluster where this will be deployed.
+  clusterName: banking-service
+  # Image configuration for the primary container used in the application.
+  image:
+    repository: nginx
+    tag: "latest"
+    pullPolicy: Always
+  # Default Kubernetes namespace to be used, if not overridden during deployment.
+  namespace: banking-service
+
+# Application-specific configuration.
+app:
+  # Number of replicas for the application.
+  replicaCount: 1
+
+  # Service Account configuration.
+  serviceAccount:
+    # Whether to enable a Kubernetes service account.
+    enabled: true
+    # The name of the service account. Leave as default or specify a custom name.
+    name: default
+    # Annotations to add to the service account, can be used for IAM roles, etc.
+    annotations: {}
+    # Automatically mount the service account token in the pod.
+    automount: true
+
+  # Environment variables for the application.
+  env:
+    - name: ENV
+      value: "dev"
+
+  # Secrets configuration. Reference existing Kubernetes secrets.
+  secrets:
+    - secretKey: SECRET
+      secretName: banking-service-nginx
+
+  # Resource requests and limits for the application pod.
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "75m"
+    limits:
+      memory: "512Mi"
+      cpu: "100m"
+
+  # Service configuration for exposing the application.
+  service:
+    # Type of service: ClusterIP, NodePort, or LoadBalancer.
+    type: LoadBalancer
+    # Ports configuration for the service.
+    ports:
+      - name: http
+        port: 80
+        targetPort: 80
+        protocol: TCP
+      - name: https
+        port: 443
+        targetPort: 443
+        protocol: TCP
+
+  # Liveness probe configuration to check the health of the application.
+  livenessProbe:
+    enabled: true
+    httpGet:
+      path: /health
+      port: http
+    initialDelaySeconds: 15
+    periodSeconds: 20
+
+  # Readiness probe configuration to check if the application is ready to serve traffic.
+  readinessProbe:
+    enabled: true
+    httpGet:
+      path: /ready
+      port: http
+    initialDelaySeconds: 5
+    periodSeconds: 20
+
+  # Horizontal Pod Autoscaler configuration to automatically scale the application.
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 5
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 70
+
+  # Security context for the pod to specify security settings.
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+
+  # Volumes and volume mounts for the application.
+  volumes:
+    - name: config-volume
+      configMap:
+        name: config-map-name
+  volumeMounts:
+    - name: config-volume
+      mountPath: /etc/config
+
+  # Node selector, tolerations, and affinity to control pod scheduling preferences.
+  nodeSelector:
+    disktype: ssd
+  tolerations:
+    - key: "key"
+      operator: "Equal"
+      value: "value"
+      effect: "NoSchedule"
+  affinity:
+    podAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+        - labelSelector:
+            matchExpressions:
+              - key: security
+                operator: In
+                values:
+                  - S1
+          topologyKey: kubernetes.io/hostname

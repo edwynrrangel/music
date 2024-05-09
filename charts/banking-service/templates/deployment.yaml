@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "banking-service.fullname" . }}
+  labels:
+    {{- include "banking-service.labels" . | nindent 4 }}
+    {{- if .Values.global.projectName }}
+    project: {{ .Values.global.projectName }}
+    cluster: {{ .Values.global.clusterName }}
+    {{- end }}
+spec:
+  replicas: {{ .Values.app.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "banking-service.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.app.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "banking-service.labels" . | nindent 8 }}
+        {{- if .Values.global.namespace }}
+        namespace: {{ .Values.global.namespace }}
+        {{- end }}
+    spec:
+      {{- with .Values.global.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "banking-service.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.app.securityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.app.securityContext | nindent 12 }}
+          image: "{{ .Values.global.image.repository }}:{{ .Values.global.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.global.image.pullPolicy }}
+          env:
+            {{- range .Values.app.env }}
+            - name: {{ .name }}
+              value: {{ .value }}
+            {{- end }}
+            {{- range .Values.app.secrets }}
+            - name: {{ .secretKey }}
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .secretName }}
+                  key: {{ .secretKey }}
+            {{- end }}
+          ports:
+            {{- range .Values.app.service.ports }}
+            - name: {{ .name }}
+              containerPort: {{ .port }}
+              protocol: {{ .protocol }}
+            {{- end }}
+          {{- if .Values.app.livenessProbe.enabled }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if .Values.app.readinessProbe.enabled }}
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          {{- end }}
+          resources:
+            {{- toYaml .Values.app.resources | nindent 12 }}
+          {{- with .Values.app.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.app.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.app.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.app.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.app.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
