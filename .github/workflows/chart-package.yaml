@@ -8,9 +8,6 @@ on:
       - "charts/**"
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -27,9 +24,8 @@ jobs:
       - name: Packaging charts
         run: |
           echo "Packaging charts"
-          echo $(pwd)
+          mkdir -p chart-repo
           charts_path=$(pwd)/charts/*
-          echo $charts_path
           for chart in $charts_path; do
             if [ -d "$chart" ]; then
               helm package $chart --destination chart-repo/
@@ -40,21 +36,58 @@ jobs:
         run: |
           helm repo index chart-repo --url https://edwynrrangel.github.io/charts/
 
+      - name: upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: chart-packages
+          path: chart-repo/
+    
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup SSH for GitHub Access
+        run: |
+          mkdir -p ~/.ssh/
+          echo "$DEPLOY_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+        env:
+          DEPLOY_KEY: ${{ secrets.DEPLOY_KEY }}
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: chart-packages
+          path: chart-repo/
+
       - name: Get author info
+        id: get_author
         run: |
           echo "author_name=$(git log -1 --pretty=format:'%an')" >> $GITHUB_ENV
           echo "author_email=$(git log -1 --pretty=format:'%ae')" >> $GITHUB_ENV
-  
-      - name: Print author info
-        run: |
-          echo "The author name is $author_name"
-          echo "The author email is $author_email"
       
-      - name: Commit and push changes
+      - name: Clone charts repository
         run: |
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/deploy_key
+          echo $(ssh -T git@github.com)
+          git clone git@github.com:edwynrrangel/charts.git 
+
+      - name: Copy chart packages to charts repository
+        run: |
+          cp chart-repo/* charts/
+          ls -la charts/
+      
+      - name: Push chart packages to charts repository
+        run: |
+          eval $(ssh-agent -s)
+          ssh-add ~/.ssh/deploy_key
+          echo $(ssh -T git@github.com)
+          cd charts
           git config --local --replace-all user.email "$author_email"
           git config --local --replace-all user.name "$author_name"
-          git add chart-repo/
-          git commit -m "Update chart repository by $author_email" -a || echo "No changes to commit"
-          git push https://${{ secrets.GITHUB_TOKEN }}@github.com/edwynrrangel/grpc HEAD:master
-        
+          git add .
+          git commit -m "Update charts repository by $author_email" -a || echo "No changes to commit"
+          git branch -M master
+          git push origin HEAD:master
