@@ -64,10 +64,16 @@ jobs:
     needs: [setup, build]
     runs-on: self-hosted
     steps:
+      - name: Usa la variable de repositorio
+        run: |
+          echo "helm chart: ${{ env.DEPLOY_GO_HELM_CHART }}"
+          echo "helm namespace: ${{ env.DEPLOY_GO_HELM_NAMESPACE }}"
+          echo "helm chart version: ${{ env.DEPLOY_GO_HELM_CHART_VERSION }}"
+
       - name: Deploy to Kubernetes
         run: |
           echo "Deploying image for directory: $base_path/$release_name"
-          helm upgrade $release_name ${{ env.DEPLOY_GO_HELM_NAMESPACE }} \
+          helm upgrade $release_name ${{ env.DEPLOY_GO_HELM_CHART }} \
             --version ${{ env.DEPLOY_GO_HELM_CHART_VERSION }} \
             --install \
             --namespace ${{ env.DEPLOY_GO_HELM_NAMESPACE }} \
