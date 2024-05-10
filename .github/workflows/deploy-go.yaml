@@ -67,10 +67,10 @@ jobs:
       - name: Deploy to Kubernetes
         run: |
           echo "Deploying image for directory: $base_path/$release_name"
-          helm upgrade $release_name $DEPLOY_GO_HELM_CHART \
-            --version $DEPLOY_GO_HELM_CHART_VERSION \
+          helm upgrade $release_name ${{ env.DEPLOY_GO_HELM_NAMESPACE }} \
+            --version ${{ env.DEPLOY_GO_HELM_CHART_VERSION }} \
             --install \
-            --namespace $DEPLOY_GO_HELM_NAMESPACE \
+            --namespace ${{ env.DEPLOY_GO_HELM_NAMESPACE }} \
             --create-namespace \
             --debug \
             -f ./$base_path/$release_name/k8s/values.yaml
