@@ -6,20 +6,27 @@ Expand the name of the chart.
 {{- end }}
 
 {{/*
+Validate the values provided by the user.
+*/}}
+{{- define "grpc-service.validateValues" -}}
+{{- if not .Values.global.projectName }}
+  {{- fail "global.projectName is required in values.yaml" }}
+{{- end }}
+{{- end }}
+
+{{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "grpc-service.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- include "grpc-service.validateValues" . }}
+{{- if .Values.global.fullnameOverride }}
+{{- .Values.global.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
+{{- $name := default .Chart.Name .Values.global.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- $suffix := .Values.global.projectName | trimSuffix "-" }}
+{{- printf "%s-%s" $name $suffix | trunc 63 | trimSuffix "-" }}
 {{- end }}
 {{- end }}
 
