@@ -48,7 +48,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-        
+
       - name: Setup SSH for GitHub Access
         run: |
           mkdir -p ~/.ssh/
@@ -75,19 +75,19 @@ jobs:
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/deploy_key
           echo $(ssh -T git@github.com)
-          git clone git@github.com:edwynrrangel/charts.git 
+          git clone git@github.com:edwynrrangel/charts.git temp_charts_repo
 
       - name: Copy chart packages to charts repository
         run: |
-          cp chart-repo/* charts/
-          ls -la charts/
+          cp chart-repo/* temp_charts_repo/
+          ls -la temp_charts_repo/
       
       - name: Push chart packages to charts repository
         run: |
           eval $(ssh-agent -s)
           ssh-add ~/.ssh/deploy_key
           echo $(ssh -T git@github.com)
-          cd charts
+          cd temp_charts_repo
           git config --local --replace-all user.email "$author_email"
           git config --local --replace-all user.name "$author_name"
           git add .
