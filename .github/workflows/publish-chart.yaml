@@ -2,6 +2,8 @@ name: Publish Chart
 
 on:
   push:
+    branches:
+      - master
     paths:
       - "chart-repo/**"
   workflow_dispatch:
