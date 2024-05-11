@@ -1,0 +1,25 @@
+name: Read Config and Set Env
+on:
+  workflow_call:
+    inputs:
+      config_path:
+        required: true
+        type: string
+
+jobs:
+  setup-env:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Read YAML file and export environment variables
+      id: read_yaml
+      uses: pietrobolcato/action-read-yaml@1.1.0
+      with:
+        config: ${{ inputs.config_path }}
+    
+    - name: Set environment variables
+      run: |
+        echo "ENVIRONMENT=${{ steps.read_yaml.outputs.environment }}" >> $GITHUB_ENV
+        echo "VERSION=${{ steps.read_yaml.outputs.version }}" >> $GITHUB_ENV
