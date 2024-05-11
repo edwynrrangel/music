@@ -1,0 +1,4 @@
+deploy:
+  helm_chart: "edwynrrangel/grpc-service"
+  helm_chart_version: "0.0.1"
+  namespace: "grpc-test"
