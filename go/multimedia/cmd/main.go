@@ -5,9 +5,10 @@ import (
 	"log"
 	"net"
 
+	"google.golang.org/grpc"
+
 	"github.com/edwynrrangel/grpc/go/multimedia/cmd/grpc/multimedia"
 	"github.com/edwynrrangel/grpc/go/multimedia/config"
-	"google.golang.org/grpc"
 )
 
 func main() {
