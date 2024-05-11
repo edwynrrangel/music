@@ -40,7 +40,7 @@ jobs:
           echo "release_name=$release_name" >> $GITHUB_OUTPUT
       
       - name: Set environment variables
-        uses: edwynrrangel/github-actions-suite/actions/yaml-to-env@main
+        uses: edwynrrangel/github-actions-suite/actions/yaml-to-env@master
         with:
           yaml-file: ${{ needs.setup.outputs.base_path }}/${{ needs.setup.outputs.release_name }}/k8s/config.yaml
 
