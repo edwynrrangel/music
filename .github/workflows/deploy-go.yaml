@@ -64,11 +64,14 @@ jobs:
     needs: [setup, build]
     runs-on: self-hosted
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Set environment variables from YAML
         uses: edwynrrangel/github-actions-suite/actions/yaml-to-env@master
         with:
           yaml-file: ${{ needs.setup.outputs.base_path }}/${{ needs.setup.outputs.release_name }}/k8s/config.yaml
-      
+
       - name: Deploy to Kubernetes
         run: |
           echo "Deploying image for directory: $base_path/$release_name"
