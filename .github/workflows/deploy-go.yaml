@@ -64,8 +64,6 @@ jobs:
     needs: [setup, build]
     runs-on: self-hosted
     steps:
-      - uses: actions/checkout@v2
-      
       - name: Set environment variables from YAML
         uses: edwynrrangel/github-actions-suite/actions/yaml-to-env@master
         with:
