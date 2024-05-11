@@ -42,7 +42,7 @@ jobs:
       - name: Set environment variables
         uses: edwynrrangel/github-actions-suite/actions/yaml-to-env@master
         with:
-          yaml-file: ${{ needs.setup.outputs.base_path }}/${{ needs.setup.outputs.release_name }}/k8s/config.yaml
+          yaml-file: ${{ steps.set_path.outputs.base_path }}/${{ steps.set_project_name.outputs.release_name }}/k8s/config.yaml
 
   
 
