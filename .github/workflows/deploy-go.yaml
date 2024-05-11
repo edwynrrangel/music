@@ -38,13 +38,6 @@ jobs:
             release_name="${{ github.event.inputs.release_name }}"
           fi
           echo "release_name=$release_name" >> $GITHUB_OUTPUT
-      
-      - name: Set environment variables
-        uses: edwynrrangel/github-actions-suite/actions/yaml-to-env@master
-        with:
-          yaml-file: ${{ steps.set_path.outputs.base_path }}/${{ steps.set_project_name.outputs.release_name }}/k8s/config.yaml
-
-  
 
   build:
     needs: setup
@@ -71,13 +64,20 @@ jobs:
     needs: [setup, build]
     runs-on: self-hosted
     steps:
+      - uses: actions/checkout@v2
+      
+      - name: Set environment variables from YAML
+        uses: edwynrrangel/github-actions-suite/actions/yaml-to-env@master
+        with:
+          yaml-file: ${{ needs.setup.outputs.base_path }}/${{ needs.setup.outputs.release_name }}/k8s/config.yaml
+      
       - name: Deploy to Kubernetes
         run: |
           echo "Deploying image for directory: $base_path/$release_name"
-          helm upgrade $release_name ${{ vars.DEPLOY_GO_HELM_CHART }} \
-            --version ${{ vars.DEPLOY_GO_HELM_CHART_VERSION }} \
+          helm upgrade $release_name DEPLOY_HELM_CHART \
+            --version DEPLOY_HELM_CHART_VERSION \
             --install \
-            --namespace ${{ vars.DEPLOY_GO_HELM_NAMESPACE }} \
+            --namespace DEPLOY_NAMESPACE \
             --create-namespace \
             --debug \
             -f ./$base_path/$release_name/k8s/values.yaml
