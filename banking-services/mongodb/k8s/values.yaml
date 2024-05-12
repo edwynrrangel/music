@@ -1,0 +1,77 @@
+global:
+  enabled: true
+  projectName: mongodb
+  clusterName: banking-service
+  image:
+    repository: mongo
+    tag: "7.0.10-rc0-jammy"
+    pullPolicy: Always
+  namespace: banking-service
+
+app:
+  replicaCount: 1
+
+  serviceAccount:
+    enabled: false
+
+  env:
+
+  secrets:
+    - secretKey: MONGO_INITDB_ROOT_USERNAME
+      secretName: banking-service-mongodb
+    - secretKey: MONGO_INITDB_ROOT_PASSWORD
+      secretName: banking-service-mongodb
+
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "75m"
+    limits:
+      memory: "384Mi"
+      cpu: "100m"
+
+  service:
+    # Type of service: ClusterIP, NodePort, or LoadBalancer.
+    type: NodePort
+    ports:
+      - name: mongodb
+        port: 27017
+        targetPort: 27017
+        nodePort: 30017
+        protocol: TCP
+
+  livenessProbe:
+    enabled: false
+    
+  readinessProbe:
+    enabled: false
+
+  autoscaling:
+    enabled: false
+
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+
+  # Volumes and volume mounts for the application.
+  pvc:
+    enabled: true
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+    storageClassName: standard
+  volumes:
+    - name: banking-service-mongodb-pvc
+      persistentVolumeClaim:
+        claimName: banking-service-mongodb-pvc
+  volumeMounts:
+    - name: banking-service-mongodb-pvc
+      mountPath: /data/db
+
+  nodeSelector: {
+    disktype: null
+  }
+  tolerations: []
+  affinity: {
+    podAffinity: null
+  }
