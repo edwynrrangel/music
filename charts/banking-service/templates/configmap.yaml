@@ -1,0 +1,10 @@
+{{- if .Values.app.configMap.enabled -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "banking-service.fullname" . }}-config
+  labels:
+    {{- include "banking-service.labels" . | nindent 4 }}
+data:
+    {{- toYaml .Values.app.configMap.data | nindent 4 }}
+{{- end }}

@@ -96,15 +96,43 @@ app:
   securityContext:
     runAsUser: 1000
     runAsGroup: 1000
+  
+  # Persistent Volume Claim (PVC) configuration for the application.
+  pvc:
+    enabled: true
+    # Access modes for the PVC: ReadWriteOnce, ReadOnlyMany, ReadWriteMany.
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+    # Storage class to use for the PVC: standard, fast, slow, etc.
+    storageClassName: standard
 
-  # Volumes and volume mounts for the application.
+  # ConfigMap configuration for the application.
+  configMap:
+    enabled: true
+    # Data to be stored in the ConfigMap.
+    data:
+      app.properties: |
+        key1: value1
+        key2: value2
+
+  # Volumes definition for pod volume mounts.
   volumes:
-    - name: config-volume
+    - name: banking-service-nginx-pvc
+      persistentVolumeClaim:
+        claimName: banking-service-nginx-pvc
+    - name: banking-service-nginx-config
       configMap:
-        name: config-map-name
+        name: banking-service-nginx-config
+
+  # Volume mounts for the application into the container.
   volumeMounts:
-    - name: config-volume
+    - name: banking-service-nginx-pvc
+      mountPath: /var/www/html
+    - name: banking-service-nginx-config
       mountPath: /etc/config
+      readOnly: true
+    
 
   # Node selector, tolerations, and affinity to control pod scheduling preferences.
   nodeSelector:
