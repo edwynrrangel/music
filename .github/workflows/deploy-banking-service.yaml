@@ -37,7 +37,7 @@ jobs:
           else
             release_name="${{ github.event.inputs.release_name }}"
           fi
-          if [ -d "banking-service/$release_name" ]; then
+          if [ ! -d "banking-service/$release_name" ]; then
             echo "No changes detected in banking-service/ directory"
             exit 1
           fi
