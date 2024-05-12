@@ -30,8 +30,7 @@ kubectl get svc -n {{ .Release.Namespace }} {{ include "banking-service.fullname
 
 Your {{ .Chart.Name }} service is exposed on each Node's IP at Port {{ (index .Values.app.service.ports 0).nodePort }}:
 You can access your service externally using:
-  - Ports: {{ (index .Values.app.service.ports 0).targetPort }}
-  - Node IP Address: kubectl get svc -n {{ .Release.Namespace }} {{ include "banking-service.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+  - Node IP Address: kubectl get svc -n banking-service banking-service-mongodb -o custom-columns=clusterIP:.spec.clusterIP
 
 {{- else }}
 
@@ -39,7 +38,7 @@ Your {{ .Chart.Name }} service is only accessible from within the cluster.
 
 {{- end }}
 
-Check your application's documentation for more details on how to interact with the gRPC service.
+Check your application's documentation for more details.
 
 {{- else }}
 
