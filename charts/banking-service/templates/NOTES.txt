@@ -30,7 +30,7 @@ kubectl get svc -n {{ .Release.Namespace }} {{ include "banking-service.fullname
 
 Your {{ .Chart.Name }} service is exposed on each Node's IP at Port {{ (index .Values.app.service.ports 0).nodePort }}:
 You can access your service externally using:
-  - Node IP Address: kubectl get svc -n banking-service banking-service-mongodb -o custom-columns=clusterIP:.spec.clusterIP
+  - Node IP Address: kubectl get nodes -o custom-columns=nodeIP:.status.addresses[0].address
 
 {{- else }}
 
