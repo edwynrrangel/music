@@ -12,6 +12,9 @@ spec:
       targetPort: {{ .targetPort }}
       protocol: {{ .protocol }}
       name: {{ .name }}
+      {{- if .nodePort }}
+      nodePort: {{ .nodePort }}
+      {{- end }}
     {{- end }}
   selector:
     {{- include "banking-service.selectorLabels" . | nindent 4 }}
