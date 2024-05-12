@@ -31,7 +31,7 @@ kubectl get svc -n {{ .Release.Namespace }} {{ include "banking-service.fullname
 Your {{ .Chart.Name }} service is exposed on each Node's IP at Port {{ (index .Values.app.service.ports 0).nodePort }}:
 You can access your service externally using:
   - Ports: {{ (index .Values.app.service.ports 0).targetPort }}
-  - IP Address: the external IP of any of your Kubernetes nodes.
+  - Node IP Address: kubectl get svc -n {{ .Release.Namespace }} {{ include "banking-service.fullname" . }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
 
 {{- else }}
 
