@@ -9,7 +9,7 @@ spec:
   ports:
     - port: {{ .Values.app.service.port }}
       targetPort: {{ .Values.app.service.targetPort }}
-      protocol: TPC
+      protocol: {{ .Values.app.service.protocol }}
       name: {{ .Values.app.service.name }}
       {{- with .Values.app.service.nodePort }}
       nodePort: {{ . }}
