@@ -1,6 +1,6 @@
 # gRPC Service Helm Chart
 
-Este chart de Helm despliega un servicio gRPC en Kubernetes.
+Este chart de Helm despliega un servidor gRPC en Kubernetes.
 
 ## Prerrequisitos
 
@@ -12,16 +12,16 @@ Este chart de Helm despliega un servicio gRPC en Kubernetes.
 Antes de instalar el chart, necesitas agregar el repositorio de Helm donde se aloja el chart:
 
 ```bash
-helm repo add my-grpc-service-repo https://username.github.io/my-grpc-service-repo/
+helm repo add edwynrrangel https://edwynrrangel.github.io/grpc-server/
 helm repo update
 ```
 
 ## Instalación del Chart
 
-Para instalar el chart con el nombre de release `my-grpc-service`:
+Para instalar el chart con el nombre de release `test`:
 
 ```bash
-helm install my-grpc-service my-grpc-service-repo/grpc-service
+helm test [NAME] edwynrrangel/grpc-server
 ```
 
 ## Configuración
@@ -33,9 +33,9 @@ Las siguientes tablas enumeran los parámetros configurables en el `values.yaml`
 | Parámetro                 | Descripción                                      | Valor Por Defecto               |
 |---------------------------|--------------------------------------------------|---------------------------------|
 | `global.enabled`          | Habilita o deshabilita el chart                  | `true`                          |
-| `global.projectName`      | Nombre del proyecto                              | `grpc-service`                  |
+| `global.projectName`      | Nombre del proyecto                              | `grpc-server`                  |
 | `global.clusterName`      | Nombre del clúster                               | `grpc`                          |
-| `global.image.repository` | Repositorio de la imagen del servicio            | `edwynrangel/grpc-service`      |
+| `global.image.repository` | Repositorio de la imagen del servicio            | `edwynrangel/grpc-server`      |
 | `global.image.tag`        | Etiqueta de la imagen del servicio               | `latest`                        |
 | `global.image.pullPolicy` | Política de extracción de la imagen              | `Always`                        |
 | `global.namespace`        | Espacio de nombres de Kubernetes para el despliegue | `grpc-test`                 |

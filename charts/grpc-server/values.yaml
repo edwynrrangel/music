@@ -1,0 +1,70 @@
+global:
+  enabled: true
+  projectName: template
+  clusterName: grpc-test
+
+  # Configuración de la imagen Docker de la aplicación
+  image:
+    repository: edwynrangel/grpc-server
+    tag: "latest"
+    pullPolicy: Always
+  namespace: grpc-test
+
+app:
+  # Number of replicas for the application pod.
+  replicaCount: 1
+
+  # Horizontal Pod Autoscaler configuration to automatically scale the application.
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 2
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+
+  # Type of service: ClusterIP, NodePort, or LoadBalancer.
+  service:
+    type: NodePort
+    protocol: TCP
+    port: 50051
+    targetPort: 50051
+    nodePort: 30051
+
+  # Environment variables for the application.
+  env:
+    - name: ENV
+      value: "dev"
+  
+  # Secrets configuration. Reference existing Kubernetes secrets.
+  secrets:
+    - secretKey: SECRET
+      # The secretName is maked from the [Chart.name]-[Values.global.projectName]  
+      secretName: grpc-server-template
+  
+  # Liveness probe configuration to check the health of the application.
+  livenessProbe:
+    tcpSocket:
+      port: grpc
+    initialDelaySeconds: 10
+    periodSeconds: 10
+
+  readinessProbe:
+    tcpSocket:
+      port: grpc
+    initialDelaySeconds: 5
+    periodSeconds: 5
+
+  # Security context for the pod to specify security settings.
+  securityContext:
+    runAsUser: 1000
+    runAsGroup: 1000
+
+  # Resource requests and limits for the application pod.
+  resources:
+    requests:
+      memory: "200Mi"
+      cpu: "75m"
+    limits:
+      memory: "384Mi"
+      cpu: "100m"
+  
