@@ -78,7 +78,7 @@ jobs:
           helm upgrade $release_name $DEPLOY_HELM_CHART \
             --version $DEPLOY_HELM_CHART_VERSION \
             --install \
-            --namespace $DEPLOY_NAMESPACE \
+            --namespace $DEPLOY_GLOBAL_NAMESPACE \
             --create-namespace \
             --debug \
             -f ./$base_path/$release_name/k8s/values.yaml
