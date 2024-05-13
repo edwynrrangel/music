@@ -72,6 +72,11 @@ jobs:
         with:
           yaml-file: ${{ needs.setup.outputs.base_path }}/${{ needs.setup.outputs.release_name }}/k8s/config.yaml
 
+      - name: Replace tokens in YAML
+        uses: edwynrrangel/github-actions-suite/actions/replace-tokens@master
+        with:
+          input-yaml-file: k8s/values.yaml
+
       - name: Deploy to Kubernetes
         run: |
           echo "Deploying image for directory: $base_path/$release_name"
