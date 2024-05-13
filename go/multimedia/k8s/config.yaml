@@ -1,4 +1,17 @@
 deploy:
-  helm_chart: "edwynrrangel/grpc-service"
-  helm_chart_version: "0.0.2"
-  namespace: "grpc-test"
+  helm:
+    chart: "edwynrrangel/grpc-server"
+    chartVersion: "0.1.0"
+  global:
+    projectName: "multimedia"
+    clusterName: "grpc-service"
+    image:
+      repository: "edwynrrangel/grpc-server"
+      tag: "latest"
+      pullPolicy: Always
+    imagePullSecrets: 
+      name: "grpc-service-multimedia-docker-registry"
+    namespace: "grpc-dev"
+  app:
+    secrets:
+      name: "grpc-server-multimedia"  
