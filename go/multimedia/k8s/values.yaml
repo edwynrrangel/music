@@ -20,6 +20,7 @@ app:
 
   service:
     type: NodePort
+    name: grpc
     protocol: TCP
     port: 50051
     targetPort: 50051
@@ -29,7 +30,7 @@ app:
 
   secrets:
     - secretKey: SECRET
-      secretName: "#{DEPLOY_APP_SECRETS_SECRET_NAME}#"
+      secretName: "#{DEPLOY_APP_SECRETS_NAME}#"
 
   securityContext:
     runAsUser: 1000

@@ -10,7 +10,7 @@ deploy:
       tag: "latest"
       pullPolicy: Always
     imagePullSecrets: 
-      name: "grpc-service-multimedia-docker-registry"
+      name: "grpc-service-multimedia-docker"
     namespace: "grpc-dev"
   app:
     secrets:
