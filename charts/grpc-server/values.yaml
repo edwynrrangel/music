@@ -26,6 +26,7 @@ app:
   service:
     type: NodePort
     protocol: TCP
+    name: grpc
     port: 50051
     targetPort: 50051
     nodePort: 30051

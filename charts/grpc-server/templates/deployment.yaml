@@ -52,7 +52,7 @@ spec:
                   key: {{ .secretKey }}
             {{- end }}
           ports:
-            - name: {{ .Values.app.service.port }}
+            - name: {{ .Values.app.service.name }}
               containerPort: {{ .Values.app.service.port }}
               protocol: {{ .Values.app.service.protocol }}
           
