@@ -9,9 +9,8 @@ deploy:
       repository: "edwynrangel"
       tag: "latest"
       pullPolicy: Always
-    imagePullSecrets: 
-      name: "grpc-service-multimedia-docker"
+    imagePullSecrets:
+      name: "docker"
     namespace: "grpc-dev"
-  app:
-    secrets:
-      name: "grpc-server-multimedia"  
+  secret:
+    name: "grpc-server-multimedia"

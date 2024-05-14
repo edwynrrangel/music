@@ -9,7 +9,7 @@ global:
     tag: "#{DEPLOY_GLOBAL_IMAGE_TAG}#"
     pullPolicy: "#{DEPLOY_GLOBAL_IMAGE_PULL_POLICY}#"
   imagePullSecrets: 
-    - name: "#{DEPLOY_GLOBAL_IMAGE_PULL_SECRETS_NAME}#"
+    - name: "#{DEPLOY_SECRET_NAME}#-#{DEPLOY_GLOBAL_IMAGE_PULL_SECRETS_NAME}#"
   namespace: "#{DEPLOY_GLOBAL_NAMESPACE}#"
 
 app:
@@ -29,8 +29,10 @@ app:
   env:
 
   secrets:
-    - secretKey: SECRET
-      secretName: "#{DEPLOY_APP_SECRETS_NAME}#"
+    - secretKey: MONGO_USERNAME
+      secretName: "#{DEPLOY_SECRET_NAME}#"
+    - secretKey: MONGO_PASSWORD
+      secretName: "#{DEPLOY_SECRET_NAME}#"
 
   securityContext:
     runAsUser: 1000
