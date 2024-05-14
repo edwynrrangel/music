@@ -6,7 +6,7 @@ deploy:
     projectName: "multimedia"
     clusterName: "grpc-service"
     image:
-      repository: "edwynrrangel/grpc-server"
+      repository: "edwynrangel"
       tag: "latest"
       pullPolicy: Always
     imagePullSecrets: 

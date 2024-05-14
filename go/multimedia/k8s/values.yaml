@@ -5,7 +5,7 @@ global:
 
   # Configuración de la imagen Docker de la aplicación
   image:
-    repository: "#{DEPLOY_GLOBAL_IMAGE_REPOSITORY}#"
+    repository: "#{DEPLOY_GLOBAL_IMAGE_REPOSITORY}#/#{DEPLOY_GLOBAL_PROJECT_NAME}#"
     tag: "#{DEPLOY_GLOBAL_IMAGE_TAG}#"
     pullPolicy: "#{DEPLOY_GLOBAL_IMAGE_PULL_POLICY}#"
   imagePullSecrets: 
