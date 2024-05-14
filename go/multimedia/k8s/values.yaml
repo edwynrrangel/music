@@ -31,6 +31,8 @@ app:
       value: "banking-service-mongodb.banking-service.svc.cluster.local"
     - name: MONGO_PORT
       value: "27017"
+    - name: MONGO_DB
+      value: "multimedia"
   secrets:
     - secretKey: MONGO_USERNAME
       secretName: "#{DEPLOY_SECRET_NAME}#"
