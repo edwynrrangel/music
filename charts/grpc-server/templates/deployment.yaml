@@ -42,7 +42,7 @@ spec:
           env:
             {{- range .Values.app.env }}
             - name: {{ .name }}
-              value: {{ .value }}
+              value: {{ .value | quote }}
             {{- end }}
             {{- range .Values.app.secrets }}
             - name: {{ .secretKey }}
