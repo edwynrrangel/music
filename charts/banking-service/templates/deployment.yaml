@@ -29,7 +29,9 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.app.serviceAccount.enabled }}
       serviceAccountName: {{ include "banking-service.serviceAccountName" . }}
+      {{- end }}
       securityContext:
         {{- toYaml .Values.app.securityContext | nindent 8 }}
       containers:
@@ -38,9 +40,13 @@ spec:
             {{- toYaml .Values.app.securityContext | nindent 12 }}
           image: "{{ .Values.global.image.repository }}:{{ .Values.global.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.global.image.pullPolicy }}
-          {{- if .Values.app.command }}
+          {{- with .Values.app.command }}
           command:
-            {{- toYaml .Values.app.command | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.app.args }}
+          args:
+            {{- toYaml . | nindent 12 }}
           {{- end }}
           env:
             {{- range .Values.app.env }}
@@ -70,11 +76,11 @@ spec:
           {{- end }}
           resources:
             {{- toYaml .Values.app.resources | nindent 12 }}
-          {{- if .Values.app.volumeMounts }}
+          {{- with .Values.app.volumeMounts }}
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-      {{- if .Values.app.volumes }}
+      {{- with .Values.app.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}
       {{- end }}

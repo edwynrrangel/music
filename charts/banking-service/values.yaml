@@ -24,9 +24,9 @@ app:
   # Service Account configuration.
   serviceAccount:
     # Whether to enable a Kubernetes service account.
-    enabled: true
+    enabled: false
     # The name of the service account. Leave as default or specify a custom name.
-    name: nginx
+    name: banking-service-nginx
     # Annotations to add to the service account, can be used for IAM roles, etc.
     annotations: {}
     # Automatically mount the service account token in the pod.
