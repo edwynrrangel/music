@@ -57,6 +57,8 @@ jobs:
 
       - name: Deploy to Kubernetes
         run: |
+          echo "Update repository for Helm"
+          helm repo update
           echo "Deploying image for directory: $base_path/$release_name"
           helm upgrade $release_name $DEPLOY_HELM_CHART \
             --version $DEPLOY_HELM_CHART_VERSION \
