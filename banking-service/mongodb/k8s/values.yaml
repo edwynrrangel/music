@@ -15,9 +15,10 @@ app:
     - "--tlsMode"
     - "requireTLS"
     - "--tlsCertificateKeyFile"
-    - "/etc/tls/mongodb.pem"
+    - "/etc/ssl/mongo/mongodb.pem"
     - "--tlsCAFile"
-    - "/etc/tls/mongodb.pem"
+    - "/etc/ssl/mongo/ca.pem"
+    - "--tlsAllowConnectionsWithoutCertificates"
   replicaCount: 1
 
   serviceAccount:
@@ -79,4 +80,5 @@ app:
     - name: banking-service-mongodb-pvc
       mountPath: /data/db
     - name: banking-service-mongodb-tls
-      mountPath: /etc/tls
+      mountPath: /etc/ssl/mongo
+      readOnly: true
