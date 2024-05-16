@@ -9,6 +9,15 @@ global:
   namespace: banking-service
 
 app:
+  command:
+    - mongod
+    - "--bind_ip_all"
+    - "--tlsMode"
+    - "requireTLS"
+    - "--tlsCertificateKeyFile"
+    - "/etc/tls/mongodb.pem"
+    - "--tlsCAFile"
+    - "/etc/tls/mongodb.pem"
   replicaCount: 1
 
   serviceAccount:
@@ -53,7 +62,6 @@ app:
     runAsUser: 1000
     runAsGroup: 1000
 
-  # Volumes and volume mounts for the application.
   pvc:
     enabled: true
     accessModes:
@@ -64,14 +72,11 @@ app:
     - name: banking-service-mongodb-pvc
       persistentVolumeClaim:
         claimName: banking-service-mongodb-pvc
+    - name: banking-service-mongodb-tls
+      secret:
+        secretName: banking-service-mongodb-tls
   volumeMounts:
     - name: banking-service-mongodb-pvc
       mountPath: /data/db
-
-  nodeSelector: {
-    disktype: null
-  }
-  tolerations: []
-  affinity: {
-    podAffinity: null
-  }
+    - name: banking-service-mongodb-tls
+      mountPath: /etc/tls
