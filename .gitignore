@@ -1,2 +1,8 @@
 .vscode
 .env
+*.crt
+*.key
+*.pem
+*.srl
+*.csr
+openssl.cnf
