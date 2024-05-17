@@ -1,0 +1,27 @@
+{{- if .Values.preInstallCheck.enabled -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pre-install-check
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-delete-policy": hook-succeeded,hook-failed
+spec:
+  backoffLimit: 2
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: check-pvc
+          image: bitnami/kubectl:1.17
+          command:
+            - /bin/sh
+            - -c
+            - |
+              if kubectl get pvc {{ .Values.preInstallCheck.pvcName }} -n {{ .Values.preInstallCheck.namespace }}; then
+                echo "PVC exists"
+              else
+                echo "PVC does not exist"
+                exit 1
+              fi
+{{- end -}}

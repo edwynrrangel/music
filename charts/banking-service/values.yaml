@@ -1,3 +1,15 @@
+# This file contains default values to be used during the Helm chart installation.
+# Values can be overridden by providing a custom values.yaml file during installation.
+
+# Pre-installation configuration for the banking-service Helm chart.
+preInstallCheck:
+  # Flag to enable or disable the pre-installation check.
+  enabled: false
+  # Name of the PVC to check for existence.
+  pvcName: banking-service-nginx-pvc
+  # Namespace where the PVC is expected to exist.
+  namespace: banking-service
+
 # Global configuration that affects all components of the chart.
 global:
   # Flag to enable or disable the chart globally.
