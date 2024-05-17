@@ -1,0 +1,17 @@
+{{- if .Values.pvc.enabled }}
+1. PersistentVolumeClaim (PVC) Details:
+{{- $pvcName := include "pvc.fullname" . }}
+  Name: {{ $pvcName }}
+  Storage Class: {{ .Values.pvc.storageClassName }}
+  Size: {{ .Values.pvc.size }}
+  Access Modes: {{ .Values.pvc.accessModes | join ", " }}
+
+2. To check the status of the PVC, run:
+  kubectl get pvc {{ $pvcName }}
+
+3. To describe the PVC, run:
+  kubectl describe pvc {{ $pvcName }}
+
+{{- else }}
+The PersistentVolumeClaim (PVC) is not enabled. To enable it, set 'pvc.enabled' to true in values.yaml.
+{{- end }}
