@@ -94,16 +94,6 @@ app:
   securityContext:
     runAsUser: 1000
     runAsGroup: 1000
-  
-  # Persistent Volume Claim (PVC) configuration for the application.
-  pvc:
-    enabled: true
-    # Access modes for the PVC: ReadWriteOnce, ReadOnlyMany, ReadWriteMany.
-    accessModes:
-      - ReadWriteOnce
-    size: 1Gi
-    # Storage class to use for the PVC: standard, fast, slow, etc.
-    storageClassName: standard
 
   # ConfigMap configuration for the application.
   configMap:

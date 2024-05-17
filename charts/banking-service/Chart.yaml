@@ -1,5 +1,22 @@
 apiVersion: v2
 name: banking-service
-description: A Helm chart for Kubernetes
+description: >
+  A Helm chart for deploying essential services like MongoDB, RabbitMQ, and Redis on Kubernetes.
+  This chart supports StatefulSets for persistent state management, Horizontal Pod Autoscaling (HPA) 
+  for dynamic scaling based on resource usage, and seamless integration with Kubernetes services 
+  for efficient communication and load balancing. It includes predefined ConfigMaps, Services, 
+  and Service Accounts for streamlined deployment and management.
+
 type: application
 version: 0.1.0
+maintainers:
+  - name: Edwyn Rangel
+    email: edwynrangel@gmail.com
+keywords:
+  - kubernetes
+  - helm
+  - statefulset
+  - hpa
+  - configmap
+  - service
+  - serviceaccount
