@@ -32,8 +32,10 @@ spec:
       {{- if .Values.app.serviceAccount.enabled }}
       serviceAccountName: {{ include "banking-service.serviceAccountName" . }}
       {{- end }}
+      {{- with .Values.app.securityContext }}
       securityContext:
-        {{- toYaml .Values.app.securityContext | nindent 8 }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
