@@ -1,24 +1,29 @@
+preInstallCheck:
+  enabled: true
+  pvcName: "#{DEPLOY_PVC_NAME}#"
+  namespace: "#{DEPLOY_NAMESPACE}#"
+
 global:
   enabled: true
   projectName: mongodb
-  clusterName: banking-service
+  clusterName: "#{DEPLOY_NAMESPACE}#"
   image:
     repository: mongo
     tag: "7.0.10-rc0-jammy"
     pullPolicy: Always
-  namespace: banking-service
+  namespace: "#{DEPLOY_NAMESPACE}#"
 
 app:
-  command:
-    - mongod
-    - "--bind_ip_all"
-    - "--tlsMode"
-    - "requireTLS"
-    - "--tlsCertificateKeyFile"
-    - "/etc/ssl/mongo/mongodb.pem"
-    - "--tlsCAFile"
-    - "/etc/ssl/mongo/ca.pem"
-    - "--tlsAllowConnectionsWithoutCertificates"
+  # command:
+  #   - mongod
+  #   - "--bind_ip_all"
+  #   - "--tlsMode"
+  #   - "requireTLS"
+  #   - "--tlsCertificateKeyFile"
+  #   - "/etc/ssl/mongo/mongodb.pem"
+  #   - "--tlsCAFile"
+  #   - "/etc/ssl/mongo/ca.pem"
+  #   - "--tlsAllowConnectionsWithoutCertificates"
   replicaCount: 1
 
   serviceAccount:
@@ -63,12 +68,6 @@ app:
     runAsUser: 1000
     runAsGroup: 1000
 
-  pvc:
-    enabled: true
-    accessModes:
-      - ReadWriteOnce
-    size: 1Gi
-    storageClassName: standard
   volumes:
     - name: banking-service-mongodb-pvc
       persistentVolumeClaim:
