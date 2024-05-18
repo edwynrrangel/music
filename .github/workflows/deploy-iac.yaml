@@ -71,7 +71,7 @@ jobs:
             --namespace $DEPLOY_NAMESPACE \
             --create-namespace \
             --debug \
-            -f ./$base_path/$release_name/k8s/values.yaml
+            -f ./$base_path/$release_name/values.yaml
         env:
           base_path: ${{ needs.setup.outputs.base_path }}
           release_name: ${{ needs.setup.outputs.release_name }}
