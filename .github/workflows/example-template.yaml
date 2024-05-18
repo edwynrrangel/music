@@ -1,4 +1,4 @@
-name: Read Config and Set Env
+name: Example template
 on:
   workflow_call:
     inputs:
