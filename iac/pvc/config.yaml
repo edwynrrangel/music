@@ -1,7 +1,7 @@
 deploy:
   namespace: banking-service
   helm:
-    chart: "edwynrrangel/banking-service"
-    chartVersion: "0.1.0"
+    chart: "edwynrrangel/pvc"
+    chartVersion: "0.0.1"
   mongodb:
     projectName: "#{DEPLOY_MONGODB_PROJECT_NAME}#"
