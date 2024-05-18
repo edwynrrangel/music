@@ -1,0 +1,4 @@
+deploy:
+  namespace: banking-service
+  mongodb:
+    projectName: "#{DEPLOY_MONGODB_PROJECT_NAME}#"

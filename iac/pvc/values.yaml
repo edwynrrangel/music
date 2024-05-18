@@ -1,0 +1,7 @@
+pvc:
+  enabled: true
+  projectName: banking-service-mongodb
+  accessModes:
+    - ReadWriteOnce
+  size: 1Gi
+  storageClassName: standard
