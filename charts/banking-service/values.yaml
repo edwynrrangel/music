@@ -109,7 +109,7 @@ app:
 
   # ConfigMap configuration for the application.
   configMap:
-    enabled: true
+    enabled: false
     # Data to be stored in the ConfigMap.
     data:
       app.properties: |

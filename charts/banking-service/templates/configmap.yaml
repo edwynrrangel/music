@@ -7,4 +7,4 @@ metadata:
     {{- include "banking-service.labels" . | nindent 4 }}
 data:
     {{- toYaml .Values.app.configMap.data | nindent 4 }}
-{{- end }}
+{{- end -}}
