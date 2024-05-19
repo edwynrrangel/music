@@ -7,10 +7,10 @@ metadata:
     "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-delete-policy": hook-succeeded,hook-failed
 spec:
-  # backoffLimit: 2
-  serviceAccountName: {{ include "banking-service.fullname" . }}-pvc-access-sa
+  backoffLimit: 2
   template:
     spec:
+      serviceAccountName: {{ include "banking-service.fullname" . }}-pvc-access-sa
       restartPolicy: Never
       containers:
         - name: check-pvc
