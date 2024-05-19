@@ -14,7 +14,7 @@ spec:
       containers:
         - name: check-pvc
           image: bitnami/kubectl:1.17
-          serviceAccountName: {{ .banking-service.fullname }}-sa
+          serviceAccountName: {{ include "banking-service.fullname" . }}
           command:
             - /bin/sh
             - -c
