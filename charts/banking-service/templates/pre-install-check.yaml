@@ -8,13 +8,13 @@ metadata:
     "helm.sh/hook-delete-policy": hook-succeeded,hook-failed
 spec:
   # backoffLimit: 2
+  serviceAccountName: {{ include "banking-service.fullname" . }}-pvc-access-sa
   template:
     spec:
       restartPolicy: Never
       containers:
         - name: check-pvc
           image: bitnami/kubectl:1.17
-          serviceAccountName: {{ include "banking-service.fullname" . }}
           command:
             - /bin/sh
             - -c
