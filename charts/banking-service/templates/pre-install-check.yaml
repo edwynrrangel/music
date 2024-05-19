@@ -7,18 +7,20 @@ metadata:
     "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-delete-policy": hook-succeeded,hook-failed
 spec:
-  backoffLimit: 2
+  # backoffLimit: 2
   template:
     spec:
       restartPolicy: Never
       containers:
         - name: check-pvc
           image: bitnami/kubectl:1.17
+          serviceAccountName: {{ .banking-service.fullname }}-sa
           command:
             - /bin/sh
             - -c
             - |
-              if kubectl get pvc {{ .Values.preInstallCheck.pvcName }} -n {{ .Values.preInstallCheck.namespace }}; then
+              echo "Checking if PVC exists"
+              if kubectl get pvc {{ .Values.preInstallCheck.pvcName }} -n {{ .Values.global.namespace }}; then
                 echo "PVC exists"
               else
                 echo "PVC does not exist"
