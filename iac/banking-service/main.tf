@@ -4,8 +4,8 @@ resource "kubernetes_namespace" "banking_service_namespace" {
   }
 }
 
-# module "mongodb" {
-#   source = "./mongodb"
-#   depends_on = [ kubernetes_namespace.banking_service_namespace ]
-#   namespace = kubernetes_namespace.banking_service_namespace.metadata[0].name
-# }
+module "mongodb" {
+  source = "./mongodb"
+  depends_on = [ kubernetes_namespace.banking_service_namespace ]
+  namespace = kubernetes_namespace.banking_service_namespace.metadata[0].name
+}
