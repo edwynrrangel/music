@@ -9,5 +9,9 @@ openssl.cnf
 .DS_Store
 .terraform
 .terraform.lock.hcl
-terraform.tfstate
-terraform.tfstate.backup
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.tfvars.json
+!example.tfvars
+crash.log
