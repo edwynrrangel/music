@@ -7,71 +7,19 @@ on:
     paths:
       - "iac/**"
   workflow_dispatch:
-    inputs:
-      release_name:
-        description: 'Enter the directory name under iac/ to deploy'
-        required: true
 
 jobs:
-  setup:
-    runs-on: ubuntu-latest
-    outputs:
-      base_path: ${{ steps.set_path.outputs.base_path }}
-      release_name: ${{ steps.set_project_name.outputs.release_name }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 2
-
-      - name: Set path
-        id: set_path
-        run: |
-          echo "base_path=iac" >> $GITHUB_OUTPUT
-
-      - name: Set Project Name
-        id: set_project_name
-        run: |
-          if [ "${{ github.event_name }}" != "workflow_dispatch" ]; then
-            release_name=$(git diff --name-only HEAD^ HEAD | grep '^iac/' | cut -d '/' -f 2 | uniq)
-          else
-            release_name="${{ github.event.inputs.release_name }}"
-          fi
-          if [ ! -d "iac/$release_name" ]; then
-            echo "No changes detected in iac/ directory"
-            exit 1
-          fi
-          echo "release_name=$release_name" >> $GITHUB_OUTPUT
-
   deploy:
-    needs: setup
     runs-on: self-hosted
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set environment variables from YAML
-        uses: edwynrrangel/github-actions-suite/actions/yaml-to-env@master
-        with:
-          yaml-file: ${{ needs.setup.outputs.base_path }}/${{ needs.setup.outputs.release_name }}/config.yaml
-
-      - name: Replace tokens in YAML
-        uses: edwynrrangel/github-actions-suite/actions/replace-tokens@master
-        with:
-          input-yaml-file: ${{ needs.setup.outputs.base_path }}/${{ needs.setup.outputs.release_name }}/values.yaml
-
       - name: Deploy to Kubernetes
         run: |
           echo "Update repository for Helm"
           helm repo update
-          echo "Deploying image for directory: $base_path/$release_name"
-          helm upgrade $release_name $DEPLOY_HELM_CHART \
-            --version $DEPLOY_HELM_CHART_VERSION \
-            --install \
-            --namespace $DEPLOY_NAMESPACE \
-            --create-namespace \
-            --debug \
-            -f ./$base_path/$release_name/values.yaml
-        env:
-          base_path: ${{ needs.setup.outputs.base_path }}
-          release_name: ${{ needs.setup.outputs.release_name }}
+          echo "Run Terraform"
+          cd iac/
+          terraform init
+          terraform apply -auto-approve
