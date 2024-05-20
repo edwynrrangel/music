@@ -52,50 +52,50 @@ resource "helm_release" "mongodb_release" {
     value = var.namespace
   }
 
-  # set {
-  #   name  = "app.command[0]"
-  #   value = "mongod"
-  # }
+  set {
+    name  = "app.command[0]"
+    value = "mongod"
+  }
 
-  # set {
-  #   name  = "app.command[1]"
-  #   value = "--bind_ip_all"
-  # }
+  set {
+    name  = "app.command[1]"
+    value = "--bind_ip_all"
+  }
 
-  # set {
-  #   name  = "app.command[2]"
-  #   value = "--tlsMode"
-  # }
+  set {
+    name  = "app.command[2]"
+    value = "--tlsMode"
+  }
 
-  # set {
-  #   name  = "app.command[3]"
-  #   value = "requireTLS"
-  # }
+  set {
+    name  = "app.command[3]"
+    value = "requireTLS"
+  }
 
-  # set {
-  #   name  = "app.command[4]"
-  #   value = "--tlsCertificateKeyFile"
-  # }
+  set {
+    name  = "app.command[4]"
+    value = "--tlsCertificateKeyFile"
+  }
 
-  # set {
-  #   name  = "app.command[5]"
-  #   value = "/etc/ssl/mongo/mongodb.pem"
-  # }
+  set {
+    name  = "app.command[5]"
+    value = "/etc/ssl/mongo/mongodb.pem"
+  }
 
-  # set {
-  #   name  = "app.command[6]"
-  #   value = "--tlsCAFile"
-  # }
+  set {
+    name  = "app.command[6]"
+    value = "--tlsCAFile"
+  }
 
-  # set {
-  #   name  = "app.command[7]"
-  #   value = "/etc/ssl/mongo/ca.pem"
-  # }
+  set {
+    name  = "app.command[7]"
+    value = "/etc/ssl/mongo/ca.pem"
+  }
 
-  # set {
-  #   name  = "app.command[8]"
-  #   value = "--tlsAllowConnectionsWithoutCertificates"
-  # }
+  set {
+    name  = "app.command[8]"
+    value = "--tlsAllowConnectionsWithoutCertificates"
+  }
 
   set {
     name  = "app.replicaCount"
