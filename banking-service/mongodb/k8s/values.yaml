@@ -1,17 +1,16 @@
 preInstallCheck:
-  enabled: true
-  pvcName: "#{DEPLOY_PVC_NAME}#"
-  namespace: "#{DEPLOY_NAMESPACE}#"
+  enabled: false
+  pvcName: banking-service-mongodb-pvc
 
 global:
   enabled: true
   projectName: mongodb
-  clusterName: "#{DEPLOY_NAMESPACE}#"
+  clusterName: banking-service
   image:
     repository: mongo
     tag: "7.0.10-rc0-jammy"
     pullPolicy: Always
-  namespace: "#{DEPLOY_NAMESPACE}#"
+  namespace: banking-service
 
 app:
   # command:
@@ -33,9 +32,9 @@ app:
 
   secrets:
     - secretKey: MONGO_INITDB_ROOT_USERNAME
-      secretName: banking-service-mongodb
+      secretName: banking-service-mongodb-db-secrets
     - secretKey: MONGO_INITDB_ROOT_PASSWORD
-      secretName: banking-service-mongodb
+      secretName: banking-service-mongodb-db-secrets
 
   resources:
     requests:
@@ -72,12 +71,12 @@ app:
     - name: banking-service-mongodb-pvc
       persistentVolumeClaim:
         claimName: banking-service-mongodb-pvc
-    - name: banking-service-mongodb-tls
+    - name: banking-service-mongodb-tls-secrets-vm
       secret:
-        secretName: banking-service-mongodb-tls
+        secretName: banking-service-mongodb-tls-secrets
   volumeMounts:
     - name: banking-service-mongodb-pvc
       mountPath: /data/db
-    - name: banking-service-mongodb-tls
+    - name: banking-service-mongodb-tls-secrets-vm
       mountPath: /etc/ssl/mongo
       readOnly: true
