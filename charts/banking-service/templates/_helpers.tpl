@@ -24,9 +24,7 @@ If release name contains chart name it will be used as a full name.
 {{- if .Values.global.fullnameOverride }}
 {{- .Values.global.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
-{{- $name := include "banking-service.name" . }}
-{{- $suffix := .Values.global.projectName | trimSuffix "-" }}
-{{- printf "%s-%s" $name $suffix | trunc 63 | trimSuffix "-" }}
+{{- Values.global.projectName | trunc 63 | trimSuffix "-" }}
 {{- end }}
 {{- end }}
 
