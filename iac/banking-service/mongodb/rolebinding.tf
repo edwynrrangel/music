@@ -1,6 +1,6 @@
 resource "kubernetes_role_binding" "banking_service_mongodb_pvc_reader_binding" {
   metadata {
-    name      = "${var.namespace}-${var.release_name}-pvc-reader-binding"
+    name      = "${var.release_name}-pvc-reader-binding"
     namespace = var.namespace
   }
 
