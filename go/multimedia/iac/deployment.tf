@@ -99,7 +99,7 @@ resource "helm_release" "grpc_multimedia_release" {
 
   set {
     name = "app.env[2].name"
-    value = "MONGO_DB"
+    value = "MONGO_DB_NAME"
   }
 
   set {
@@ -115,6 +115,16 @@ resource "helm_release" "grpc_multimedia_release" {
   set {
     name = "app.env[3].value"
     value = "true"
+  }
+
+   set {
+    name = "app.env[4].name"
+    value = "MONGO_COLLECTION_NAME"
+  }
+
+  set {
+    name = "app.env[4].value"
+    value = "contents"
   }
 
   set {
