@@ -6,7 +6,6 @@ import (
 	"crypto/x509"
 	"encoding/base64"
 	"fmt"
-	"log"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -79,7 +78,6 @@ func (b *builder) setOptionAuth() *builder {
 }
 
 func (b *builder) getTLSConfig() (*tls.Config, error) {
-	log.Println("ca", b.ca)
 	caCert, err := base64.StdEncoding.DecodeString(b.ca)
 	if err != nil {
 		return nil, err
