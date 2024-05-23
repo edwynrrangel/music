@@ -139,7 +139,7 @@ resource "helm_release" "grpc_multimedia_release" {
 
   set {
     name = "app.secrets[2].secretKey"
-    value = "MONOG_TLS_CA"
+    value = "MONGO_TLS_CA"
   }
 
   set {
