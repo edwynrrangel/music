@@ -11,9 +11,14 @@ import (
 )
 
 func GetMongoClient(cfg config.Config) *mongo.Client {
-	mongoBuilder := mongodb.NewBuilder(cfg).WithRetryWrites("false")
-	if cfg.MongoDB.TLS {
-		mongoBuilder = mongoBuilder.WithTLS(cfg.MongoDB.CA)
+	mongoBuilder := mongodb.NewBuilder(
+		cfg.MongoDB.Connection.Host,
+		cfg.MongoDB.Connection.Port,
+		cfg.MongoDB.Connection.Username,
+		cfg.MongoDB.Connection.Password,
+	).WithRetryWrites("false")
+	if cfg.MongoDB.Connection.TLS {
+		mongoBuilder = mongoBuilder.WithTLS(cfg.MongoDB.Connection.CA)
 	}
 	client, err := mongoBuilder.GetClient(context.Background())
 	if err != nil {

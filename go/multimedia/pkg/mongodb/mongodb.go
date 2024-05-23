@@ -9,8 +9,6 @@ import (
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
-
-	"github.com/edwynrrangel/grpc/go/multimedia/config"
 )
 
 type builder struct {
@@ -24,12 +22,12 @@ type builder struct {
 	options  *options.ClientOptions
 }
 
-func NewBuilder(config config.Config) *builder {
+func NewBuilder(host, port, username, password string) *builder {
 	return &builder{
-		host:     config.MongoDB.Host,
-		port:     config.MongoDB.Port,
-		username: config.MongoDB.Username,
-		password: config.MongoDB.Password,
+		host:     host,
+		port:     port,
+		username: username,
+		password: password,
 		params:   make(map[string]string),
 	}
 }
