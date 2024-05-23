@@ -67,11 +67,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set environment variables from YAML
-        uses: edwynrrangel/github-actions-suite/actions/yaml-to-env@master
-        with:
-          yaml-file: ${{ needs.setup.outputs.base_path }}/${{ needs.setup.outputs.release_name }}/k8s/config.yaml
-
       - name: Deploy to Kubernetes
         run: |
           echo "Update repository for Helm"
