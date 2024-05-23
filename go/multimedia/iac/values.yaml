@@ -2,6 +2,7 @@ global:
   enabled: true
   projectName: "#{DEPLOY_GLOBAL_PROJECT_NAME}#"
   clusterName: "#{DEPLOY_GLOBAL_CLUSTER_NAME}#"
+  namespace: "#{DEPLOY_GLOBAL_NAMESPACE}#"
 
   # Configuración de la imagen Docker de la aplicación
   image:
@@ -10,7 +11,6 @@ global:
     pullPolicy: "#{DEPLOY_GLOBAL_IMAGE_PULL_POLICY}#"
   imagePullSecrets: 
     - name: "#{DEPLOY_SECRET_NAME}#-#{DEPLOY_GLOBAL_IMAGE_PULL_SECRETS_NAME}#"
-  namespace: "#{DEPLOY_GLOBAL_NAMESPACE}#"
 
 app:
   replicaCount: 1
@@ -33,10 +33,14 @@ app:
       value: "27017"
     - name: MONGO_DB
       value: "multimedia"
+    - name: MONGO_TLS
+      value: "true"
   secrets:
     - secretKey: MONGO_USERNAME
       secretName: "#{DEPLOY_SECRET_NAME}#"
     - secretKey: MONGO_PASSWORD
+      secretName: "#{DEPLOY_SECRET_NAME}#"
+    - secretKey: MONGO_TLS_CA
       secretName: "#{DEPLOY_SECRET_NAME}#"
 
   securityContext:
