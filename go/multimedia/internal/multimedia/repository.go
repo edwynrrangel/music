@@ -1,8 +1,13 @@
 package multimedia
 
+import (
+	"github.com/edwynrrangel/grpc/go/multimedia/config"
+	"go.mongodb.org/mongo-driver/mongo"
+)
+
 type repository struct{}
 
-func NewRepository() Repository {
+func NewRepository(dbClient *mongo.Client, config *config.Config) Repository {
 	return &repository{}
 }
 
