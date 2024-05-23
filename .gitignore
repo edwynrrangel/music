@@ -15,3 +15,4 @@ openssl.cnf
 *.tfvars.json
 !example.tfvars
 crash.log
+__debug_bin*
