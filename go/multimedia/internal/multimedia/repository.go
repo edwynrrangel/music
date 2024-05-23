@@ -1,20 +1,43 @@
 package multimedia
 
 import (
+	"context"
+
 	"github.com/edwynrrangel/grpc/go/multimedia/config"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type repository struct{}
-
-func NewRepository(dbClient *mongo.Client, config *config.Config) Repository {
-	return &repository{}
+type repository struct {
+	dbClient       *mongo.Client
+	dbName         string
+	collectionName string
 }
 
-func (r *repository) SearchContent(query string) ([]Content, error) {
-	contents := []Content{
-		{ID: "1", Title: "Example Title 1", Genre: "Action", Creator: "Director A", Url: "http://example.com/1"},
-		{ID: "2", Title: "Example Title 2", Genre: "Comedy", Creator: "Director B", Url: "http://example.com/2"},
+func NewRepository(dbClient *mongo.Client, config *config.Config) Repository {
+	return &repository{
+		dbClient:       dbClient,
+		dbName:         config.MongoDB.DbName,
+		collectionName: config.MongoDB.CollectionName,
+	}
+}
+
+func (r *repository) SearchContent(ctx context.Context, query string) ([]Content, error) {
+	filter := bson.M{"$or": []bson.M{
+		{"title": bson.M{"$regex": query, "$options": "i"}},
+		{"genre": bson.M{"$regex": query, "$options": "i"}},
+		{"creator": bson.M{"$regex": query, "$options": "i"}},
+	}}
+
+	cursor, err := r.dbClient.Database(r.dbName).Collection(r.collectionName).Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var contents []Content
+	if err := cursor.All(ctx, &contents); err != nil {
+		return nil, err
 	}
 
 	return contents, nil

@@ -20,7 +20,7 @@ func NewAdapter(usecase multimedia.UseCase) *adapter {
 func (a *adapter) SearchContent(ctx context.Context, req *proto.SearchRequest) (*proto.SearchResponse, error) {
 	log.Printf("Received request: %+v", req)
 	schema := multimedia.ConvertPBSearchRequestToSearchRequest(req)
-	got, err := a.usecase.SearchContent(schema)
+	got, err := a.usecase.SearchContent(ctx, schema)
 	if err != nil {
 		return nil, err
 	}

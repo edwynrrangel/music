@@ -11,14 +11,19 @@ type app struct {
 	Port string `env:"PORT" envDefault:"50051"`
 }
 
-type mongoDB struct {
+type mongoDBConn struct {
 	Host     string `env:"MONGO_HOST" envDefault:"localhost"`
 	Port     string `env:"MONGO_PORT" envDefault:"27017"`
-	DbName   string `env:"MONGO_DB_NAME" envDefault:"test"`
 	Username string `env:"MONGO_USERNAME"`
 	Password string `env:"MONGO_PASSWORD"`
 	TLS      bool   `env:"MONGO_TLS" envDefault:"false"`
 	CA       string `env:"MONGO_TLS_CA"`
+}
+
+type mongoDB struct {
+	Connection     mongoDBConn
+	DbName         string `env:"MONGO_DB_NAME" envDefault:"test"`
+	CollectionName string `env:"MONGO_COLLECTION_NAME" envDefault:"multimedia"`
 }
 
 type Config struct {
