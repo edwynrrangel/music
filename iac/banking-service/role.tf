@@ -1,6 +1,6 @@
-resource "kubernetes_role" "banking_service_mongodb_pvc_reader_role" {
+resource "kubernetes_role" "banking_service_pvc_reader_role" {
   metadata {
-    name      = "${var.release_name}-pvc-reader-role"
+    name      = "pvc-reader-role"
     namespace = var.namespace
   }
 

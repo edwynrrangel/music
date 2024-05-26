@@ -19,6 +19,11 @@ resource "helm_release" "mongodb_release" {
   }
 
   set {
+    name  = "preInstallCheck.serviceAccountName"
+    value = var.service_account_name
+  }
+
+  set {
     name  = "global.enabled"
     value = "true"
   }

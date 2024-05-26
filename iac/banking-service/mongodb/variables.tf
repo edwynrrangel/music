@@ -3,6 +3,11 @@ variable "namespace" {
   type        = string
 }
 
+variable "service_account_name" {
+  description = "The name of the service account to use"
+  type        = string
+}
+
 variable "release_name" {
   description = "The release name of the application"
   type        = string
@@ -12,11 +17,11 @@ variable "release_name" {
 variable "db_secret_name" {
   description = "The name of the secrets to use for the database"
   type        = string
-  default     = "banking-service-mongodb-db-secrets"
+  default     = "mongodb-db-secrets"
 }
 
 variable "tls_secret_name" {
   description = "The name of the secrets to use for TLS"
   type        = string
-  default     = "banking-service-mongodb-tls-secrets"
+  default     = "mongodb-tls-secrets"
 }
