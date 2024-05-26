@@ -10,7 +10,7 @@ spec:
   backoffLimit: 2
   template:
     spec:
-      serviceAccountName: {{ include "banking-service.fullname" . }}-pvc-access-sa
+      serviceAccountName: {{ .Values.preInstallCheck.serviceAccountName }}
       restartPolicy: Never
       containers:
         - name: check-pvc
