@@ -12,3 +12,9 @@ module "banking_service" {
 module "grpc_service" {
   source = "./grpc-service"
 }
+
+module "bucket" {
+  source = "./bucket"
+  minio_user = var.minio_user
+  minio_password = var.minio_password
+}
