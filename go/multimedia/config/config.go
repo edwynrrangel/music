@@ -19,16 +19,26 @@ type mongoDBConn struct {
 	TLS      bool   `env:"MONGO_TLS" envDefault:"false"`
 	CA       string `env:"MONGO_TLS_CA"`
 }
-
 type mongoDB struct {
 	Connection     mongoDBConn
 	DbName         string `env:"MONGO_DB_NAME" envDefault:"test"`
 	CollectionName string `env:"MONGO_COLLECTION_NAME" envDefault:"multimedia"`
 }
-
+type minIO struct {
+	Endpoint          string `env:"MINIO_ENDPOINT" envDefault:"localhost:9000"`
+	ReadonlyAccessKey string `env:"MINIO_READONLY_ACCESS_KEY"`
+	ReadonlySecretKey string `env:"MINIO_READONLY_SECRET_KEY"`
+	UseSSL            bool   `env:"MINIO_SSL" envDefault:"false"`
+}
+type bucket struct {
+	Type string `env:"BUCKET_TYPE"`
+	Name string `env:"BUCKET_NAME"`
+}
 type Config struct {
 	App     app
 	MongoDB mongoDB
+	MinIO   minIO
+	Bucket  bucket
 }
 
 func init() {
