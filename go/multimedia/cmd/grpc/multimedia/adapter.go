@@ -2,6 +2,7 @@ package multimedia
 
 import (
 	"context"
+	"io"
 	"log"
 
 	"github.com/edwynrrangel/grpc/go/multimedia/internal/multimedia"
@@ -26,4 +27,31 @@ func (a *adapter) SearchContent(ctx context.Context, req *proto.SearchRequest) (
 	}
 
 	return got.ToProto(), nil
+}
+
+func (a *adapter) StreamContent(req *proto.StreamRequest, stream proto.MultimediaService_StreamContentServer) error {
+	log.Printf("Received request: %+v", req)
+
+	file, err := a.usecase.StreamContent(stream.Context(), req.Id)
+	if err != nil {
+		return err
+	}
+
+	defer file.Close()
+
+	buffer := make([]byte, 64*1024)
+	for {
+		n, err := file.Read(buffer)
+		if err != nil && err != io.EOF {
+			return err
+		}
+		if n == 0 {
+			break
+		}
+		if err := stream.Send(&proto.StreamResponse{Data: buffer[:n]}); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }

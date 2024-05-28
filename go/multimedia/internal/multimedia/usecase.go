@@ -1,13 +1,22 @@
 package multimedia
 
-import "context"
+import (
+	"context"
+	"io"
+
+	"github.com/edwynrrangel/grpc/go/multimedia/pkg/bucket"
+)
 
 type usecase struct {
-	repo Repository
+	bucketStrategy bucket.Strategy
+	repo           Repository
 }
 
-func NewUseCase(repo Repository) UseCase {
-	return &usecase{repo: repo}
+func NewUseCase(repo Repository, bucketStrategy bucket.Strategy) UseCase {
+	return &usecase{
+		bucketStrategy: bucketStrategy,
+		repo:           repo,
+	}
 }
 
 func (u *usecase) SearchContent(ctx context.Context, request *SearchRequest) (*SearchResponse, error) {
@@ -19,4 +28,13 @@ func (u *usecase) SearchContent(ctx context.Context, request *SearchRequest) (*S
 	return &SearchResponse{
 		Data: contents,
 	}, nil
+}
+
+func (u *usecase) StreamContent(ctx context.Context, id string) (io.ReadCloser, error) {
+	file, err := u.bucketStrategy.DownloadFile(ctx, "multimedia", id)
+	if err != nil {
+		return nil, err
+	}
+
+	return file, nil
 }
