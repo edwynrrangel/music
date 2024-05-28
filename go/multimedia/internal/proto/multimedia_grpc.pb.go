@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	MultimediaService_SearchContent_FullMethodName  = "/multimedia.MultimediaService/SearchContent"
+	MultimediaService_GetContent_FullMethodName     = "/multimedia.MultimediaService/GetContent"
 	MultimediaService_StreamContent_FullMethodName  = "/multimedia.MultimediaService/StreamContent"
 	MultimediaService_ManagePlaylist_FullMethodName = "/multimedia.MultimediaService/ManagePlaylist"
 )
@@ -30,8 +31,10 @@ const (
 type MultimediaServiceClient interface {
 	// Content search
 	SearchContent(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error)
+	// Content retrieval
+	GetContent(ctx context.Context, in *StreamRequest, opts ...grpc.CallOption) (*ContentResponse, error)
 	// Content streaming
-	StreamContent(ctx context.Context, in *ContentResponse, opts ...grpc.CallOption) (MultimediaService_StreamContentClient, error)
+	StreamContent(ctx context.Context, in *StreamRequest, opts ...grpc.CallOption) (MultimediaService_StreamContentClient, error)
 	// Playlist management
 	ManagePlaylist(ctx context.Context, opts ...grpc.CallOption) (MultimediaService_ManagePlaylistClient, error)
 }
@@ -53,7 +56,16 @@ func (c *multimediaServiceClient) SearchContent(ctx context.Context, in *SearchR
 	return out, nil
 }
 
-func (c *multimediaServiceClient) StreamContent(ctx context.Context, in *ContentResponse, opts ...grpc.CallOption) (MultimediaService_StreamContentClient, error) {
+func (c *multimediaServiceClient) GetContent(ctx context.Context, in *StreamRequest, opts ...grpc.CallOption) (*ContentResponse, error) {
+	out := new(ContentResponse)
+	err := c.cc.Invoke(ctx, MultimediaService_GetContent_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *multimediaServiceClient) StreamContent(ctx context.Context, in *StreamRequest, opts ...grpc.CallOption) (MultimediaService_StreamContentClient, error) {
 	stream, err := c.cc.NewStream(ctx, &MultimediaService_ServiceDesc.Streams[0], MultimediaService_StreamContent_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
@@ -69,7 +81,7 @@ func (c *multimediaServiceClient) StreamContent(ctx context.Context, in *Content
 }
 
 type MultimediaService_StreamContentClient interface {
-	Recv() (*ContentResponse, error)
+	Recv() (*StreamResponse, error)
 	grpc.ClientStream
 }
 
@@ -77,8 +89,8 @@ type multimediaServiceStreamContentClient struct {
 	grpc.ClientStream
 }
 
-func (x *multimediaServiceStreamContentClient) Recv() (*ContentResponse, error) {
-	m := new(ContentResponse)
+func (x *multimediaServiceStreamContentClient) Recv() (*StreamResponse, error) {
+	m := new(StreamResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
@@ -122,8 +134,10 @@ func (x *multimediaServiceManagePlaylistClient) Recv() (*PlaylistResponse, error
 type MultimediaServiceServer interface {
 	// Content search
 	SearchContent(context.Context, *SearchRequest) (*SearchResponse, error)
+	// Content retrieval
+	GetContent(context.Context, *StreamRequest) (*ContentResponse, error)
 	// Content streaming
-	StreamContent(*ContentResponse, MultimediaService_StreamContentServer) error
+	StreamContent(*StreamRequest, MultimediaService_StreamContentServer) error
 	// Playlist management
 	ManagePlaylist(MultimediaService_ManagePlaylistServer) error
 	mustEmbedUnimplementedMultimediaServiceServer()
@@ -136,7 +150,10 @@ type UnimplementedMultimediaServiceServer struct {
 func (UnimplementedMultimediaServiceServer) SearchContent(context.Context, *SearchRequest) (*SearchResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SearchContent not implemented")
 }
-func (UnimplementedMultimediaServiceServer) StreamContent(*ContentResponse, MultimediaService_StreamContentServer) error {
+func (UnimplementedMultimediaServiceServer) GetContent(context.Context, *StreamRequest) (*ContentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetContent not implemented")
+}
+func (UnimplementedMultimediaServiceServer) StreamContent(*StreamRequest, MultimediaService_StreamContentServer) error {
 	return status.Errorf(codes.Unimplemented, "method StreamContent not implemented")
 }
 func (UnimplementedMultimediaServiceServer) ManagePlaylist(MultimediaService_ManagePlaylistServer) error {
@@ -173,8 +190,26 @@ func _MultimediaService_SearchContent_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MultimediaService_GetContent_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StreamRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MultimediaServiceServer).GetContent(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MultimediaService_GetContent_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MultimediaServiceServer).GetContent(ctx, req.(*StreamRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _MultimediaService_StreamContent_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(ContentResponse)
+	m := new(StreamRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
@@ -182,7 +217,7 @@ func _MultimediaService_StreamContent_Handler(srv interface{}, stream grpc.Serve
 }
 
 type MultimediaService_StreamContentServer interface {
-	Send(*ContentResponse) error
+	Send(*StreamResponse) error
 	grpc.ServerStream
 }
 
@@ -190,7 +225,7 @@ type multimediaServiceStreamContentServer struct {
 	grpc.ServerStream
 }
 
-func (x *multimediaServiceStreamContentServer) Send(m *ContentResponse) error {
+func (x *multimediaServiceStreamContentServer) Send(m *StreamResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
@@ -230,6 +265,10 @@ var MultimediaService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SearchContent",
 			Handler:    _MultimediaService_SearchContent_Handler,
+		},
+		{
+			MethodName: "GetContent",
+			Handler:    _MultimediaService_GetContent_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

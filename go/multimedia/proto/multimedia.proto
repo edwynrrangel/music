@@ -9,6 +9,11 @@ message SearchRequest {
   string query = 1;
 }
 
+// Stream request message
+message StreamRequest {
+  string id = 1;
+}
+
 // Playlist request message
 message PlaylistRequest {
     string userId = 1;
@@ -35,6 +40,11 @@ message SearchResponse {
   repeated ContentResponse contents = 1;
 }
 
+// Stream response message
+message StreamResponse {
+  bytes data = 1; 
+}
+
 // Playlist response message
 message PlaylistResponse {
   repeated ContentResponse contents = 1;
@@ -45,8 +55,11 @@ service MultimediaService {
   // Content search
   rpc SearchContent (SearchRequest) returns (SearchResponse);
 
+  // Content retrieval
+  rpc GetContent (StreamRequest) returns (ContentResponse);
+
   // Content streaming
-  rpc StreamContent (ContentResponse) returns (stream ContentResponse);
+  rpc StreamContent(StreamRequest) returns (stream StreamResponse);
 
   // Playlist management
   rpc ManagePlaylist (stream PlaylistRequest) returns (stream PlaylistResponse);
