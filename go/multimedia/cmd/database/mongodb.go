@@ -11,16 +11,16 @@ import (
 )
 
 func GetMongoClient(cfg config.Config) *mongo.Client {
-	mongoBuilder := mongodb.NewBuilder(
+	builder := mongodb.NewBuilder(
 		cfg.MongoDB.Connection.Host,
 		cfg.MongoDB.Connection.Port,
 		cfg.MongoDB.Connection.Username,
 		cfg.MongoDB.Connection.Password,
 	).WithRetryWrites("false")
 	if cfg.MongoDB.Connection.TLS {
-		mongoBuilder = mongoBuilder.WithTLS(cfg.MongoDB.Connection.CA)
+		builder = builder.WithTLS(cfg.MongoDB.Connection.CA)
 	}
-	client, err := mongoBuilder.GetClient(context.Background())
+	client, err := builder.GetClient(context.Background())
 	if err != nil {
 		log.Fatalf("Failed to connect to MongoDB: %s", err.Error())
 	}
