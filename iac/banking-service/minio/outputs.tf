@@ -3,9 +3,9 @@ output "minio_url" {
 }
 
 output "minio_port" {
-  value = module.minio.minio_port
+  value = var.minio_port
 }
 
 output "minio_ip" {
-  value =  kubernetes_stateful_set.minio.status[0].load_balancer[0].ingress[0].ip
+  value = kubernetes_service.minio_service.status[0].load_balancer[0].ingress[0].ip
 }
