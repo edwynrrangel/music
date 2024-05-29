@@ -55,15 +55,3 @@ func (r *repository) SearchContent(ctx context.Context, query string) ([]Content
 
 	return contents, nil
 }
-
-func (r *repository) StreamContent(ctx context.Context, id string) (Content, error) {
-	objID, _ := primitive.ObjectIDFromHex(id)
-	filter := bson.M{"_id": objID}
-
-	var content Content
-	if err := r.dbClient.Database(r.dbName).Collection(r.collectionName).FindOne(ctx, filter).Decode(&content); err != nil {
-		return Content{}, err
-	}
-
-	return content, nil
-}

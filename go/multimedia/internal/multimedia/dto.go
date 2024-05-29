@@ -24,6 +24,6 @@ func (sr *SearchResponse) ToProto() *proto.SearchResponse {
 	}
 
 	return &proto.SearchResponse{
-		Contents: contents,
+		Data: contents,
 	}
 }

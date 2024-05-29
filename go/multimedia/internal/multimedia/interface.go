@@ -14,5 +14,4 @@ type UseCase interface {
 type Repository interface {
 	SearchContent(ctx context.Context, query string) ([]Content, error)
 	GetContent(ctx context.Context, id string) (Content, error)
-	StreamContent(ctx context.Context, id string) (Content, error)
 }
