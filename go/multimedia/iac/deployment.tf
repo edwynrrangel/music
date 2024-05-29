@@ -5,7 +5,7 @@ resource "helm_release" "grpc_multimedia_release" {
   version         = "0.1.0"
   cleanup_on_fail = true
   lint            = true
-  # timeout         = 60
+  timeout         = 60
   
   set {
     name  = "global.enabled"
