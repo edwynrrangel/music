@@ -94,7 +94,7 @@ resource "helm_release" "grpc_multimedia_release" {
 
   set {
     name = "app.env[1].value"
-    value = "27017"
+    value = "${data.terraform_remote_state.infra.outputs.banking_service_mongodb_port}"
   }
 
   set {
@@ -128,6 +128,36 @@ resource "helm_release" "grpc_multimedia_release" {
   }
 
   set {
+    name = "app.env[5].name"
+    value = "MINIO_ENDPOINT"
+  }
+
+  set {
+    name = "app.env[5].value"
+    value = "${data.terraform_remote_state.infra.outputs.banking_service_minio_url}"
+  }
+
+  set {
+    name = "app.env[6].name"
+    value = "MINIO_SSL"
+  }
+
+  set {
+    name = "app.env[6].value"
+    value = "false"
+  }
+
+  set {
+    name = "app.env[7].name"
+    value = "BUCKET_TYPE"
+  }
+
+  set {
+    name = "app.env[7].value"
+    value = "minio"
+  }
+  
+  set {
     name = "app.secrets[0].secretKey"
     value = "MONGO_USERNAME"
   }
@@ -154,6 +184,26 @@ resource "helm_release" "grpc_multimedia_release" {
 
   set {
     name = "app.secrets[2].secretName"
+    value = var.multimedia_app_secrets
+  }
+
+  set {
+    name = "app.secrets[3].secretKey"
+    value = "MINIO_READONLY_ACCESS_KEY"
+  }
+
+  set {
+    name = "app.secrets[3].secretName"
+    value = var.multimedia_app_secrets
+  }
+
+  set {
+    name = "app.secrets[4].secretKey"
+    value = "MINIO_READONLY_SECRET_KEY"
+  }
+
+  set {
+    name = "app.secrets[4].secretName"
     value = var.multimedia_app_secrets
   }
 
