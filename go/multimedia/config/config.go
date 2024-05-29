@@ -32,7 +32,6 @@ type minIO struct {
 }
 type bucket struct {
 	Type string `env:"BUCKET_TYPE"`
-	Name string `env:"BUCKET_NAME"`
 }
 type Config struct {
 	App     app
