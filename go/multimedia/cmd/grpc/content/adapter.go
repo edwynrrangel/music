@@ -18,10 +18,10 @@ func NewAdapter(usecase content.UseCase) *adapter {
 	return &adapter{usecase: usecase}
 }
 
-func (a *adapter) SearchContent(ctx context.Context, req *proto.SearchRequest) (*proto.SearchResponse, error) {
+func (a *adapter) Search(ctx context.Context, req *proto.SearchRequest) (*proto.SearchResponse, error) {
 	log.Printf("Received request: %+v", req)
 	schema := content.ConvertPBSearchRequestToSearchRequest(req)
-	got, err := a.usecase.SearchContent(ctx, schema)
+	got, err := a.usecase.Search(ctx, schema)
 	if err != nil {
 		return nil, err
 	}
@@ -29,9 +29,9 @@ func (a *adapter) SearchContent(ctx context.Context, req *proto.SearchRequest) (
 	return got.ToProto(), nil
 }
 
-func (a *adapter) GetContent(ctx context.Context, req *proto.StreamRequest) (*proto.ContentResponse, error) {
+func (a *adapter) Get(ctx context.Context, req *proto.StreamRequest) (*proto.ContentResponse, error) {
 	log.Printf("Received request: %+v", req)
-	got, err := a.usecase.GetContent(ctx, req.Id)
+	got, err := a.usecase.Get(ctx, req.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -39,14 +39,12 @@ func (a *adapter) GetContent(ctx context.Context, req *proto.StreamRequest) (*pr
 	return got.ToProto(), nil
 }
 
-func (a *adapter) StreamContent(req *proto.StreamRequest, stream proto.MultimediaService_StreamContentServer) error {
+func (a *adapter) Stream(req *proto.StreamRequest, stream proto.MultimediaService_StreamContentServer) error {
 	log.Printf("Received request: %+v", req)
-
-	file, err := a.usecase.StreamContent(stream.Context(), req.Id)
+	file, err := a.usecase.Stream(stream.Context(), req.Id)
 	if err != nil {
 		return err
 	}
-
 	defer file.Close()
 
 	buffer := make([]byte, 64*1024)

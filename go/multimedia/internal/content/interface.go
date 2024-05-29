@@ -6,12 +6,12 @@ import (
 )
 
 type UseCase interface {
-	SearchContent(ctx context.Context, request *SearchRequest) (*SearchResponse, error)
-	GetContent(ctx context.Context, id string) (*Content, error)
-	StreamContent(ctx context.Context, id string) (io.ReadCloser, error)
+	Search(ctx context.Context, request *SearchRequest) (*SearchResponse, error)
+	Get(ctx context.Context, id string) (*Content, error)
+	Stream(ctx context.Context, id string) (io.ReadCloser, error)
 }
 
 type Repository interface {
-	SearchContent(ctx context.Context, query string) ([]Content, error)
-	GetContent(ctx context.Context, id string) (Content, error)
+	Search(ctx context.Context, query string) ([]Content, error)
+	Get(ctx context.Context, id string) (Content, error)
 }

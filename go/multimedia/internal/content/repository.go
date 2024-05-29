@@ -23,7 +23,7 @@ func NewRepository(dbClient *mongo.Client, config *config.Config) Repository {
 	}
 }
 
-func (r *repository) GetContent(ctx context.Context, id string) (Content, error) {
+func (r *repository) Get(ctx context.Context, id string) (Content, error) {
 	objID, _ := primitive.ObjectIDFromHex(id)
 	filter := bson.M{"_id": objID}
 
@@ -35,7 +35,7 @@ func (r *repository) GetContent(ctx context.Context, id string) (Content, error)
 	return content, nil
 }
 
-func (r *repository) SearchContent(ctx context.Context, query string) ([]Content, error) {
+func (r *repository) Search(ctx context.Context, query string) ([]Content, error) {
 	filter := bson.M{"$or": []bson.M{
 		{"title": bson.M{"$regex": query, "$options": "i"}},
 		{"genre": bson.M{"$regex": query, "$options": "i"}},

@@ -19,8 +19,8 @@ func NewUseCase(repo Repository, bucketStrategy bucket.Strategy) UseCase {
 	}
 }
 
-func (u *usecase) SearchContent(ctx context.Context, request *SearchRequest) (*SearchResponse, error) {
-	contents, err := u.repo.SearchContent(ctx, request.Query)
+func (u *usecase) Search(ctx context.Context, request *SearchRequest) (*SearchResponse, error) {
+	contents, err := u.repo.Search(ctx, request.Query)
 	if err != nil {
 		return nil, err
 	}
@@ -30,8 +30,8 @@ func (u *usecase) SearchContent(ctx context.Context, request *SearchRequest) (*S
 	}, nil
 }
 
-func (u *usecase) GetContent(ctx context.Context, id string) (*Content, error) {
-	content, err := u.repo.GetContent(ctx, id)
+func (u *usecase) Get(ctx context.Context, id string) (*Content, error) {
+	content, err := u.repo.Get(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -39,8 +39,8 @@ func (u *usecase) GetContent(ctx context.Context, id string) (*Content, error) {
 	return &content, nil
 }
 
-func (u *usecase) StreamContent(ctx context.Context, id string) (io.ReadCloser, error) {
-	content, err := u.repo.GetContent(ctx, id)
+func (u *usecase) Stream(ctx context.Context, id string) (io.ReadCloser, error) {
+	content, err := u.repo.Get(ctx, id)
 	if err != nil {
 		return nil, err
 	}
