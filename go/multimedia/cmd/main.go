@@ -8,9 +8,7 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/edwynrrangel/grpc/go/multimedia/cmd/bucket"
 	"github.com/edwynrrangel/grpc/go/multimedia/cmd/database"
-	"github.com/edwynrrangel/grpc/go/multimedia/cmd/grpc/multimedia"
 	"github.com/edwynrrangel/grpc/go/multimedia/config"
 )
 
@@ -20,7 +18,7 @@ func main() {
 	dbClient := database.GetMongoClient(cfg)
 	defer dbClient.Disconnect(context.Background())
 
-	bucketClient := bucket.GetClient(cfg)
+	// bucketClient := bucket.GetClient(cfg)
 
 	log.Printf("Starting server on port %s", cfg.App.Port)
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", cfg.App.Port))
@@ -29,7 +27,7 @@ func main() {
 	}
 	grpcServer := grpc.NewServer()
 
-	multimedia.Register(grpcServer, &cfg, dbClient, bucketClient)
+	// multimedia.Register(grpcServer, &cfg, dbClient, bucketClient)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %s", err.Error())
