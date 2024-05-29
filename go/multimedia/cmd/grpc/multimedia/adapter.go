@@ -29,6 +29,16 @@ func (a *adapter) SearchContent(ctx context.Context, req *proto.SearchRequest) (
 	return got.ToProto(), nil
 }
 
+func (a *adapter) GetContent(ctx context.Context, req *proto.StreamRequest) (*proto.ContentResponse, error) {
+	log.Printf("Received request: %+v", req)
+	got, err := a.usecase.GetContent(ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	return got.ToProto(), nil
+}
+
 func (a *adapter) StreamContent(req *proto.StreamRequest, stream proto.MultimediaService_StreamContentServer) error {
 	log.Printf("Received request: %+v", req)
 

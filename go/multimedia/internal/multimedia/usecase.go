@@ -30,6 +30,15 @@ func (u *usecase) SearchContent(ctx context.Context, request *SearchRequest) (*S
 	}, nil
 }
 
+func (u *usecase) GetContent(ctx context.Context, id string) (*Content, error) {
+	content, err := u.repo.GetContent(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &content, nil
+}
+
 func (u *usecase) StreamContent(ctx context.Context, id string) (io.ReadCloser, error) {
 	content, err := u.repo.GetContent(ctx, id)
 	if err != nil {
