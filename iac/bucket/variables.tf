@@ -1,7 +1,6 @@
 variable "minio_server" {
   description = "The MinIO server endpoint"
   type        = string
-  sensitive   = true
 }
 
 variable "minio_user" {
