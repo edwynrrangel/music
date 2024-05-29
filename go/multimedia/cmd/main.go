@@ -10,7 +10,7 @@ import (
 
 	"github.com/edwynrrangel/grpc/go/multimedia/cmd/bucket"
 	"github.com/edwynrrangel/grpc/go/multimedia/cmd/database"
-	"github.com/edwynrrangel/grpc/go/multimedia/cmd/grpc/multimedia"
+	"github.com/edwynrrangel/grpc/go/multimedia/cmd/grpc/content"
 	"github.com/edwynrrangel/grpc/go/multimedia/config"
 )
 
@@ -29,7 +29,7 @@ func main() {
 	}
 	grpcServer := grpc.NewServer()
 
-	multimedia.Register(grpcServer, &cfg, dbClient, bucketClient)
+	content.Register(grpcServer, &cfg, dbClient, bucketClient)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %s", err.Error())

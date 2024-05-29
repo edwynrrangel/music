@@ -1,4 +1,4 @@
-package multimedia
+package content
 
 import (
 	"context"

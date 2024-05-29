@@ -1,26 +1,26 @@
-package multimedia
+package content
 
 import (
 	"context"
 	"io"
 	"log"
 
-	"github.com/edwynrrangel/grpc/go/multimedia/internal/multimedia"
+	"github.com/edwynrrangel/grpc/go/multimedia/internal/content"
 	"github.com/edwynrrangel/grpc/go/multimedia/internal/proto"
 )
 
 type adapter struct {
 	proto.UnimplementedMultimediaServiceServer
-	usecase multimedia.UseCase
+	usecase content.UseCase
 }
 
-func NewAdapter(usecase multimedia.UseCase) *adapter {
+func NewAdapter(usecase content.UseCase) *adapter {
 	return &adapter{usecase: usecase}
 }
 
 func (a *adapter) SearchContent(ctx context.Context, req *proto.SearchRequest) (*proto.SearchResponse, error) {
 	log.Printf("Received request: %+v", req)
-	schema := multimedia.ConvertPBSearchRequestToSearchRequest(req)
+	schema := content.ConvertPBSearchRequestToSearchRequest(req)
 	got, err := a.usecase.SearchContent(ctx, schema)
 	if err != nil {
 		return nil, err

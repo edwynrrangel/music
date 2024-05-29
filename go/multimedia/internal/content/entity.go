@@ -1,4 +1,4 @@
-package multimedia
+package content
 
 type (
 	Content struct {

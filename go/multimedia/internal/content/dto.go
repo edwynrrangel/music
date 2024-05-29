@@ -1,4 +1,4 @@
-package multimedia
+package content
 
 import "github.com/edwynrrangel/grpc/go/multimedia/internal/proto"
 
