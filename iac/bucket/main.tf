@@ -7,9 +7,10 @@ terraform {
   }
 }
 
-module "multimedia" {
-  source    = "./multimedia"
-  providers = {
-    minio.local = minio.local
-  }
-}
+# module "multimedia" {
+#   source    = "./multimedia"
+#   providers = {
+#     minio.local = minio.local
+#   }
+#   multimedia_readonly_user_secret = var.multimedia_readonly_user_secret
+# }
