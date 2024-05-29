@@ -5,7 +5,7 @@ resource "helm_release" "grpc_multimedia_release" {
   version         = "0.1.0"
   cleanup_on_fail = true
   lint            = true
-  timeout         = 60
+  # timeout         = 60
   
   set {
     name  = "global.enabled"
@@ -134,7 +134,7 @@ resource "helm_release" "grpc_multimedia_release" {
 
   set {
     name = "app.env[5].value"
-    value = "${data.terraform_remote_state.infra.outputs.banking_service_minio_url}"
+    value = "${data.terraform_remote_state.infra.outputs.banking_service_minio_url}:${data.terraform_remote_state.infra.outputs.banking_service_minio_port}"
   }
 
   set {
@@ -156,7 +156,7 @@ resource "helm_release" "grpc_multimedia_release" {
     name = "app.env[7].value"
     value = "minio"
   }
-  
+
   set {
     name = "app.secrets[0].secretKey"
     value = "MONGO_USERNAME"
