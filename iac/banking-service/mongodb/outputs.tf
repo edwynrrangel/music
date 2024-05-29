@@ -1,5 +1,5 @@
 output "mongodb_url" {
-  value = "${kubernetes_stateful_set.mongodb.metadata[0].name}.${var.namespace}.svc.cluster.local"
+  value = "${kubernetes_service.mongodb_service.metadata[0].name}.${var.namespace}"
 }
 
 output "mongodb_port" {

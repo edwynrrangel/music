@@ -1,5 +1,5 @@
 output "minio_url" {
-  value = "${kubernetes_stateful_set.minio.metadata[0].name}.${var.namespace}.svc.cluster.local:${var.minio_port}"
+  value = "${kubernetes_service.minio_service.metadata[0].name}.${var.namespace}"
 }
 
 output "minio_port" {
