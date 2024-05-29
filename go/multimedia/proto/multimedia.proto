@@ -32,7 +32,6 @@ message ContentResponse {
   string title = 2;
   string genre = 3;
   string creator = 4; // Artist or Director
-  string url = 5; // URL for content simulation
 }
 
 // Search response message
