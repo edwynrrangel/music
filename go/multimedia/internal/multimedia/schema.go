@@ -15,7 +15,6 @@ type (
 		Title   string
 		Genre   string
 		Creator string
-		Url     string
 	}
 	StreamResponse struct {
 		Data [][]byte

@@ -31,7 +31,12 @@ func (u *usecase) SearchContent(ctx context.Context, request *SearchRequest) (*S
 }
 
 func (u *usecase) StreamContent(ctx context.Context, id string) (io.ReadCloser, error) {
-	file, err := u.bucketStrategy.DownloadFile(ctx, "multimedia", id)
+	content, err := u.repo.GetContent(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	file, err := u.bucketStrategy.DownloadFile(ctx, content.Bucket, id)
 	if err != nil {
 		return nil, err
 	}

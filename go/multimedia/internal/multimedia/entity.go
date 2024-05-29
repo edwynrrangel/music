@@ -6,6 +6,6 @@ type (
 		Title   string `bson:"title"`
 		Genre   string `bson:"genre"`
 		Creator string `bson:"creator"`
-		Url     string `bson:"url"`
+		Bucket  string `bson:"bucket"`
 	}
 )

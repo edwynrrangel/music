@@ -14,7 +14,6 @@ func (c *Content) ToProto() *proto.ContentResponse {
 		Title:   c.Title,
 		Genre:   c.Genre,
 		Creator: c.Creator,
-		Url:     c.Url,
 	}
 }
 
