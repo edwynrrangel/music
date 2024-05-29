@@ -21,5 +21,9 @@ jobs:
           helm repo update
           echo "Run Terraform"
           cd iac/
-          terraform init
+          terraform init -upgrade
           terraform apply -auto-approve
+        env:
+          TF_VAR_minio_user: ${{ secrets.MINIO_USER }}
+          TF_VAR_minio_password: ${{ secrets.MINIO_PASSWORD }}
+          TF_VAR_multimedia_readonly_user_secret: ${{ secrets.MULTIMEDIA_READONLY_USER_SECRET }}
