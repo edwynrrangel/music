@@ -1,4 +1,4 @@
-resource "kubernetes_service" "banking_service_minio_service" {
+resource "kubernetes_service" "minio_service" {
   metadata {
     name      = "${var.service_name}-service"
     namespace = var.namespace
@@ -8,16 +8,14 @@ resource "kubernetes_service" "banking_service_minio_service" {
     selector = var.selector_labels
     type = "LoadBalancer"
     port {
-      name        = "minio"
+      name     = "minio"
       protocol = "TCP" 
-      port        = 9000
-      target_port = 9000
+      port     = var.minio_port
     }
     port {
-      name        = "minio-ui"
+      name     = "minio-ui"
       protocol = "TCP" 
-      port        = 9001
-      target_port = 9001
+      port     = 9001
     }
   }
 }

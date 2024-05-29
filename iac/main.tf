@@ -13,8 +13,9 @@ module "grpc_service" {
   source = "./grpc-service"
 }
 
-module "bucket" {
-  source = "./bucket"
-  minio_user = var.minio_user
-  minio_password = var.minio_password
-}
+# module "bucket" {
+#   source                   = "./bucket"
+#   minio_user               = var.minio_user
+#   minio_password           = var.minio_password
+#   app_readonly_user_secret = var.app_readonly_user_secret
+# }

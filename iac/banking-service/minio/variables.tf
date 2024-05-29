@@ -12,10 +12,6 @@ variable "service_name" {
 variable "labels" {
   description = "The labels to apply to the resources"
   type        = map(string)
-  default     = {
-    cluster = "banking-service"
-    "app.kubernetes.io/managed-by" = "Terraform"
-  }
 }
 
 variable "selector_labels" {
@@ -23,7 +19,7 @@ variable "selector_labels" {
   type        = map(string)
   default     = {
     "app.kubernetes.io/name" = "minio"
-    "app.kubernetes.io/instance" = "minio-intance-1"
+    "app.kubernetes.io/instance" = "minio-intance-0"
   }
 }
 
@@ -31,4 +27,10 @@ variable "minio_secret_name" {
   description = "The name of the secret to store Minio credentials"
   type        = string
   default     = "minio-secrets"
+}
+
+variable "minio_port" {
+  description = "The port to expose Minio"
+  type        = number
+  default     = 9000
 }

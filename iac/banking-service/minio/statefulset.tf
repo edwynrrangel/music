@@ -1,4 +1,9 @@
-resource "kubernetes_stateful_set" "banking_service_minio" {
+resource "kubernetes_stateful_set" "minio" {
+  depends_on = [ kubernetes_service.minio_service ]
+  timeouts {
+    create = "2m"
+    delete = "5m"
+  }
   metadata {
     name      = var.service_name
     namespace = var.namespace
@@ -47,7 +52,7 @@ resource "kubernetes_stateful_set" "banking_service_minio" {
             }
           }
           port {
-            container_port = 9000
+            container_port = var.minio_port
             protocol = "TCP"
           }
           port {
