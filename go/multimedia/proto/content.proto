@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+option go_package = "./content";
+
+// Search request message
+message SearchRequest {
+  string query = 1;
+}
+
+// Stream request message
+message StreamRequest {
+  string id = 1;
+}
+
+// Content response message
+message ContentResponse {
+  string id = 1;
+  string title = 2;
+  string genre = 3;
+  string creator = 4; // Artist or Director
+}
+
+// Search response message
+message SearchResponse {
+  repeated ContentResponse data = 1;
+}
+
+// Stream response message
+message StreamResponse {
+  bytes data = 1; 
+}
+
+// gRPC service
+service ContentService {
+  // Content search
+  rpc Search (SearchRequest) returns (SearchResponse);
+
+  // Content retrieval
+  rpc Get (StreamRequest) returns (ContentResponse);
+
+  // Content streaming
+  rpc Stream(StreamRequest) returns (stream StreamResponse);
+}
