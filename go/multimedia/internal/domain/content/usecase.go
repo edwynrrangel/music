@@ -8,19 +8,19 @@ import (
 )
 
 type usecase struct {
-	bucketStrategy bucket.Strategy
-	repo           Repository
+	bucketStrategy    bucket.Strategy
+	contentRepository Repository
 }
 
-func NewUseCase(repo Repository, bucketStrategy bucket.Strategy) UseCase {
+func NewUseCase(bucketStrategy bucket.Strategy, contentRepository Repository) UseCase {
 	return &usecase{
-		bucketStrategy: bucketStrategy,
-		repo:           repo,
+		bucketStrategy:    bucketStrategy,
+		contentRepository: contentRepository,
 	}
 }
 
 func (u *usecase) Search(ctx context.Context, request *SearchRequest) (*SearchResponse, error) {
-	contents, err := u.repo.Search(ctx, request.Query)
+	contents, err := u.contentRepository.Search(ctx, request.Query)
 	if err != nil {
 		return nil, err
 	}
@@ -31,16 +31,16 @@ func (u *usecase) Search(ctx context.Context, request *SearchRequest) (*SearchRe
 }
 
 func (u *usecase) Get(ctx context.Context, id string) (*Content, error) {
-	content, err := u.repo.Get(ctx, id)
+	content, err := u.contentRepository.Get(ctx, id)
 	if err != nil {
 		return nil, err
 	}
 
-	return &content, nil
+	return content, nil
 }
 
 func (u *usecase) Stream(ctx context.Context, id string) (io.ReadCloser, error) {
-	content, err := u.repo.Get(ctx, id)
+	content, err := u.contentRepository.Get(ctx, id)
 	if err != nil {
 		return nil, err
 	}
