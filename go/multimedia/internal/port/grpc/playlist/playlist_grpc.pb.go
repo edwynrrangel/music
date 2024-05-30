@@ -19,49 +19,54 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	PlayListService_Manage_FullMethodName = "/PlayListService/Manage"
+	PlaylistService_Manage_FullMethodName = "/PlaylistService/Manage"
+	PlaylistService_List_FullMethodName   = "/PlaylistService/List"
+	PlaylistService_Remove_FullMethodName = "/PlaylistService/Remove"
 )
 
-// PlayListServiceClient is the client API for PlayListService service.
+// PlaylistServiceClient is the client API for PlaylistService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type PlayListServiceClient interface {
+type PlaylistServiceClient interface {
 	// Playlist management
-	Manage(ctx context.Context, opts ...grpc.CallOption) (PlayListService_ManageClient, error)
+	Manage(ctx context.Context, opts ...grpc.CallOption) (PlaylistService_ManageClient, error)
+	// List playlists
+	List(ctx context.Context, in *ListPlaylistRequest, opts ...grpc.CallOption) (*PlaylistResponse, error)
+	Remove(ctx context.Context, in *RemovePlaylistRequest, opts ...grpc.CallOption) (*PlaylistResponse, error)
 }
 
-type playListServiceClient struct {
+type playlistServiceClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewPlayListServiceClient(cc grpc.ClientConnInterface) PlayListServiceClient {
-	return &playListServiceClient{cc}
+func NewPlaylistServiceClient(cc grpc.ClientConnInterface) PlaylistServiceClient {
+	return &playlistServiceClient{cc}
 }
 
-func (c *playListServiceClient) Manage(ctx context.Context, opts ...grpc.CallOption) (PlayListService_ManageClient, error) {
-	stream, err := c.cc.NewStream(ctx, &PlayListService_ServiceDesc.Streams[0], PlayListService_Manage_FullMethodName, opts...)
+func (c *playlistServiceClient) Manage(ctx context.Context, opts ...grpc.CallOption) (PlaylistService_ManageClient, error) {
+	stream, err := c.cc.NewStream(ctx, &PlaylistService_ServiceDesc.Streams[0], PlaylistService_Manage_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &playListServiceManageClient{stream}
+	x := &playlistServiceManageClient{stream}
 	return x, nil
 }
 
-type PlayListService_ManageClient interface {
+type PlaylistService_ManageClient interface {
 	Send(*PlaylistRequest) error
 	Recv() (*PlaylistResponse, error)
 	grpc.ClientStream
 }
 
-type playListServiceManageClient struct {
+type playlistServiceManageClient struct {
 	grpc.ClientStream
 }
 
-func (x *playListServiceManageClient) Send(m *PlaylistRequest) error {
+func (x *playlistServiceManageClient) Send(m *PlaylistRequest) error {
 	return x.ClientStream.SendMsg(m)
 }
 
-func (x *playListServiceManageClient) Recv() (*PlaylistResponse, error) {
+func (x *playlistServiceManageClient) Recv() (*PlaylistResponse, error) {
 	m := new(PlaylistResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -69,54 +74,81 @@ func (x *playListServiceManageClient) Recv() (*PlaylistResponse, error) {
 	return m, nil
 }
 
-// PlayListServiceServer is the server API for PlayListService service.
-// All implementations must embed UnimplementedPlayListServiceServer
+func (c *playlistServiceClient) List(ctx context.Context, in *ListPlaylistRequest, opts ...grpc.CallOption) (*PlaylistResponse, error) {
+	out := new(PlaylistResponse)
+	err := c.cc.Invoke(ctx, PlaylistService_List_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *playlistServiceClient) Remove(ctx context.Context, in *RemovePlaylistRequest, opts ...grpc.CallOption) (*PlaylistResponse, error) {
+	out := new(PlaylistResponse)
+	err := c.cc.Invoke(ctx, PlaylistService_Remove_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// PlaylistServiceServer is the server API for PlaylistService service.
+// All implementations must embed UnimplementedPlaylistServiceServer
 // for forward compatibility
-type PlayListServiceServer interface {
+type PlaylistServiceServer interface {
 	// Playlist management
-	Manage(PlayListService_ManageServer) error
-	mustEmbedUnimplementedPlayListServiceServer()
+	Manage(PlaylistService_ManageServer) error
+	// List playlists
+	List(context.Context, *ListPlaylistRequest) (*PlaylistResponse, error)
+	Remove(context.Context, *RemovePlaylistRequest) (*PlaylistResponse, error)
+	mustEmbedUnimplementedPlaylistServiceServer()
 }
 
-// UnimplementedPlayListServiceServer must be embedded to have forward compatible implementations.
-type UnimplementedPlayListServiceServer struct {
+// UnimplementedPlaylistServiceServer must be embedded to have forward compatible implementations.
+type UnimplementedPlaylistServiceServer struct {
 }
 
-func (UnimplementedPlayListServiceServer) Manage(PlayListService_ManageServer) error {
+func (UnimplementedPlaylistServiceServer) Manage(PlaylistService_ManageServer) error {
 	return status.Errorf(codes.Unimplemented, "method Manage not implemented")
 }
-func (UnimplementedPlayListServiceServer) mustEmbedUnimplementedPlayListServiceServer() {}
+func (UnimplementedPlaylistServiceServer) List(context.Context, *ListPlaylistRequest) (*PlaylistResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method List not implemented")
+}
+func (UnimplementedPlaylistServiceServer) Remove(context.Context, *RemovePlaylistRequest) (*PlaylistResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Remove not implemented")
+}
+func (UnimplementedPlaylistServiceServer) mustEmbedUnimplementedPlaylistServiceServer() {}
 
-// UnsafePlayListServiceServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to PlayListServiceServer will
+// UnsafePlaylistServiceServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to PlaylistServiceServer will
 // result in compilation errors.
-type UnsafePlayListServiceServer interface {
-	mustEmbedUnimplementedPlayListServiceServer()
+type UnsafePlaylistServiceServer interface {
+	mustEmbedUnimplementedPlaylistServiceServer()
 }
 
-func RegisterPlayListServiceServer(s grpc.ServiceRegistrar, srv PlayListServiceServer) {
-	s.RegisterService(&PlayListService_ServiceDesc, srv)
+func RegisterPlaylistServiceServer(s grpc.ServiceRegistrar, srv PlaylistServiceServer) {
+	s.RegisterService(&PlaylistService_ServiceDesc, srv)
 }
 
-func _PlayListService_Manage_Handler(srv interface{}, stream grpc.ServerStream) error {
-	return srv.(PlayListServiceServer).Manage(&playListServiceManageServer{stream})
+func _PlaylistService_Manage_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(PlaylistServiceServer).Manage(&playlistServiceManageServer{stream})
 }
 
-type PlayListService_ManageServer interface {
+type PlaylistService_ManageServer interface {
 	Send(*PlaylistResponse) error
 	Recv() (*PlaylistRequest, error)
 	grpc.ServerStream
 }
 
-type playListServiceManageServer struct {
+type playlistServiceManageServer struct {
 	grpc.ServerStream
 }
 
-func (x *playListServiceManageServer) Send(m *PlaylistResponse) error {
+func (x *playlistServiceManageServer) Send(m *PlaylistResponse) error {
 	return x.ServerStream.SendMsg(m)
 }
 
-func (x *playListServiceManageServer) Recv() (*PlaylistRequest, error) {
+func (x *playlistServiceManageServer) Recv() (*PlaylistRequest, error) {
 	m := new(PlaylistRequest)
 	if err := x.ServerStream.RecvMsg(m); err != nil {
 		return nil, err
@@ -124,17 +156,62 @@ func (x *playListServiceManageServer) Recv() (*PlaylistRequest, error) {
 	return m, nil
 }
 
-// PlayListService_ServiceDesc is the grpc.ServiceDesc for PlayListService service.
+func _PlaylistService_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPlaylistRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PlaylistServiceServer).List(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PlaylistService_List_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PlaylistServiceServer).List(ctx, req.(*ListPlaylistRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PlaylistService_Remove_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemovePlaylistRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PlaylistServiceServer).Remove(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: PlaylistService_Remove_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PlaylistServiceServer).Remove(ctx, req.(*RemovePlaylistRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// PlaylistService_ServiceDesc is the grpc.ServiceDesc for PlaylistService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var PlayListService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "PlayListService",
-	HandlerType: (*PlayListServiceServer)(nil),
-	Methods:     []grpc.MethodDesc{},
+var PlaylistService_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "PlaylistService",
+	HandlerType: (*PlaylistServiceServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "List",
+			Handler:    _PlaylistService_List_Handler,
+		},
+		{
+			MethodName: "Remove",
+			Handler:    _PlaylistService_Remove_Handler,
+		},
+	},
 	Streams: []grpc.StreamDesc{
 		{
 			StreamName:    "Manage",
-			Handler:       _PlayListService_Manage_Handler,
+			Handler:       _PlaylistService_Manage_Handler,
 			ServerStreams: true,
 			ClientStreams: true,
 		},

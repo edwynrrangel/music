@@ -5,5 +5,6 @@ type (
 		ID        string
 		UserID    string
 		ContentID string
+		Name      string
 	}
 )

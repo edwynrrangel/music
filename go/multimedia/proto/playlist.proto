@@ -6,13 +6,25 @@ option go_package = "./playlist";
 message PlaylistRequest {
   string id = 1;
   string userID = 2;
-  string contentID = 3;
+  string name = 3;
+  string contentID = 4;
   enum Operation {
     ADD = 0;
     REMOVE = 1;
     GET = 2;
   }
-  Operation operation = 4;
+  Operation operation = 5;
+}
+
+// List playlist request message
+message ListPlaylistRequest {
+  string userID = 1;
+}
+
+// Remove content request message
+message RemovePlaylistRequest {
+  string playlistID = 1;
+  string contentID = 2;
 }
 
 // Content response message
@@ -25,13 +37,17 @@ message Content {
 
 // Playlist response message
 message PlaylistResponse {
-  string userID = 1;
+  string id = 1;
   string name = 2;
-  repeated Content data = 3;
+  repeated Content contents = 3;
 }
 
 // gRPC service
-service PlayListService {
+service PlaylistService {
   // Playlist management
   rpc Manage (stream PlaylistRequest) returns (stream PlaylistResponse);
+  // List playlists
+  rpc List (ListPlaylistRequest) returns (PlaylistResponse);
+  // Remove content from playlist
+  rpc Remove (RemovePlaylistRequest) returns (PlaylistResponse);
 }

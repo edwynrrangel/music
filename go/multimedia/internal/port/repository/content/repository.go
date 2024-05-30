@@ -31,6 +31,9 @@ func (r *repository) Get(ctx context.Context, id string) (*content.Content, erro
 
 	var content *content.Content
 	if err := r.dbClient.Database(r.dbName).Collection(r.collectionName).FindOne(ctx, filter).Decode(&content); err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, nil
+		}
 		return nil, err
 	}
 

@@ -9,8 +9,8 @@ type (
 		Bucket  string `bson:"bucket"`
 	}
 
-	PlayList struct {
-		ID      string    `bson:"_id"`
+	Playlist struct {
+		ID      string    `bson:"_id,omitempty"`
 		UserID  string    `bson:"user_id"`
 		Name    string    `bson:"name"`
 		Content []Content `bson:"content"`

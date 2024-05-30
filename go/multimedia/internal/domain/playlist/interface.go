@@ -3,14 +3,15 @@ package playlist
 import "context"
 
 type UseCase interface {
-	Get(context.Context, PlayListRequest) (*PlayList, error)
-	Add(context.Context, PlayListRequest) error
-	Remove(context.Context, PlayListRequest) error
+	Add(ctx context.Context, request *PlayListRequest) error
+	Remove(ctx context.Context, request *PlayListRequest) error
+	Get(ctx context.Context, request *PlayListRequest) (*Playlist, error)
 }
 
 type Repository interface {
-	Get(context.Context, string, string) (*PlayList, error)
-	Add(context.Context, PlayList) error
-	Update(context.Context, string, string, PlayList) error
-	Remove(context.Context, string, string) error
+	Get(ctx context.Context, playListID, user string) (*Playlist, error)
+	GetAll(ctx context.Context, userID string) ([]Playlist, uint32, error)
+	Add(ctx context.Context, playList *Playlist) error
+	Update(ctx context.Context, playListID, userID string, data Content) error
+	RemoveContent(ctx context.Context, playListID, userID, contentID string) error
 }
