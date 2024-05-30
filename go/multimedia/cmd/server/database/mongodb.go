@@ -10,6 +10,7 @@ import (
 	"github.com/edwynrrangel/grpc/go/multimedia/pkg/mongodb"
 )
 
+// GetMongoClient function returns a mongo client
 func GetMongoClient(cfg config.Config) *mongo.Client {
 	builder := mongodb.NewBuilder(
 		cfg.MongoDB.Connection.Host,

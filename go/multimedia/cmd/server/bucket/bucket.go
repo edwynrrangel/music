@@ -7,6 +7,7 @@ import (
 	"github.com/edwynrrangel/grpc/go/multimedia/pkg/bucket"
 )
 
+// GetClient function returns a bucket client
 func GetClient(cfg config.Config) bucket.Strategy {
 	switch cfg.Bucket.Type {
 	case "minio":
