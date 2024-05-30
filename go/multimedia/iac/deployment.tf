@@ -54,7 +54,7 @@ resource "helm_release" "grpc_multimedia_release" {
 
   set {
     name = "app.service.type"
-    value = "NodePort"
+    value = "LoadBalancer"
   }
 
   set {
@@ -71,12 +71,7 @@ resource "helm_release" "grpc_multimedia_release" {
     name = "app.service.targetPort"
     value = "50051"
   }
-
-  set {
-    name = "app.service.nodePort"
-    value = "30051"
-  }
-
+ 
   set {
     name = "app.env[0].name"
     value = "MONGO_HOST"
@@ -119,7 +114,7 @@ resource "helm_release" "grpc_multimedia_release" {
 
    set {
     name = "app.env[4].name"
-    value = "MONGO_COLLECTION_NAME"
+    value = "MONGO_CONTENT_COLLECTION_NAME"
   }
 
   set {
@@ -129,31 +124,41 @@ resource "helm_release" "grpc_multimedia_release" {
 
   set {
     name = "app.env[5].name"
-    value = "MINIO_ENDPOINT"
+    value = "MONGO_PLAYLIST_COLLECTION_NAME"
   }
 
   set {
     name = "app.env[5].value"
-    value = "${data.terraform_remote_state.infra.outputs.banking_service_minio_url}:${data.terraform_remote_state.infra.outputs.banking_service_minio_port}"
+    value = "playlists"
   }
 
   set {
     name = "app.env[6].name"
-    value = "MINIO_SSL"
+    value = "MINIO_ENDPOINT"
   }
 
   set {
     name = "app.env[6].value"
-    value = "false"
+    value = "${data.terraform_remote_state.infra.outputs.banking_service_minio_url}:${data.terraform_remote_state.infra.outputs.banking_service_minio_port}"
   }
 
   set {
     name = "app.env[7].name"
-    value = "BUCKET_TYPE"
+    value = "MINIO_SSL"
   }
 
   set {
     name = "app.env[7].value"
+    value = "false"
+  }
+
+  set {
+    name = "app.env[8].name"
+    value = "BUCKET_TYPE"
+  }
+
+  set {
+    name = "app.env[8].value"
     value = "minio"
   }
 
