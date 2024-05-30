@@ -63,3 +63,8 @@ func (u *usecase) Remove(ctx context.Context, request *PlayListRequest) error {
 	log.Printf("Received request: %+v", request)
 	return u.playListRepository.RemoveContent(ctx, request.ID, request.UserID, request.ContentID)
 }
+
+func (u *usecase) List(userID string) ([]Playlist, error) {
+	log.Printf("Received request: %s", userID)
+	return u.playListRepository.List(context.Background(), userID)
+}

@@ -39,24 +39,20 @@ func (r *repository) Get(ctx context.Context, playlistID, userID string) (*playl
 	return playlist, nil
 }
 
-func (r *repository) GetAll(ctx context.Context, userID string) ([]playlist.Playlist, uint32, error) {
+func (r *repository) List(ctx context.Context, userID string) ([]playlist.Playlist, error) {
 	filter := bson.M{"user_id": userID}
-	count, err := r.dbClient.Database(r.dbName).Collection(r.collectionName).CountDocuments(ctx, filter)
-	if err != nil {
-		return nil, 0, err
-	}
 	cursor, err := r.dbClient.Database(r.dbName).Collection(r.collectionName).Find(ctx, filter)
 	if err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 	defer cursor.Close(ctx)
 
 	var playlists []playlist.Playlist
 	if err := cursor.All(ctx, &playlists); err != nil {
-		return nil, 0, err
+		return nil, err
 	}
 
-	return playlists, uint32(count), nil
+	return playlists, nil
 }
 
 func (r *repository) Add(ctx context.Context, playlist *playlist.Playlist) error {

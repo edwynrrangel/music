@@ -23,8 +23,8 @@ message ListPlaylistRequest {
 
 // Remove content request message
 message RemovePlaylistRequest {
-  string playlistID = 1;
-  string contentID = 2;
+  string id = 1;
+  string userID = 2;
 }
 
 // Content response message
@@ -42,12 +42,20 @@ message PlaylistResponse {
   repeated Content contents = 3;
 }
 
+message ListPlaylistResponse {
+  message Playlist {
+    string id = 1;
+    string name = 2;
+  }
+  repeated Playlist data = 1;
+}  
+
 // gRPC service
 service PlaylistService {
   // Playlist management
   rpc Manage (stream PlaylistRequest) returns (stream PlaylistResponse);
   // List playlists
-  rpc List (ListPlaylistRequest) returns (PlaylistResponse);
-  // Remove content from playlist
+  rpc List (ListPlaylistRequest) returns (ListPlaylistResponse);
+  // Remove playlist
   rpc Remove (RemovePlaylistRequest) returns (PlaylistResponse);
 }

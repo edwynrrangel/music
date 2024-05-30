@@ -1,6 +1,7 @@
 package playlist
 
 import (
+	"context"
 	"io"
 	"log"
 
@@ -46,4 +47,13 @@ func (a *adapter) Manage(stream PlaylistService_ManageServer) error {
 		}
 		stream.Send(convertToPlayListResponse(playlist))
 	}
+}
+
+func (a *adapter) List(ctx context.Context, req *ListPlaylistRequest) (*ListPlaylistResponse, error) {
+	log.Printf("Received request: %+v", req)
+	got, err := a.usecase.List(req.UserID)
+	if err != nil {
+		return nil, err
+	}
+	return convertToListPlaylistResponse(got), nil
 }
