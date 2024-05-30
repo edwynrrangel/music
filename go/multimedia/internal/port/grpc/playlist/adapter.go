@@ -32,7 +32,7 @@ func (a *adapter) Manage(stream PlaylistService_ManageServer) error {
 		case PlaylistRequest_ADD:
 			err = a.usecase.Add(stream.Context(), playlistReq)
 		case PlaylistRequest_REMOVE:
-			err = a.usecase.Remove(stream.Context(), playlistReq)
+			err = a.usecase.RemoveContent(stream.Context(), playlistReq)
 		case PlaylistRequest_GET:
 		default:
 			return nil
@@ -56,4 +56,15 @@ func (a *adapter) List(ctx context.Context, req *ListPlaylistRequest) (*ListPlay
 		return nil, err
 	}
 	return convertToListPlaylistResponse(got), nil
+}
+
+func (a *adapter) Remove(ctx context.Context, req *RemovePlaylistRequest) (*RemovePlaylistResponse, error) {
+	log.Printf("Received request: %+v", req)
+	err := a.usecase.Remove(ctx, req.toRemovePlaylistRequest())
+	if err != nil {
+		return nil, err
+	}
+	return &RemovePlaylistResponse{
+		Message: "Playlist removed",
+	}, nil
 }

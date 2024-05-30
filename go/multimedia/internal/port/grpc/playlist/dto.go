@@ -13,8 +13,8 @@ type (
 	}
 )
 
-func (r *PlaylistRequest) toPlayListRequest() *playlist.PlayListRequest {
-	return &playlist.PlayListRequest{
+func (r *PlaylistRequest) toPlayListRequest() *playlist.PlaylistRequest {
+	return &playlist.PlaylistRequest{
 		ID:        r.Id,
 		UserID:    r.UserID,
 		ContentID: r.ContentID,
@@ -57,5 +57,12 @@ func convertToListPlaylistResponse(list []playlist.Playlist) *ListPlaylistRespon
 	}
 	return &ListPlaylistResponse{
 		Data: listPB,
+	}
+}
+
+func (r *RemovePlaylistRequest) toRemovePlaylistRequest() *playlist.RemovePlaylistRequest {
+	return &playlist.RemovePlaylistRequest{
+		ID:     r.Id,
+		UserID: r.UserID,
 	}
 }

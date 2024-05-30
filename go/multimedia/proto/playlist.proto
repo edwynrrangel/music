@@ -48,7 +48,11 @@ message ListPlaylistResponse {
     string name = 2;
   }
   repeated Playlist data = 1;
-}  
+}
+
+message RemovePlaylistResponse {
+  string message = 1;
+}
 
 // gRPC service
 service PlaylistService {
@@ -57,5 +61,5 @@ service PlaylistService {
   // List playlists
   rpc List (ListPlaylistRequest) returns (ListPlaylistResponse);
   // Remove playlist
-  rpc Remove (RemovePlaylistRequest) returns (PlaylistResponse);
+  rpc Remove (RemovePlaylistRequest) returns (RemovePlaylistResponse);
 }

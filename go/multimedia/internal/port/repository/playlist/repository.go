@@ -75,12 +75,21 @@ func (r *repository) Update(ctx context.Context, playlistID, userID string, cont
 	return err
 }
 
-// Remove removes content from playlist
+// RemoveContent removes content from playlist
 func (r *repository) RemoveContent(ctx context.Context, playlistID, userID, contentID string) error {
 	objID, _ := primitive.ObjectIDFromHex(playlistID)
 	filter := bson.M{"_id": objID, "user_id": userID}
 	update := bson.M{"$pull": bson.M{"content": bson.M{"_id": contentID}}}
 
 	_, err := r.dbClient.Database(r.dbName).Collection(r.collectionName).UpdateOne(ctx, filter, update)
+	return err
+}
+
+// Remove removes playlist
+func (r *repository) Remove(ctx context.Context, playlistID, userID string) error {
+	objID, _ := primitive.ObjectIDFromHex(playlistID)
+	filter := bson.M{"_id": objID, "user_id": userID}
+
+	_, err := r.dbClient.Database(r.dbName).Collection(r.collectionName).DeleteOne(ctx, filter)
 	return err
 }

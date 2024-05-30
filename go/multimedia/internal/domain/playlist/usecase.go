@@ -22,7 +22,7 @@ func NewUseCase(
 	}
 }
 
-func (u *usecase) Add(ctx context.Context, request *PlayListRequest) error {
+func (u *usecase) Add(ctx context.Context, request *PlaylistRequest) error {
 	log.Printf("Received request: %+v", request)
 	content, err := u.contentRepository.Get(ctx, request.ContentID)
 	if err != nil {
@@ -54,12 +54,12 @@ func (u *usecase) Add(ctx context.Context, request *PlayListRequest) error {
 	return nil
 }
 
-func (u *usecase) Get(ctx context.Context, request *PlayListRequest) (*Playlist, error) {
+func (u *usecase) Get(ctx context.Context, request *PlaylistRequest) (*Playlist, error) {
 	log.Printf("Received request: %+v", request)
 	return u.playListRepository.Get(ctx, request.ID, request.UserID)
 }
 
-func (u *usecase) Remove(ctx context.Context, request *PlayListRequest) error {
+func (u *usecase) RemoveContent(ctx context.Context, request *PlaylistRequest) error {
 	log.Printf("Received request: %+v", request)
 	return u.playListRepository.RemoveContent(ctx, request.ID, request.UserID, request.ContentID)
 }
@@ -67,4 +67,9 @@ func (u *usecase) Remove(ctx context.Context, request *PlayListRequest) error {
 func (u *usecase) List(userID string) ([]Playlist, error) {
 	log.Printf("Received request: %s", userID)
 	return u.playListRepository.List(context.Background(), userID)
+}
+
+func (u *usecase) Remove(ctx context.Context, request *RemovePlaylistRequest) error {
+	log.Printf("Received request: %+v", request)
+	return u.playListRepository.Remove(ctx, request.ID, request.UserID)
 }

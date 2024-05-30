@@ -33,7 +33,7 @@ type PlaylistServiceClient interface {
 	// List playlists
 	List(ctx context.Context, in *ListPlaylistRequest, opts ...grpc.CallOption) (*ListPlaylistResponse, error)
 	// Remove playlist
-	Remove(ctx context.Context, in *RemovePlaylistRequest, opts ...grpc.CallOption) (*PlaylistResponse, error)
+	Remove(ctx context.Context, in *RemovePlaylistRequest, opts ...grpc.CallOption) (*RemovePlaylistResponse, error)
 }
 
 type playlistServiceClient struct {
@@ -84,8 +84,8 @@ func (c *playlistServiceClient) List(ctx context.Context, in *ListPlaylistReques
 	return out, nil
 }
 
-func (c *playlistServiceClient) Remove(ctx context.Context, in *RemovePlaylistRequest, opts ...grpc.CallOption) (*PlaylistResponse, error) {
-	out := new(PlaylistResponse)
+func (c *playlistServiceClient) Remove(ctx context.Context, in *RemovePlaylistRequest, opts ...grpc.CallOption) (*RemovePlaylistResponse, error) {
+	out := new(RemovePlaylistResponse)
 	err := c.cc.Invoke(ctx, PlaylistService_Remove_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
@@ -102,7 +102,7 @@ type PlaylistServiceServer interface {
 	// List playlists
 	List(context.Context, *ListPlaylistRequest) (*ListPlaylistResponse, error)
 	// Remove playlist
-	Remove(context.Context, *RemovePlaylistRequest) (*PlaylistResponse, error)
+	Remove(context.Context, *RemovePlaylistRequest) (*RemovePlaylistResponse, error)
 	mustEmbedUnimplementedPlaylistServiceServer()
 }
 
@@ -116,7 +116,7 @@ func (UnimplementedPlaylistServiceServer) Manage(PlaylistService_ManageServer) e
 func (UnimplementedPlaylistServiceServer) List(context.Context, *ListPlaylistRequest) (*ListPlaylistResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method List not implemented")
 }
-func (UnimplementedPlaylistServiceServer) Remove(context.Context, *RemovePlaylistRequest) (*PlaylistResponse, error) {
+func (UnimplementedPlaylistServiceServer) Remove(context.Context, *RemovePlaylistRequest) (*RemovePlaylistResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Remove not implemented")
 }
 func (UnimplementedPlaylistServiceServer) mustEmbedUnimplementedPlaylistServiceServer() {}
