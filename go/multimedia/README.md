@@ -42,6 +42,8 @@ This directory contains the implementation of a basic multimedia service using v
     go mod download
     ```
 
+3. Rename the `.env.template` file to `.env` and set the appropriate values for each environment variable.
+
 ## Usage
 
 To run the service:
