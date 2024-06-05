@@ -11,6 +11,9 @@ func (req *SearchRequest) toSearchRequest() *content.SearchRequest {
 
 // convertToContent function converts Content domain to ContentResponse proto
 func convertToContent(content *content.Content) *ContentResponse {
+	if content == nil {
+		return nil
+	}
 	return &ContentResponse{
 		Id:      content.ID,
 		Title:   content.Title,

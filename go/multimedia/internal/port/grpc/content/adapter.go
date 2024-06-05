@@ -50,7 +50,9 @@ func (a *adapter) Stream(req *StreamRequest, stream ContentService_StreamServer)
 	defer file.Close()
 
 	buffer := make([]byte, 64*1024)
+	cont := 0
 	for {
+
 		n, err := file.Read(buffer)
 		if err != nil && err != io.EOF {
 			return err
@@ -61,6 +63,8 @@ func (a *adapter) Stream(req *StreamRequest, stream ContentService_StreamServer)
 		if err := stream.Send(&StreamResponse{Data: buffer[:n]}); err != nil {
 			return err
 		}
+		cont++
+		log.Printf("chunk %d sent", cont)
 	}
 
 	return nil
