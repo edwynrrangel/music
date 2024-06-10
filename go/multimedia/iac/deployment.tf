@@ -1,7 +1,7 @@
 resource "helm_release" "grpc_multimedia_release" {
   name            = var.project_name
   chart           = "edwynrrangel/grpc-server"
-  namespace       = var.namespace
+  namespace       = data.terraform_remote_state.infra.outputs.grpc_service_namespace
   version         = "0.1.0"
   cleanup_on_fail = true
   lint            = true
@@ -24,7 +24,7 @@ resource "helm_release" "grpc_multimedia_release" {
 
   set {
     name  = "global.namespace"
-    value = var.namespace
+    value = data.terraform_remote_state.infra.outputs.grpc_service_namespace
   }
 
   set {
@@ -64,12 +64,12 @@ resource "helm_release" "grpc_multimedia_release" {
 
   set {
     name = "app.service.port"
-    value = "50051"
+    value = var.app_port
   }
 
   set {
     name = "app.service.targetPort"
-    value = "50051"
+    value = var.app_port
   }
  
   set {

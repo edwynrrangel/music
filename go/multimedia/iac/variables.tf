@@ -1,9 +1,3 @@
-variable "namespace" {
-  description = "The namespace to deploy the application"
-  type        = string
-  default     = "grpc-dev"
-}
-
 variable "project_name" {
   description = "The project name"
   type        = string
@@ -26,5 +20,10 @@ variable "multimedia_app_secrets" {
   description = "The multimedia app secrets"
   type        = string
   default     = "multimedia-app-secrets"
-  
+}
+
+variable "app_port" {
+  description = "The app port"
+  type        = number
+  default     = 50051
 }
