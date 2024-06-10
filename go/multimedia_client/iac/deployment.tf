@@ -32,7 +32,7 @@ resource "kubernetes_deployment" "multimedia_client" {
       spec {
         container {
           name              = var.project_name
-          image             = "edwynrrangel/multimedia_client:latest"
+          image             = "edwynrangel/multimedia_client:latest"
           image_pull_policy = "Always"
 
           port {
