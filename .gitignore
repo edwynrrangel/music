@@ -1,5 +1,5 @@
 ### VsCode ###
-.vscode/*
+.vscode/
 __debug_bin*
 
 ### Go ###
