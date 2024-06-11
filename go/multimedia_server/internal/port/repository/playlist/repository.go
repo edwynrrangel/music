@@ -3,8 +3,8 @@ package playlist
 import (
 	"context"
 
-	"github.com/edwynrrangel/grpc/go/multimedia/config"
-	"github.com/edwynrrangel/grpc/go/multimedia/internal/domain/playlist"
+	"github.com/edwynrrangel/grpc/go/multimedia_server/config"
+	"github.com/edwynrrangel/grpc/go/multimedia_server/internal/domain/playlist"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"

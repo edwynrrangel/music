@@ -8,11 +8,11 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/edwynrrangel/grpc/go/multimedia/cmd/server/bucket"
-	"github.com/edwynrrangel/grpc/go/multimedia/cmd/server/database"
-	"github.com/edwynrrangel/grpc/go/multimedia/config"
-	"github.com/edwynrrangel/grpc/go/multimedia/internal/port/grpc/content"
-	"github.com/edwynrrangel/grpc/go/multimedia/internal/port/grpc/playlist"
+	"github.com/edwynrrangel/grpc/go/multimedia_server/cmd/server/bucket"
+	"github.com/edwynrrangel/grpc/go/multimedia_server/cmd/server/database"
+	"github.com/edwynrrangel/grpc/go/multimedia_server/config"
+	"github.com/edwynrrangel/grpc/go/multimedia_server/internal/port/grpc/content"
+	"github.com/edwynrrangel/grpc/go/multimedia_server/internal/port/grpc/playlist"
 )
 
 // Run function starts the server

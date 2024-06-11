@@ -1,6 +1,6 @@
 package playlist
 
-import "github.com/edwynrrangel/grpc/go/multimedia/internal/domain/playlist"
+import "github.com/edwynrrangel/grpc/go/multimedia_server/internal/domain/playlist"
 
 func (r *PlaylistRequest) toPlayListRequest() *playlist.PlaylistRequest {
 	return &playlist.PlaylistRequest{

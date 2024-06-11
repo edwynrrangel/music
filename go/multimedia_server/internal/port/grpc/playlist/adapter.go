@@ -5,7 +5,7 @@ import (
 	"io"
 	"log"
 
-	"github.com/edwynrrangel/grpc/go/multimedia/internal/domain/playlist"
+	"github.com/edwynrrangel/grpc/go/multimedia_server/internal/domain/playlist"
 )
 
 type adapter struct {

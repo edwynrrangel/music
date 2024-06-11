@@ -7,8 +7,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 
-	"github.com/edwynrrangel/grpc/go/multimedia/config"
-	"github.com/edwynrrangel/grpc/go/multimedia/internal/domain/content"
+	"github.com/edwynrrangel/grpc/go/multimedia_server/config"
+	"github.com/edwynrrangel/grpc/go/multimedia_server/internal/domain/content"
 )
 
 type repository struct {

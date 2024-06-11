@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/edwynrrangel/grpc/go/multimedia/internal/domain/content"
+	"github.com/edwynrrangel/grpc/go/multimedia_server/internal/domain/content"
 )
 
 type usecase struct {

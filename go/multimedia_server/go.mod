@@ -1,4 +1,4 @@
-module github.com/edwynrrangel/grpc/go/multimedia
+module github.com/edwynrrangel/grpc/go/multimedia_server
 
 go 1.21
 

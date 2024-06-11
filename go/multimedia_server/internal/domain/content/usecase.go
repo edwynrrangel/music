@@ -4,7 +4,7 @@ import (
 	"context"
 	"io"
 
-	"github.com/edwynrrangel/grpc/go/multimedia/pkg/bucket"
+	"github.com/edwynrrangel/grpc/go/multimedia_server/pkg/bucket"
 )
 
 type usecase struct {

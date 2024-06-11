@@ -1,6 +1,6 @@
 package content
 
-import "github.com/edwynrrangel/grpc/go/multimedia/internal/domain/content"
+import "github.com/edwynrrangel/grpc/go/multimedia_server/internal/domain/content"
 
 // toSearchRequest function converts SearchRequest proto to SearchRequest domain
 func (req *SearchRequest) toSearchRequest() *content.SearchRequest {
