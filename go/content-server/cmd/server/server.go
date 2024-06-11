@@ -12,7 +12,6 @@ import (
 	"github.com/edwynrrangel/grpc/go/multimedia_server/cmd/server/database"
 	"github.com/edwynrrangel/grpc/go/multimedia_server/config"
 	"github.com/edwynrrangel/grpc/go/multimedia_server/internal/port/grpc/content"
-	"github.com/edwynrrangel/grpc/go/multimedia_server/internal/port/grpc/playlist"
 )
 
 // Run function starts the server
@@ -26,7 +25,6 @@ func Run() {
 
 	grpcServer := grpc.NewServer()
 	content.Register(grpcServer, &cfg, dbClient, bucketClient)
-	playlist.Register(grpcServer, &cfg, dbClient)
 
 	log.Printf("Starting server on port %s", cfg.App.Port)
 	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", cfg.App.Port))

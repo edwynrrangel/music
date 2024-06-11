@@ -19,7 +19,7 @@ func NewAdapter(usecase content.UseCase) *adapter {
 }
 
 // Get function returns a content
-func (a *adapter) Get(ctx context.Context, req *StreamRequest) (*ContentResponse, error) {
+func (a *adapter) Get(ctx context.Context, req *ContentRequest) (*ContentResponse, error) {
 	log.Printf("Received request: %+v", req)
 	got, err := a.usecase.Get(ctx, req.Id)
 	if err != nil {
@@ -41,7 +41,7 @@ func (a *adapter) Search(ctx context.Context, req *SearchRequest) (*SearchRespon
 }
 
 // Stream function streams a content
-func (a *adapter) Stream(req *StreamRequest, stream ContentService_StreamServer) error {
+func (a *adapter) Stream(req *ContentRequest, stream ContentService_StreamServer) error {
 	log.Printf("Received request: %+v", req)
 	file, err := a.usecase.Stream(stream.Context(), req.Id)
 	if err != nil {

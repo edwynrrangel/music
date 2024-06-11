@@ -29,7 +29,7 @@ func (r *repository) Get(ctx context.Context, id string) (*content.Content, erro
 	objID, _ := primitive.ObjectIDFromHex(id)
 	filter := bson.M{"_id": objID}
 
-	var content *content.Content
+	var content *Content
 	if err := r.dbClient.Database(r.dbName).Collection(r.collectionName).FindOne(ctx, filter).Decode(&content); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, nil
@@ -37,7 +37,7 @@ func (r *repository) Get(ctx context.Context, id string) (*content.Content, erro
 		return nil, err
 	}
 
-	return content, nil
+	return content.toDomain(), nil
 }
 
 func (r *repository) Search(ctx context.Context, query string) ([]content.Content, error) {
@@ -53,10 +53,10 @@ func (r *repository) Search(ctx context.Context, query string) ([]content.Conten
 	}
 	defer cursor.Close(ctx)
 
-	var contents []content.Content
+	var contents []Content
 	if err := cursor.All(ctx, &contents); err != nil {
 		return nil, err
 	}
 
-	return contents, nil
+	return toArrayDomain(contents), nil
 }

@@ -7,17 +7,18 @@ message SearchRequest {
   string query = 1;
 }
 
-// Stream request message
-message StreamRequest {
+// Content request message
+message ContentRequest {
   string id = 1;
 }
 
 // Content response message
 message ContentResponse {
-  string id = 1;
-  string title = 2;
-  string genre = 3;
-  string creator = 4; // Artist or Director
+  string id = 1; // Unique identifier
+  string title = 2; // Title of the content
+  string creator = 3; // Artist or Director
+  string genre = 4; // Genre of the content
+  string duration = 5; // Duration of the content
 }
 
 // Search response message
@@ -32,12 +33,12 @@ message StreamResponse {
 
 // gRPC service
 service ContentService {
+  // Content get by id
+  rpc Get (ContentRequest) returns (ContentResponse);
+  
   // Content search
   rpc Search (SearchRequest) returns (SearchResponse);
 
-  // Content retrieval
-  rpc Get (StreamRequest) returns (ContentResponse);
-
   // Content streaming
-  rpc Stream(StreamRequest) returns (stream StreamResponse);
+  rpc Stream(ContentRequest) returns (stream StreamResponse);
 }

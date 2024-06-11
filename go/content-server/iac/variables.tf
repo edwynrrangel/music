@@ -1,7 +1,7 @@
 variable "project_name" {
   description = "The project name"
   type        = string
-  default     = "multimedia-server"
+  default     = "content-server"
 }
 
 variable "labels" {
@@ -22,7 +22,7 @@ variable "selector_labels" {
   }
 }
 
-variable "multimedia_app_secrets" {
+variable "multimedia_server_secrets" {
   description = "The multimedia app secrets"
   type        = string
   default     = "multimedia-app-secrets"
