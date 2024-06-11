@@ -4,17 +4,11 @@ variable "project_name" {
   default     = "multimedia-client"
 }
 
-variable "cluster_name" {
-  description = "The cluster name"
-  type        = string
-  default     = "grpc-service"
-}
-
 variable "labels" {
   description = "The labels to apply to the resources"
   type        = map(string)
   default     = {
-    cluster = "banking-service"
+    cluster = "grpc-service"
     "app.kubernetes.io/managed-by" = "Terraform"
   }
 }

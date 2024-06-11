@@ -25,28 +25,39 @@ resource "kubernetes_deployment" "multimedia_client" {
 
     template {
       metadata {
-        labels    = var.selector_labels
         namespace = data.terraform_remote_state.infra.outputs.grpc_service_namespace
+        labels    = merge(
+          {
+            project = var.project_name
+          },
+          var.labels,
+          var.selector_labels
+        )
       }
 
       spec {
         container {
           name              = var.project_name
-          image             = "edwynrangel/multimedia_client:latest"
+          image             = "edwynrangel/multimedia-client:latest"
           image_pull_policy = "Always"
 
           port {
             container_port = var.app_port
-            protocol = "TCP"
+            protocol       = "TCP"
           }
 
           env {
             name  = "PORT"
-            value = "${var.app_port}"
+            value = var.app_port
           }
           env {
             name  = "GRPC_SERVER_URI"
             value = data.terraform_remote_state.server.outputs.grpc_server_url
+          }
+
+          security_context {
+            run_as_user = 1000
+            run_as_group = 1000
           }
 
           resources {
