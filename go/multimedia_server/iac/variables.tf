@@ -1,19 +1,25 @@
 variable "project_name" {
   description = "The project name"
   type        = string
-  default     = "multimedia-app"
+  default     = "multimedia-server"
 }
 
-variable "cluster_name" {
-  description = "The cluster name"
-  type        = string
-  default     = "grpc-service"
+variable "labels" {
+  description = "The labels to apply to the resources"
+  type        = map(string)
+  default     = {
+    cluster = "grpc-service"
+    "app.kubernetes.io/managed-by" = "Terraform"
+  }
 }
 
-variable "image_pull_secret" {
-  description = "The image pull secret"
-  type        = string
-  default     = "multimedia-app-docker-secrets"
+variable "selector_labels" {
+  description = "The labels to apply to the selector"
+  type        = map(string)
+  default     = {
+    "app.kubernetes.io/name" = "multimedia-server"
+    "app.kubernetes.io/instance" = "multimedia-server-0"
+  }
 }
 
 variable "multimedia_app_secrets" {
@@ -27,3 +33,4 @@ variable "app_port" {
   type        = number
   default     = 50051
 }
+
