@@ -41,6 +41,10 @@ resource "kubernetes_deployment" "multimedia_client" {
           }
 
           env {
+            name  = "PORT"
+            value = "${var.app_port}"
+          }
+          env {
             name  = "GRPC_SERVER_URI"
             value = data.terraform_remote_state.server.outputs.grpc_server_url
           }

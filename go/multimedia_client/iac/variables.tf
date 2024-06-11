@@ -31,5 +31,5 @@ variable "selector_labels" {
 variable "app_port" {
   description = "The port the application listens on"
   type        = number
-  default     = 8080
+  default     = 3000
 }
