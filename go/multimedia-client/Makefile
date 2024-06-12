@@ -1,4 +1,4 @@
-.PHONY: run start-react build build-react
+.PHONY: run start-react build build-react clean generate-stubs help
 
 run: start-react
 	@echo "Running the application..."
@@ -22,11 +22,17 @@ clean:
 	@cd resource && npm run clean
 	@go clean
 
+generate-stubs:
+	@echo "Generating stubs..."
+	@sh scripts/generate-stubs.sh
+
 help:
 	@echo "Available targets:"
-	@echo "  run         Run the application (Go and React)"
-	@echo "  start-react Start the React application"
-	@echo "  build       Build the application (Go and React)"
-	@echo "  build-react Build the React application"
-	@echo "  clean       Clean up built files"
-	@echo "  help        Show this help message"
+	@echo "  run            Run the application (Go and React)"
+	@echo "  start-react    Start the React application"
+	@echo "  build          Build the application (Go and React)"
+	@echo "  build-react    Build the React application"
+	@echo "  clean          Clean up built files"
+	@echo "  generate-stubs Generate stubs for the gRPC services"
+	@echo "  help           Show this help message"
+
