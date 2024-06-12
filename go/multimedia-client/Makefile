@@ -7,7 +7,7 @@ run: start-react
 
 start-react:
 	@echo "Starting React application..."
-	@cd resource && npm install && npm start &
+	@cd resource && npm install && npm start
 
 build: build-react
 	@echo "Building the application..."
