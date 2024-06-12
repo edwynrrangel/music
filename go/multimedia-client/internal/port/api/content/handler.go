@@ -21,7 +21,7 @@ func NewHandler(contentClient content.ContentServiceClient) domainContent.Handle
 }
 
 func (h *handler) Get(c *gin.Context) {
-	got, err := h.contentClient.Get(c.Request.Context(), &content.StreamRequest{Id: c.Param("id")})
+	got, err := h.contentClient.Get(c.Request.Context(), &content.ContentRequest{Id: c.Param("id")})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -41,7 +41,7 @@ func (h *handler) Search(c *gin.Context) {
 }
 
 func (h *handler) Stream(c *gin.Context) {
-	stream, err := h.contentClient.Stream(c.Request.Context(), &content.StreamRequest{Id: c.Param("id")})
+	stream, err := h.contentClient.Stream(c.Request.Context(), &content.ContentRequest{Id: c.Param("id")})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

@@ -19,8 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ContentService_Search_FullMethodName = "/ContentService/Search"
 	ContentService_Get_FullMethodName    = "/ContentService/Get"
+	ContentService_Search_FullMethodName = "/ContentService/Search"
 	ContentService_Stream_FullMethodName = "/ContentService/Stream"
 )
 
@@ -28,12 +28,12 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ContentServiceClient interface {
+	// Content get by id
+	Get(ctx context.Context, in *ContentRequest, opts ...grpc.CallOption) (*ContentResponse, error)
 	// Content search
 	Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error)
-	// Content retrieval
-	Get(ctx context.Context, in *StreamRequest, opts ...grpc.CallOption) (*ContentResponse, error)
 	// Content streaming
-	Stream(ctx context.Context, in *StreamRequest, opts ...grpc.CallOption) (ContentService_StreamClient, error)
+	Stream(ctx context.Context, in *ContentRequest, opts ...grpc.CallOption) (ContentService_StreamClient, error)
 }
 
 type contentServiceClient struct {
@@ -42,6 +42,15 @@ type contentServiceClient struct {
 
 func NewContentServiceClient(cc grpc.ClientConnInterface) ContentServiceClient {
 	return &contentServiceClient{cc}
+}
+
+func (c *contentServiceClient) Get(ctx context.Context, in *ContentRequest, opts ...grpc.CallOption) (*ContentResponse, error) {
+	out := new(ContentResponse)
+	err := c.cc.Invoke(ctx, ContentService_Get_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *contentServiceClient) Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error) {
@@ -53,16 +62,7 @@ func (c *contentServiceClient) Search(ctx context.Context, in *SearchRequest, op
 	return out, nil
 }
 
-func (c *contentServiceClient) Get(ctx context.Context, in *StreamRequest, opts ...grpc.CallOption) (*ContentResponse, error) {
-	out := new(ContentResponse)
-	err := c.cc.Invoke(ctx, ContentService_Get_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *contentServiceClient) Stream(ctx context.Context, in *StreamRequest, opts ...grpc.CallOption) (ContentService_StreamClient, error) {
+func (c *contentServiceClient) Stream(ctx context.Context, in *ContentRequest, opts ...grpc.CallOption) (ContentService_StreamClient, error) {
 	stream, err := c.cc.NewStream(ctx, &ContentService_ServiceDesc.Streams[0], ContentService_Stream_FullMethodName, opts...)
 	if err != nil {
 		return nil, err
@@ -98,12 +98,12 @@ func (x *contentServiceStreamClient) Recv() (*StreamResponse, error) {
 // All implementations must embed UnimplementedContentServiceServer
 // for forward compatibility
 type ContentServiceServer interface {
+	// Content get by id
+	Get(context.Context, *ContentRequest) (*ContentResponse, error)
 	// Content search
 	Search(context.Context, *SearchRequest) (*SearchResponse, error)
-	// Content retrieval
-	Get(context.Context, *StreamRequest) (*ContentResponse, error)
 	// Content streaming
-	Stream(*StreamRequest, ContentService_StreamServer) error
+	Stream(*ContentRequest, ContentService_StreamServer) error
 	mustEmbedUnimplementedContentServiceServer()
 }
 
@@ -111,13 +111,13 @@ type ContentServiceServer interface {
 type UnimplementedContentServiceServer struct {
 }
 
+func (UnimplementedContentServiceServer) Get(context.Context, *ContentRequest) (*ContentResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
+}
 func (UnimplementedContentServiceServer) Search(context.Context, *SearchRequest) (*SearchResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Search not implemented")
 }
-func (UnimplementedContentServiceServer) Get(context.Context, *StreamRequest) (*ContentResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
-}
-func (UnimplementedContentServiceServer) Stream(*StreamRequest, ContentService_StreamServer) error {
+func (UnimplementedContentServiceServer) Stream(*ContentRequest, ContentService_StreamServer) error {
 	return status.Errorf(codes.Unimplemented, "method Stream not implemented")
 }
 func (UnimplementedContentServiceServer) mustEmbedUnimplementedContentServiceServer() {}
@@ -131,6 +131,24 @@ type UnsafeContentServiceServer interface {
 
 func RegisterContentServiceServer(s grpc.ServiceRegistrar, srv ContentServiceServer) {
 	s.RegisterService(&ContentService_ServiceDesc, srv)
+}
+
+func _ContentService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ContentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServiceServer).Get(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContentService_Get_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServiceServer).Get(ctx, req.(*ContentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _ContentService_Search_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -151,26 +169,8 @@ func _ContentService_Search_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _ContentService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(StreamRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ContentServiceServer).Get(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: ContentService_Get_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ContentServiceServer).Get(ctx, req.(*StreamRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 func _ContentService_Stream_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(StreamRequest)
+	m := new(ContentRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
@@ -198,12 +198,12 @@ var ContentService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*ContentServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Search",
-			Handler:    _ContentService_Search_Handler,
-		},
-		{
 			MethodName: "Get",
 			Handler:    _ContentService_Get_Handler,
+		},
+		{
+			MethodName: "Search",
+			Handler:    _ContentService_Search_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

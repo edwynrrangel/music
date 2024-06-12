@@ -16,7 +16,10 @@ import (
 // Run function starts the server
 func Run() {
 	cfg := config.New()
-	grpcConn, err := client.GetConn(cfg.Grpc.ServerUri, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	grpcConn, err := client.GetConn(
+		cfg.Grpc.ContentServerUri,
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
 	if err != nil {
 		panic(err)
 	}

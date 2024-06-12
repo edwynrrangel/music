@@ -1,4 +1,4 @@
-resource "kubernetes_service" "minio_service" {
+resource "kubernetes_service" "multimedia_client_service" {
   metadata {
     name      = "${var.project_name}-service"
     namespace = data.terraform_remote_state.infra.outputs.grpc_service_namespace

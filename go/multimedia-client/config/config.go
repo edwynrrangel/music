@@ -14,7 +14,7 @@ type app struct {
 
 // grpc struct holds the configuration for the gRPC server
 type grpc struct {
-	ServerUri string `env:"GRPC_SERVER_URI" envDefault:"localhost:50051"`
+	ContentServerUri string `env:"CONTENT_SERVER_URI" envDefault:"localhost:50051"`
 }
 
 // Config struct holds the configuration
