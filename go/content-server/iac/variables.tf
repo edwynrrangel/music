@@ -23,9 +23,9 @@ variable "selector_labels" {
 }
 
 variable "multimedia_server_secrets" {
-  description = "The multimedia app secrets"
+  description = "The multimedia server secrets"
   type        = string
-  default     = "multimedia-app-secrets"
+  default     = "multimedia-server-secrets"
 }
 
 variable "app_port" {
