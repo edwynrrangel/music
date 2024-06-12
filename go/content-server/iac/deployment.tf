@@ -38,7 +38,7 @@ resource "kubernetes_deployment" "multimedia_server" {
       spec {
         container {
           name  = var.project_name
-          image = "edwynrangel/multimedia-server:latest"
+          image = "edwynrangel/content-server:latest"
 
           port {
             container_port = var.app_port
