@@ -2,23 +2,17 @@ package content
 
 import "github.com/edwynrrangel/grpc/go/multimedia_server/internal/domain/content"
 
-// toSearchRequest function converts SearchRequest proto to SearchRequest domain
-func (req *SearchRequest) toSearchRequest() *content.SearchRequest {
-	return &content.SearchRequest{
-		Query: req.Query,
-	}
-}
-
 // convertToContent function converts Content domain to ContentResponse proto
 func convertToContent(content *content.Content) *ContentResponse {
 	if content == nil {
 		return nil
 	}
 	return &ContentResponse{
-		Id:      content.ID,
-		Title:   content.Title,
-		Genre:   content.Genre,
-		Creator: content.Creator,
+		Id:       content.ID,
+		Title:    content.Title,
+		Genre:    content.Genre,
+		Creator:  content.Creator,
+		Duration: content.Duration,
 	}
 }
 

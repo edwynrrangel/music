@@ -19,8 +19,8 @@ func NewUseCase(bucketStrategy bucket.Strategy, contentRepository Repository) Us
 	}
 }
 
-func (u *usecase) Search(ctx context.Context, request *SearchRequest) (*SearchResponse, error) {
-	contents, err := u.contentRepository.Search(ctx, request.Query)
+func (u *usecase) Search(ctx context.Context, query string) (*SearchResponse, error) {
+	contents, err := u.contentRepository.Search(ctx, query)
 	if err != nil {
 		return nil, err
 	}

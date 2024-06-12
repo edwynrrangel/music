@@ -32,7 +32,7 @@ func (a *adapter) Get(ctx context.Context, req *ContentRequest) (*ContentRespons
 // Search function returns a list of contents
 func (a *adapter) Search(ctx context.Context, req *SearchRequest) (*SearchResponse, error) {
 	log.Printf("Received request: %+v", req)
-	got, err := a.usecase.Search(ctx, req.toSearchRequest())
+	got, err := a.usecase.Search(ctx, req.Query)
 	if err != nil {
 		return nil, err
 	}
