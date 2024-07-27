@@ -73,7 +73,7 @@ resource "kubernetes_deployment" "multimedia_server" {
             name = "MONGO_USERNAME"
             value_from {
               secret_key_ref {
-                name = var.multimedia_app_secrets
+                name = var.multimedia_server_secrets
                 key  = "MONGO_USERNAME"
               }
             }
@@ -82,7 +82,7 @@ resource "kubernetes_deployment" "multimedia_server" {
             name = "MONGO_PASSWORD"
             value_from {
               secret_key_ref {
-                name = var.multimedia_app_secrets
+                name = var.multimedia_server_secrets
                 key  = "MONGO_PASSWORD"
               }
             }
@@ -91,7 +91,7 @@ resource "kubernetes_deployment" "multimedia_server" {
             name = "MONGO_TLS_CA"
             value_from {
               secret_key_ref {
-                name = var.multimedia_app_secrets
+                name = var.multimedia_server_secrets
                 key  = "MONGO_TLS_CA"
               }
             }
