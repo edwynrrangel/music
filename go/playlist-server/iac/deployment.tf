@@ -70,6 +70,10 @@ resource "kubernetes_deployment" "multimedia_server" {
             value = "playlists"
           }
           env {
+            name  = "CONTENT_SERVER_URI"
+            value = data.terraform_remote_state.content_server.outputs.url
+          }
+          env {
             name = "MONGO_USERNAME"
             value_from {
               secret_key_ref {

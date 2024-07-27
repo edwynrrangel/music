@@ -1,4 +1,4 @@
-resource "kubernetes_service" "multimedia_server_service" {
+resource "kubernetes_service" "playlist_server_service" {
   metadata {
     name      = "${var.project_name}-service"
     namespace = data.terraform_remote_state.infra.outputs.grpc_service_namespace

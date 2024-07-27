@@ -21,3 +21,10 @@ data "terraform_remote_state" "infra" {
     path = "/home/egui/terraform/grpc/infra/terraform.tfstate"
   }
 }
+
+data "terraform_remote_state" "content_server" {
+  backend = "local"
+  config  = {
+    path = "/home/egui/terraform/grpc/apps/go/content-server/terraform.tfstate"
+  }
+}
