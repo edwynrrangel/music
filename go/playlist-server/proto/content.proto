@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option go_package = "./content";
+
+// Content request message
+message ContentRequest {
+  string id = 1;
+}
+
+// Content response message
+message ContentResponse {
+  string id = 1; // Unique identifier
+  string title = 2; // Title of the content
+  string creator = 3; // Artist or Director
+  string genre = 4; // Genre of the content
+  string duration = 5; // Duration of the content
+}
+
+// gRPC service
+service ContentService {
+  // Content get by id
+  rpc Get (ContentRequest) returns (ContentResponse); 
+}
