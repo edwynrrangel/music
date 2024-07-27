@@ -1,7 +1,7 @@
 variable "project_name" {
   description = "The project name"
   type        = string
-  default     = "multimedia-server"
+  default     = "playlist-server"
 }
 
 variable "labels" {
@@ -17,8 +17,8 @@ variable "selector_labels" {
   description = "The labels to apply to the selector"
   type        = map(string)
   default     = {
-    "app.kubernetes.io/name" = "multimedia-server"
-    "app.kubernetes.io/instance" = "multimedia-server-0"
+    "app.kubernetes.io/name" = "playlist-server"
+    "app.kubernetes.io/instance" = "playlist-server-0"
   }
 }
 

@@ -66,24 +66,8 @@ resource "kubernetes_deployment" "multimedia_server" {
             value = "true"
           }
           env {
-            name  = "MONGO_CONTENT_COLLECTION_NAME"
-            value = "contents"
-          }
-          env {
             name  = "MONGO_PLAYLIST_COLLECTION_NAME"
             value = "playlists"
-          }
-          env {
-            name  = "MINIO_ENDPOINT"
-            value = "${data.terraform_remote_state.infra.outputs.banking_service_minio_url}:${data.terraform_remote_state.infra.outputs.banking_service_minio_port}"
-          }
-          env {
-            name  = "MINIO_SSL"
-            value = "false"
-          }
-          env {
-            name  = "BUCKET_TYPE"
-            value = "minio"
           }
           env {
             name = "MONGO_USERNAME"
@@ -109,24 +93,6 @@ resource "kubernetes_deployment" "multimedia_server" {
               secret_key_ref {
                 name = var.multimedia_app_secrets
                 key  = "MONGO_TLS_CA"
-              }
-            }
-          }
-          env {
-            name = "MINIO_READONLY_ACCESS_KEY"
-            value_from {
-              secret_key_ref {
-                name = var.multimedia_app_secrets
-                key  = "MINIO_READONLY_ACCESS_KEY"
-              }
-            }
-          }
-          env {
-            name = "MINIO_READONLY_SECRET_KEY"
-            value_from {
-              secret_key_ref {
-                name = var.multimedia_app_secrets
-                key  = "MINIO_READONLY_SECRET_KEY"
               }
             }
           }
