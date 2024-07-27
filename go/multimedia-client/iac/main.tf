@@ -16,9 +16,16 @@ data "terraform_remote_state" "infra" {
   }
 }
 
-data "terraform_remote_state" "server" {
+data "terraform_remote_state" "content_server" {
   backend = "local"
   config  = {
     path = "/home/egui/terraform/grpc/apps/go/content-server/terraform.tfstate"
+  }
+}
+
+data "terraform_remote_state" "playlist_server" {
+  backend = "local"
+  config  = {
+    path = "/home/egui/terraform/grpc/apps/go/playlist-server/terraform.tfstate"
   }
 }

@@ -52,7 +52,11 @@ resource "kubernetes_deployment" "multimedia_client" {
           }
           env {
             name  = "CONTENT_SERVER_URI"
-            value = data.terraform_remote_state.server.outputs.content_server_url
+            value = data.terraform_remote_state.content_server.outputs.url
+          }
+          env {
+            name  = "PLAYLIST_SERVER_URI"
+            value = data.terraform_remote_state.playlist_server.outputs.url
           }
 
           security_context {
