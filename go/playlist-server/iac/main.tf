@@ -1,7 +1,7 @@
 terraform {
   required_version = ">= 0.12"
   backend "local" {
-    path = "/home/egui/terraform/grpc/apps/go/multimedia/terraform.tfstate"
+    path = "/home/egui/terraform/grpc/apps/go/content-server/terraform.tfstate"
   }
 }
 
