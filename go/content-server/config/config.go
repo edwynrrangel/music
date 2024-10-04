@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"os"
 
 	"github.com/caarlos0/env/v10"
 	"github.com/joho/godotenv"
@@ -54,6 +55,9 @@ type Config struct {
 // init function sets the log flags and loads the .env file
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	if os.Getenv("ENV") != "prod" {
+		return
+	}
 	if err := godotenv.Load(); err != nil {
 		log.Println("Warning loading .env file")
 	}

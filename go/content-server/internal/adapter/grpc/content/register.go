@@ -5,8 +5,8 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/edwynrrangel/grpc/go/multimedia_server/config"
+	contentRepo "github.com/edwynrrangel/grpc/go/multimedia_server/internal/adapter/repository/content"
 	contentDomain "github.com/edwynrrangel/grpc/go/multimedia_server/internal/domain/content"
-	contentRepo "github.com/edwynrrangel/grpc/go/multimedia_server/internal/port/repository/content"
 	"github.com/edwynrrangel/grpc/go/multimedia_server/pkg/bucket"
 )
 

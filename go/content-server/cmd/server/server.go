@@ -11,7 +11,7 @@ import (
 	"github.com/edwynrrangel/grpc/go/multimedia_server/cmd/server/bucket"
 	"github.com/edwynrrangel/grpc/go/multimedia_server/cmd/server/database"
 	"github.com/edwynrrangel/grpc/go/multimedia_server/config"
-	"github.com/edwynrrangel/grpc/go/multimedia_server/internal/port/grpc/content"
+	"github.com/edwynrrangel/grpc/go/multimedia_server/internal/adapter/grpc/content"
 )
 
 // Run function starts the server

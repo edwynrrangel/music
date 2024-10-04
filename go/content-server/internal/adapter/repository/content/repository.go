@@ -37,7 +37,7 @@ func (r *repository) Get(ctx context.Context, id string) (*content.Content, erro
 		return nil, err
 	}
 
-	return content.toDomain(), nil
+	return content.toEntity(), nil
 }
 
 func (r *repository) Search(ctx context.Context, query string) ([]content.Content, error) {
@@ -58,5 +58,5 @@ func (r *repository) Search(ctx context.Context, query string) ([]content.Conten
 		return nil, err
 	}
 
-	return toArrayDomain(contents), nil
+	return toArrayEntity(contents), nil
 }
