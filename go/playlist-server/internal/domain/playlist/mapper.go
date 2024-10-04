@@ -1,7 +1,7 @@
 package playlist
 
-func (c *Content) toDTO() *ContentResponse {
-	return &ContentResponse{
+func (c *ContentRequest) ToEntity() *Content {
+	return &Content{
 		ID:       c.ID,
 		Title:    c.Title,
 		Creator:  c.Creator,
@@ -10,15 +10,15 @@ func (c *Content) toDTO() *ContentResponse {
 	}
 }
 
-func (p *Playlist) toDTO() *PlaylistResponse {
-	var contentDTO []ContentResponse
-	for _, c := range p.Content {
-		contentDTO = append(contentDTO, *c.toDTO())
+func (p *PlaylistRequest) ToEntity() *Playlist {
+	contents := make([]Content, 0)
+	for _, content := range p.Contents {
+		contents = append(contents, *content.ToEntity())
 	}
-	return &PlaylistResponse{
-		ID:      p.ID,
-		UserID:  p.UserID,
-		Name:    p.Name,
-		Content: contentDTO,
+	return &Playlist{
+		ID:       p.ID,
+		UserID:   p.UserID,
+		Name:     p.Name,
+		Contents: contents,
 	}
 }

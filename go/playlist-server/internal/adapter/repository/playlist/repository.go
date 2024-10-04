@@ -7,7 +7,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 
-	"github.com/edwynrrangel/grpc/go/playlist_server/config"
 	"github.com/edwynrrangel/grpc/go/playlist_server/internal/domain/playlist"
 )
 
@@ -17,15 +16,15 @@ type repository struct {
 	collectionName string
 }
 
-func NewRepository(dbClient *mongo.Client, config *config.Config) playlist.Repository {
+func NewRepository(dbClient *mongo.Client, dbName string, collectionName string) playlist.Repository {
 	return &repository{
 		dbClient:       dbClient,
-		dbName:         config.MongoDB.DbName,
-		collectionName: config.MongoDB.PlaylistCollectionName,
+		dbName:         dbName,
+		collectionName: collectionName,
 	}
 }
 
-func (r *repository) Get(ctx context.Context, playlistID, userID string) (*playlist.Playlist, error) {
+func (r *repository) Get(ctx context.Context, userID, playlistID string) (*playlist.Playlist, error) {
 	objID, _ := primitive.ObjectIDFromHex(playlistID)
 	filter := bson.M{"_id": objID, "user_id": userID}
 
@@ -67,27 +66,28 @@ func (r *repository) Add(ctx context.Context, playlist *playlist.Playlist) error
 	return nil
 }
 
-func (r *repository) Update(ctx context.Context, playlistID, userID string, content playlist.Content) error {
+// Update update playlist
+func (r *repository) Update(ctx context.Context, userID, playlistID string, content []playlist.Content) error {
 	objID, _ := primitive.ObjectIDFromHex(playlistID)
 	filter := bson.M{"_id": objID, "user_id": userID}
-	update := bson.M{"$push": bson.M{"content": content}}
+	update := bson.M{"$push": bson.M{"contents": bson.M{"$each": content}}}
 
 	_, err := r.dbClient.Database(r.dbName).Collection(r.collectionName).UpdateOne(ctx, filter, update)
 	return err
 }
 
-// RemoveContent removes content from playlist
-func (r *repository) RemoveContent(ctx context.Context, playlistID, userID, contentID string) error {
+// RemoveContent remove contents from playlist
+func (r *repository) RemoveContent(ctx context.Context, userID, playlistID string, contentIDs []string) error {
 	objID, _ := primitive.ObjectIDFromHex(playlistID)
 	filter := bson.M{"_id": objID, "user_id": userID}
-	update := bson.M{"$pull": bson.M{"content": bson.M{"_id": contentID}}}
+	update := bson.M{"$pull": bson.M{"contents": bson.M{"id": bson.M{"$in": contentIDs}}}}
 
 	_, err := r.dbClient.Database(r.dbName).Collection(r.collectionName).UpdateOne(ctx, filter, update)
 	return err
 }
 
-// Remove removes playlist
-func (r *repository) Remove(ctx context.Context, playlistID, userID string) error {
+// Remove remove playlist
+func (r *repository) Remove(ctx context.Context, userID, playlistID string) error {
 	objID, _ := primitive.ObjectIDFromHex(playlistID)
 	filter := bson.M{"_id": objID, "user_id": userID}
 

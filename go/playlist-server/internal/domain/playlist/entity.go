@@ -10,9 +10,9 @@ type (
 	}
 
 	Playlist struct {
-		ID      string    `bson:"_id,omitempty"`
-		UserID  string    `bson:"user_id"`
-		Name    string    `bson:"name"`
-		Content []Content `bson:"content"`
+		ID       string    `bson:"_id,omitempty"`
+		UserID   string    `bson:"user_id"`
+		Name     string    `bson:"name"`
+		Contents []Content `bson:"contents"`
 	}
 )

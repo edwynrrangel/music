@@ -2,82 +2,83 @@ package playlist
 
 import (
 	"context"
+	"errors"
 	"log"
-
-	"github.com/edwynrrangel/grpc/go/playlist_server/internal/domain/content"
 )
 
 type usecase struct {
-	playListRepository Repository
-	contentClient      content.Adapter
+	playlistRepo Repository
 }
 
 func NewUseCase(
-	playListRepository Repository,
-	contentClient content.Adapter,
+	playlistRepo Repository,
 ) UseCase {
 	return &usecase{
-		playListRepository: playListRepository,
-		contentClient:      contentClient,
+		playlistRepo: playlistRepo,
 	}
 }
 
-func (u *usecase) Add(ctx context.Context, request *PlaylistRequest) error {
-	log.Printf("Add received request: %+v", request)
-	content, err := u.contentClient.Get(ctx, request.ContentID)
-	if err != nil {
-		return err
+func (u *usecase) Manage(ctx context.Context, request *PlaylistRequest) (*Playlist, error) {
+	log.Printf("Manage received request: %+v", request)
+	switch request.Operation {
+	case OperationKeyAdd:
+		return u.add(ctx, request.ToEntity())
+	case OperationKeyRemove:
+		return u.removeContent(ctx, request.ToEntity())
+	case OperationKeyGet:
+		return u.Get(ctx, request.UserID, request.ID)
+	default:
+		return nil, errors.New("invalid operation")
 	}
-	if content == nil {
-		return nil
-	}
-
-	if request.ID != "" {
-		return u.playListRepository.Update(ctx, request.ID, request.UserID, (Content)(*content))
-	}
-
-	if request.Name == "" {
-		request.Name = "new playlist"
-	}
-	playList := &Playlist{
-		Name:   request.Name,
-		UserID: request.UserID,
-		Content: []Content{
-			(Content)(*content),
-		},
-	}
-
-	if err = u.playListRepository.Add(ctx, playList); err != nil {
-		return err
-	}
-	request.ID = playList.ID
-	return nil
 }
 
-func (u *usecase) Get(ctx context.Context, request *PlaylistRequest) (*PlaylistResponse, error) {
-	log.Printf("Get received request: %+v", request)
-	got, err := u.playListRepository.Get(ctx, request.ID, request.UserID)
+func (u *usecase) Get(ctx context.Context, userID string, playlistID string) (*Playlist, error) {
+	log.Printf("Get received userID: %s playlistID: %s", userID, playlistID)
+	got, err := u.playlistRepo.Get(ctx, userID, playlistID)
 	if err != nil {
 		return nil, err
 	}
-	if got == nil {
-		return nil, nil
+
+	return got, nil
+}
+
+func (u *usecase) List(ctx context.Context, userID string) ([]Playlist, error) {
+	log.Printf("List received request: %s", userID)
+	return u.playlistRepo.List(ctx, userID)
+}
+
+func (u *usecase) Remove(ctx context.Context, userID, playlistID string) error {
+	log.Printf("Remove received userID: %s playlist: %s", userID, playlistID)
+	return u.playlistRepo.Remove(ctx, userID, playlistID)
+}
+
+func (u *usecase) add(ctx context.Context, data *Playlist) (*Playlist, error) {
+	log.Printf("Add received request: %+v", data)
+	if data.ID != "" {
+		if err := u.playlistRepo.Update(ctx, data.UserID, data.ID, data.Contents); err != nil {
+			return nil, err
+		}
+		return u.playlistRepo.Get(ctx, data.UserID, data.ID)
 	}
 
-	return got.toDTO(), nil
+	if data.Name == "" {
+		data.Name = "New Playlist"
+	}
+
+	if err := u.playlistRepo.Add(ctx, data); err != nil {
+		return nil, err
+	}
+	return data, nil
 }
 
-func (u *usecase) RemoveContent(ctx context.Context, request *PlaylistRequest) error {
-	log.Printf("Remove content received request: %+v", request)
-	return u.playListRepository.RemoveContent(ctx, request.ID, request.UserID, request.ContentID)
-}
-
-func (u *usecase) List(userID string) ([]Playlist, error) {
-	log.Printf("List received request: %s", userID)
-	return u.playListRepository.List(context.Background(), userID)
-}
-
-func (u *usecase) Remove(ctx context.Context, request *RemovePlaylistRequest) error {
-	log.Printf("Remove received request: %+v", request)
-	return u.playListRepository.Remove(ctx, request.ID, request.UserID)
+func (u *usecase) removeContent(ctx context.Context, data *Playlist) (*Playlist, error) {
+	log.Printf("Remove content received data: %+v", data)
+	contentIDs := make([]string, 0)
+	for _, content := range data.Contents {
+		contentIDs = append(contentIDs, content.ID)
+	}
+	if err := u.playlistRepo.RemoveContent(ctx, data.UserID, data.ID, contentIDs); err != nil {
+		return nil, err
+	}
+	return u.playlistRepo.Get(ctx, data.UserID, data.ID)
 }

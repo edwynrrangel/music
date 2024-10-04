@@ -2,27 +2,43 @@ package playlist
 
 import "github.com/edwynrrangel/grpc/go/playlist_server/internal/domain/playlist"
 
+func (c *Content) toContentRequest() *playlist.ContentRequest {
+	return &playlist.ContentRequest{
+		ID:       c.Id,
+		Title:    c.Title,
+		Genre:    c.Genre,
+		Creator:  c.Creator,
+		Duration: c.Duration,
+	}
+}
+
 func (r *PlaylistRequest) toPlayListRequest() *playlist.PlaylistRequest {
+	contents := make([]playlist.ContentRequest, 0)
+	for _, content := range r.Contents {
+		contents = append(contents, *content.toContentRequest())
+	}
 	return &playlist.PlaylistRequest{
 		ID:        r.Id,
 		UserID:    r.UserID,
-		ContentID: r.ContentID,
 		Name:      r.Name,
+		Contents:  contents,
+		Operation: playlist.OperationKey(r.Operation),
 	}
 }
 
-func convertToContentResponse(content *playlist.ContentResponse) *Content {
+func convertToContentResponse(content *playlist.Content) *Content {
 	return &Content{
-		Id:      content.ID,
-		Title:   content.Title,
-		Genre:   content.Genre,
-		Creator: content.Creator,
+		Id:       content.ID,
+		Title:    content.Title,
+		Genre:    content.Genre,
+		Creator:  content.Creator,
+		Duration: content.Duration,
 	}
 }
 
-func convertToPlayListResponse(playlist *playlist.PlaylistResponse) *PlaylistResponse {
+func convertToPlaylistResponse(playlist *playlist.Playlist) *PlaylistResponse {
 	contents := make([]*Content, 0)
-	for _, content := range playlist.Content {
+	for _, content := range playlist.Contents {
 		contents = append(contents, convertToContentResponse(&content))
 	}
 	return &PlaylistResponse{
@@ -46,12 +62,5 @@ func convertToListPlaylistResponse(list []playlist.Playlist) *ListPlaylistRespon
 	}
 	return &ListPlaylistResponse{
 		Data: listPB,
-	}
-}
-
-func (r *RemovePlaylistRequest) toRemovePlaylistRequest() *playlist.RemovePlaylistRequest {
-	return &playlist.RemovePlaylistRequest{
-		ID:     r.Id,
-		UserID: r.UserID,
 	}
 }

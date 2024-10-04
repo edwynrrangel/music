@@ -27,34 +27,19 @@ func (a *adapter) Manage(stream PlaylistService_ManageServer) error {
 		if err != nil {
 			return err
 		}
-		playlistReq := req.toPlayListRequest()
-		switch req.Operation {
-		case PlaylistRequest_ADD:
-			err = a.usecase.Add(stream.Context(), playlistReq)
-		case PlaylistRequest_REMOVE:
-			err = a.usecase.RemoveContent(stream.Context(), playlistReq)
-		case PlaylistRequest_GET:
-		default:
-			log.Printf("Unknown operation: %v", req.Operation)
-			return nil
-		}
+		got, err := a.usecase.Manage(stream.Context(), req.toPlayListRequest())
 		if err != nil {
 			log.Printf("Error: %v", err)
 			continue
 		}
 
-		playlist, err := a.usecase.Get(stream.Context(), playlistReq)
-		if err != nil {
-			log.Printf("Error: %v", err)
-			continue
-		}
-		stream.Send(convertToPlayListResponse(playlist))
+		stream.Send(convertToPlaylistResponse(got))
 	}
 }
 
 func (a *adapter) List(ctx context.Context, req *ListPlaylistRequest) (*ListPlaylistResponse, error) {
 	log.Printf("List received request: %+v", req)
-	got, err := a.usecase.List(req.UserID)
+	got, err := a.usecase.List(ctx, req.UserID)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +48,7 @@ func (a *adapter) List(ctx context.Context, req *ListPlaylistRequest) (*ListPlay
 
 func (a *adapter) Remove(ctx context.Context, req *RemovePlaylistRequest) (*RemovePlaylistResponse, error) {
 	log.Printf("Remove received request: %+v", req)
-	err := a.usecase.Remove(ctx, req.toRemovePlaylistRequest())
+	err := a.usecase.Remove(ctx, req.UserID, req.Id)
 	if err != nil {
 		return nil, err
 	}
