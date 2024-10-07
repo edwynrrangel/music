@@ -2,10 +2,10 @@
 
 for proto in ./proto/*.proto; do
   DIR_NAME=$(basename "$proto" .proto)
-  if [ ! -d "./internal/port/grpc/$DIR_NAME" ]; then
-    mkdir -p "./internal/port/grpc/$DIR_NAME"
+  if [ ! -d "./internal/adapter/grpc/$DIR_NAME" ]; then
+    mkdir -p "./internal/adapter/grpc/$DIR_NAME"
   fi
-  protoc --go_out=./internal/port/grpc/ \
-    --go-grpc_out=./internal/port/grpc/ \
+  protoc --go_out=./internal/adapter/grpc/ \
+    --go-grpc_out=./internal/adapter/grpc/ \
     "$proto"
 done
