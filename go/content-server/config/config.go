@@ -55,7 +55,7 @@ type Config struct {
 // init function sets the log flags and loads the .env file
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
-	if os.Getenv("ENV") != "prod" {
+	if os.Getenv("ENV") != "" {
 		return
 	}
 	if err := godotenv.Load(); err != nil {
