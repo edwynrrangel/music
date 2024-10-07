@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"os"
 
 	"github.com/caarlos0/env/v10"
 	"github.com/joho/godotenv"
@@ -29,21 +30,18 @@ type mongoDB struct {
 	PlaylistCollectionName string `env:"MONGO_PLAYLIST_COLLECTION_NAME" envDefault:"playlists"`
 }
 
-// grpc struct holds the configuration for the gRPC server
-type grpc struct {
-	ContentServerUri string `env:"CONTENT_SERVER_URI" envDefault:"localhost:50051"`
-}
-
 // Config struct holds the configuration for the app, mongoDB, minIO and bucket
 type Config struct {
 	App     app
 	MongoDB mongoDB
-	Grpc    grpc
 }
 
 // init function sets the log flags and loads the .env file
 func init() {
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
+	if os.Getenv("ENV") != "" {
+		return
+	}
 	if err := godotenv.Load(); err != nil {
 		log.Println("Warning loading .env file")
 	}
