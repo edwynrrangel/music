@@ -6,8 +6,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	"github.com/edwynrrangel/grpc/go/multimedia_client/internal/adapter/grpc/content"
 	domainContent "github.com/edwynrrangel/grpc/go/multimedia_client/internal/domain/content"
-	"github.com/edwynrrangel/grpc/go/multimedia_client/internal/port/grpc/content"
 )
 
 type handler struct {

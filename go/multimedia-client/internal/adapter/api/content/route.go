@@ -5,7 +5,7 @@ import (
 	"google.golang.org/grpc"
 
 	"github.com/edwynrrangel/grpc/go/multimedia_client/config"
-	"github.com/edwynrrangel/grpc/go/multimedia_client/internal/port/grpc/content"
+	"github.com/edwynrrangel/grpc/go/multimedia_client/internal/adapter/grpc/content"
 )
 
 func RegisterRoutes(api *gin.RouterGroup, cfg *config.Config, conn *grpc.ClientConn) {
