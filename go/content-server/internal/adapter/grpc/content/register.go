@@ -4,10 +4,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc"
 
-	"github.com/edwynrrangel/grpc/go/multimedia_server/config"
-	contentRepo "github.com/edwynrrangel/grpc/go/multimedia_server/internal/adapter/repository/content"
-	contentDomain "github.com/edwynrrangel/grpc/go/multimedia_server/internal/domain/content"
-	"github.com/edwynrrangel/grpc/go/multimedia_server/pkg/bucket"
+	"github.com/edwynrrangel/music/go/multimedia_server/config"
+	contentRepo "github.com/edwynrrangel/music/go/multimedia_server/internal/adapter/repository/content"
+	contentDomain "github.com/edwynrrangel/music/go/multimedia_server/internal/domain/content"
+	"github.com/edwynrrangel/music/go/multimedia_server/pkg/bucket"
 )
 
 // Register function registers the content service to server gRPC

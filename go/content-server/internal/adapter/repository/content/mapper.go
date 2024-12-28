@@ -1,22 +1,23 @@
 package content
 
-import "github.com/edwynrrangel/grpc/go/multimedia_server/internal/domain/content"
+import "github.com/edwynrrangel/music/go/multimedia_server/internal/domain/content"
 
 func (c *Content) toEntity() *content.Content {
 	return &content.Content{
 		ID:       c.ID,
 		Title:    c.Title,
+		Artists:  c.Artists,
+		Album:    c.Album,
 		Genre:    c.Genre,
-		Creator:  c.Creator,
 		Duration: c.Duration,
-		Bucket:   c.Bucket,
+		CoverURL: c.CoverURL,
 	}
 }
 
-func toArrayEntity(contents []Content) []content.Content {
+func (c Contents) toArrayEntity() []content.Content {
 	var result []content.Content
-	for _, c := range contents {
-		result = append(result, *c.toEntity())
+	for _, item := range c {
+		result = append(result, *item.toEntity())
 	}
 	return result
 }

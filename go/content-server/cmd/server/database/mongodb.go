@@ -6,8 +6,8 @@ import (
 
 	"go.mongodb.org/mongo-driver/mongo"
 
-	"github.com/edwynrrangel/grpc/go/multimedia_server/config"
-	"github.com/edwynrrangel/grpc/go/multimedia_server/pkg/mongodb"
+	"github.com/edwynrrangel/music/go/multimedia_server/config"
+	"github.com/edwynrrangel/music/go/multimedia_server/pkg/mongodb"
 )
 
 // GetMongoClient function returns a mongo client

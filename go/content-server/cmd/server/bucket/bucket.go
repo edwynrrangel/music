@@ -3,8 +3,8 @@ package bucket
 import (
 	"log"
 
-	"github.com/edwynrrangel/grpc/go/multimedia_server/config"
-	"github.com/edwynrrangel/grpc/go/multimedia_server/pkg/bucket"
+	"github.com/edwynrrangel/music/go/multimedia_server/config"
+	"github.com/edwynrrangel/music/go/multimedia_server/pkg/bucket"
 )
 
 // GetClient function returns a bucket client

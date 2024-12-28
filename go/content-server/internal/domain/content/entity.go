@@ -4,9 +4,10 @@ type (
 	Content struct {
 		ID       string
 		Title    string
+		Artists  []string
+		Album    string
 		Genre    string
-		Creator  string
-		Duration string
-		Bucket   string
+		Duration int32
+		CoverURL string
 	}
 )

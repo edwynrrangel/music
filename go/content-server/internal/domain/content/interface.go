@@ -2,16 +2,15 @@ package content
 
 import (
 	"context"
-	"io"
+
+	"github.com/edwynrrangel/music/go/multimedia_server/internal/shared"
 )
 
 type UseCase interface {
-	Get(ctx context.Context, id string) (*Content, error)
-	Search(ctx context.Context, query string) (*SearchResponse, error)
-	Stream(ctx context.Context, id string) (io.ReadCloser, error)
+	Search(ctx context.Context, query string) (*shared.Paginated[Content], error)
 }
 
 type Repository interface {
-	Get(ctx context.Context, id string) (*Content, error)
 	Search(ctx context.Context, query string) ([]Content, error)
+	Count(ctx context.Context, query string) (int64, error)
 }

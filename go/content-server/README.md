@@ -15,16 +15,16 @@ This directory contains the implementation of a basic multimedia service using v
 - **internal/**: Internal and business logic.
   - **domain/**: Business logic.
     - **content/**: Multimedia content logic.
-    - **playlist/**: Playlist logic.
-  - **ports/**: Adapters and ports.
+  - **adapter/**: Adapters for external interfaces.
     - **grpc/**: gRPC implementation.
     - **repository/**: Data repositories.
+  - **shared/**: Shared components.
 - **pkg/**: Shared packages.
 - **proto/**: Protocol buffer definitions for gRPC.
 
 ## Requirements
 
-- Golang 1.21+
+- Golang 1.23+
 - Protoc 3.21+
 - MinIO (for object storage)
 - MongoDB
@@ -33,8 +33,8 @@ This directory contains the implementation of a basic multimedia service using v
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/edwynrrangel/grpc
-    cd grpc/go/multimedia
+    git clone https://github.com/edwynrrangel/music
+    cd music/go/content-server
     ```
 
 2. Install dependencies:
