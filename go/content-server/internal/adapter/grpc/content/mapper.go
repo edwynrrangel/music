@@ -5,18 +5,33 @@ import (
 	"github.com/edwynrrangel/music/go/multimedia_server/internal/shared"
 )
 
-type ContentEntity content.Content
-type Paginated shared.Paginated[content.Content]
+type (
+	ContentEntity content.Content
+	Paginated     shared.Paginated[content.Content]
+	Locations     []content.Location
+)
+
+func (l *Locations) toResponse() []*Location {
+	locations := make([]*Location, 0, len(*l))
+	for _, item := range *l {
+		locations = append(locations, &Location{
+			Bucket: item.Bucket,
+			Key:    item.Key,
+		})
+	}
+	return locations
+}
 
 func (c *ContentEntity) toResponse() *Content {
 	return &Content{
-		Id:       c.ID,
-		Title:    c.Title,
-		Artists:  c.Artists,
-		Album:    c.Album,
-		Genre:    c.Genre,
-		Duration: c.Duration,
-		CoverUrl: c.CoverURL,
+		Id:        c.ID,
+		Title:     c.Title,
+		Artists:   c.Artists,
+		Album:     c.Album,
+		Genre:     c.Genre,
+		Duration:  c.Duration,
+		CoverUrl:  c.CoverURL,
+		Locations: (*Locations)(&c.Locations).toResponse(),
 	}
 }
 

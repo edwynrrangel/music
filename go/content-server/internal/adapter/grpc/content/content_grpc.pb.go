@@ -20,14 +20,15 @@ const _ = grpc.SupportPackageIsVersion7
 
 const (
 	ContentService_Search_FullMethodName = "/ContentService/Search"
+	ContentService_Get_FullMethodName    = "/ContentService/Get"
 )
 
 // ContentServiceClient is the client API for ContentService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ContentServiceClient interface {
-	// Content search
 	Search(ctx context.Context, in *SearchRequest, opts ...grpc.CallOption) (*SearchResponse, error)
+	Get(ctx context.Context, in *ContentRequest, opts ...grpc.CallOption) (*Content, error)
 }
 
 type contentServiceClient struct {
@@ -47,12 +48,21 @@ func (c *contentServiceClient) Search(ctx context.Context, in *SearchRequest, op
 	return out, nil
 }
 
+func (c *contentServiceClient) Get(ctx context.Context, in *ContentRequest, opts ...grpc.CallOption) (*Content, error) {
+	out := new(Content)
+	err := c.cc.Invoke(ctx, ContentService_Get_FullMethodName, in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ContentServiceServer is the server API for ContentService service.
 // All implementations must embed UnimplementedContentServiceServer
 // for forward compatibility
 type ContentServiceServer interface {
-	// Content search
 	Search(context.Context, *SearchRequest) (*SearchResponse, error)
+	Get(context.Context, *ContentRequest) (*Content, error)
 	mustEmbedUnimplementedContentServiceServer()
 }
 
@@ -62,6 +72,9 @@ type UnimplementedContentServiceServer struct {
 
 func (UnimplementedContentServiceServer) Search(context.Context, *SearchRequest) (*SearchResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Search not implemented")
+}
+func (UnimplementedContentServiceServer) Get(context.Context, *ContentRequest) (*Content, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
 }
 func (UnimplementedContentServiceServer) mustEmbedUnimplementedContentServiceServer() {}
 
@@ -94,6 +107,24 @@ func _ContentService_Search_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ContentService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ContentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ContentServiceServer).Get(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ContentService_Get_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ContentServiceServer).Get(ctx, req.(*ContentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ContentService_ServiceDesc is the grpc.ServiceDesc for ContentService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -104,6 +135,10 @@ var ContentService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Search",
 			Handler:    _ContentService_Search_Handler,
+		},
+		{
+			MethodName: "Get",
+			Handler:    _ContentService_Get_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

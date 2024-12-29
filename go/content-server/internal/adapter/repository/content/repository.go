@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 
 	"github.com/edwynrrangel/music/go/multimedia_server/config"
@@ -58,4 +59,19 @@ func (r *repository) Search(ctx context.Context, query string) ([]content.Conten
 	}
 
 	return contents.toArrayEntity(), nil
+}
+
+func (r *repository) Get(ctx context.Context, id string) (*content.Content, error) {
+	objID, _ := primitive.ObjectIDFromHex(id)
+	filter := bson.M{"_id": objID}
+
+	var content *Content
+	if err := r.dbClient.Database(r.dbName).Collection(r.collectionName).FindOne(ctx, filter).Decode(&content); err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return content.toEntity(), nil
 }

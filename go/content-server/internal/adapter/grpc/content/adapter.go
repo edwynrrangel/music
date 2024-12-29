@@ -27,3 +27,13 @@ func (a *adapter) Search(ctx context.Context, req *SearchRequest) (*SearchRespon
 
 	return (*Paginated)(paginated).toResponse(), nil
 }
+
+func (a *adapter) Get(ctx context.Context, req *ContentRequest) (*Content, error) {
+	log.Printf("Received request: %+v", req)
+	got, err := a.usecase.Get(ctx, req.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	return (*ContentEntity)(got).toResponse(), nil
+}

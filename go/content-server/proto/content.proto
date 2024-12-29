@@ -9,6 +9,15 @@ message SearchRequest {
   int32 limit = 3;
 }
 
+message ContentRequest {
+  string id = 1;
+}
+
+message Location {
+  string bucket = 1;
+  string key = 2;
+}
+
 // Content response message
 message Content {
   string id = 1; 
@@ -17,7 +26,8 @@ message Content {
   string album = 4;
   string genre = 5;
   int32 duration = 6;
-  string cover_url = 7; 
+  string cover_url = 7;
+  repeated Location locations = 8;
 }
 
 // Search response message
@@ -30,6 +40,6 @@ message SearchResponse {
 
 // gRPC service
 service ContentService {
-  // Content search
   rpc Search (SearchRequest) returns (SearchResponse);
+  rpc Get (ContentRequest) returns (Content);
 }

@@ -35,3 +35,12 @@ func (u *usecase) Search(ctx context.Context, query string) (*shared.Paginated[C
 		Data:  contents,
 	}, nil
 }
+
+func (u *usecase) Get(ctx context.Context, id string) (*Content, error) {
+	content, err := u.contentRepository.Get(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return content, nil
+}
