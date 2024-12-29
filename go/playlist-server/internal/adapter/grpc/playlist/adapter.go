@@ -71,6 +71,28 @@ func (a *adapter) AddContent(stream PlaylistService_AddContentServer) error {
 	}
 }
 
+func (a *adapter) RemoveContent(stream PlaylistService_RemoveContentServer) error {
+	log.Printf("RemoveContent received request")
+	var got *Playlist
+	for {
+		data, err := stream.Recv()
+		if err == io.EOF {
+			return stream.SendAndClose(got)
+		}
+		if err != nil {
+			return err
+		}
+
+		log.Printf("RemoveContent received request: %+v", data)
+		playlist, err := a.usecase.RemoveContent(stream.Context(), data.UserId, data.PlaylistId, data.ContentId)
+		if err != nil {
+			return err
+		}
+		got = (*PlaylistEntity)(playlist).toResponse()
+	}
+
+}
+
 /*
 func (a *adapter) Manage(stream PlaylistService_ManageServer) error {
 	log.Printf("Manage received request: %+v", stream)

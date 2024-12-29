@@ -80,10 +80,24 @@ func (r *repository) Get(ctx context.Context, userId, playlistId string) (*playl
 	return playlist.toEntity(), nil
 }
 
-func (r *repository) Update(ctx context.Context, userId, playlistId string, content playlist.Content) error {
+func (r *repository) Update(ctx context.Context, userId, playlistId string, playlist *playlist.Playlist) error {
 	objID, _ := primitive.ObjectIDFromHex(playlistId)
 	filter := bson.M{"_id": objID, "user_id": userId}
-	update := bson.M{"$push": bson.M{"contents": (*ContentEntity)(&content).toModel()}}
+	update := bson.M{
+		"$set": bson.M{
+			"name":     playlist.Name,
+			"contents": playlist.Data,
+		},
+	}
+
+	_, err := r.dbClient.Database(r.dbName).Collection(r.collectionName).UpdateOne(ctx, filter, update)
+	return err
+}
+
+func (r *repository) RemoveContent(ctx context.Context, userId, playlistId, contentId string) error {
+	objID, _ := primitive.ObjectIDFromHex(playlistId)
+	filter := bson.M{"_id": objID, "user_id": userId}
+	update := bson.M{"$pull": bson.M{"contents": bson.M{"id": contentId}}}
 
 	_, err := r.dbClient.Database(r.dbName).Collection(r.collectionName).UpdateOne(ctx, filter, update)
 	return err

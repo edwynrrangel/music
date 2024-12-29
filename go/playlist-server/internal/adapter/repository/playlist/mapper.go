@@ -15,13 +15,6 @@ func (p *PlaylistEntity) toModel() *Playlist {
 	}
 }
 
-func (c *ContentEntity) toModel() *Content {
-	return &Content{
-		ID:    c.ID,
-		Order: c.Order,
-	}
-}
-
 func (c *Content) toEntity() *playlist.Content {
 	return &playlist.Content{
 		ID:    c.ID,

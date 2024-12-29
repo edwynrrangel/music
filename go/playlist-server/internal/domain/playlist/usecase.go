@@ -2,6 +2,7 @@ package playlist
 
 import (
 	"context"
+	"fmt"
 	"log"
 
 	"github.com/edwynrrangel/grpc/go/playlist_server/internal/shared"
@@ -71,7 +72,39 @@ func (u *usecase) Get(ctx context.Context, userId string, playlistId string) (*P
 
 func (u *usecase) AddContent(ctx context.Context, userId string, playlistId string, content Content) (*Playlist, error) {
 	log.Printf("AddContent received userId: %s playlistId: %s contentId: %s", userId, playlistId, content.ID)
-	err := u.playlistRepo.Update(ctx, userId, playlistId, content)
+	playlist, err := u.playlistRepo.Get(ctx, userId, playlistId)
+	if err != nil {
+		return nil, err
+	}
+
+	if playlist == nil {
+		return nil, fmt.Errorf("playlist not found")
+	}
+
+	contentExists := false
+	for i, c := range playlist.Data {
+		if c.ID == content.ID {
+			contentExists = true
+			playlist.Data[i] = content
+			break
+		}
+	}
+
+	if !contentExists {
+		playlist.Data = append(playlist.Data, content)
+	}
+
+	err = u.playlistRepo.Update(ctx, userId, playlistId, playlist)
+	if err != nil {
+		return nil, err
+	}
+
+	return playlist, nil
+}
+
+func (u *usecase) RemoveContent(ctx context.Context, userId string, playlistId string, contentId string) (*Playlist, error) {
+	log.Printf("RemoveContent received userId: %s playlistId: %s contentId: %s", userId, playlistId, contentId)
+	err := u.playlistRepo.RemoveContent(ctx, userId, playlistId, contentId)
 	if err != nil {
 		return nil, err
 	}
