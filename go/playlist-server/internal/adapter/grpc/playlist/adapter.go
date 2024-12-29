@@ -60,10 +60,35 @@ func (a *adapter) AddContent(stream PlaylistService_AddContentServer) error {
 		}
 
 		log.Printf("AddContent received request: %+v", data)
-		playlist, err := a.usecase.AddContent(stream.Context(), data.UserId, data.PlaylistId, data.ContentId)
+		playlist, err := a.usecase.AddContent(stream.Context(), data.UserId, data.PlaylistId, playlist.Content{
+			ID:    data.ContentId,
+			Order: data.Order,
+		})
 		if err != nil {
 			return err
 		}
 		got = (*PlaylistEntity)(playlist).toResponse()
 	}
 }
+
+/*
+func (a *adapter) Manage(stream PlaylistService_ManageServer) error {
+	log.Printf("Manage received request: %+v", stream)
+	for {
+		req, err := stream.Recv()
+		if err == io.EOF {
+			return nil
+		}
+		if err != nil {
+			return err
+		}
+		got, err := a.usecase.Manage(stream.Context(), req.toPlayListRequest())
+		if err != nil {
+			log.Printf("Error: %v", err)
+			continue
+		}
+
+		stream.Send(convertToPlaylistResponse(got))
+	}
+}
+*/

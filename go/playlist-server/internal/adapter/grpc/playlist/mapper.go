@@ -6,6 +6,7 @@ import (
 )
 
 type (
+	ContentEntity  playlist.Content
 	PlaylistEntity playlist.Playlist
 	Paginated      shared.Paginated[playlist.Playlist]
 )
@@ -17,11 +18,27 @@ func (c *CreateRequest) toRequest() *playlist.CreateRequest {
 	}
 }
 
+func (c *ContentEntity) toResponse() *Content {
+	return &Content{
+		Id:    c.ID,
+		Order: c.Order,
+	}
+}
+
 func (e *PlaylistEntity) toResponse() *Playlist {
+	if e == nil {
+		return nil
+	}
+
+	contents := make([]*Content, 0, len(e.Data))
+	for _, item := range e.Data {
+		contents = append(contents, (*ContentEntity)(&item).toResponse())
+	}
+
 	return &Playlist{
-		Id:      e.ID,
-		Name:    e.Name,
-		Content: e.Data,
+		Id:       e.ID,
+		Name:     e.Name,
+		Contents: contents,
 	}
 }
 

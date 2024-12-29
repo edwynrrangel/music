@@ -2,10 +2,15 @@ syntax = "proto3";
 
 option go_package = "./playlist";
 
+message Content {
+  string id = 1;
+  int32 order = 2;
+}
+
 message Playlist {
   string id = 1;
   string name = 2;
-  repeated string content = 3;
+  repeated Content contents = 3;
 }
 
 message CreateRequest {
@@ -37,13 +42,35 @@ message OperationRequest {
   string user_id = 1;
   string playlist_id = 2;
   string content_id = 3;
+  int32 order = 4;
 }
 
+message AddContentEvent {
+  string song_id = 1;
+}
 
+message SkipContentEvent {
+  bool force_skip = 1;
+}
+
+message PartyModeRequest {
+  string playlist_id = 1;
+  oneof action {
+    AddContentEvent add_song = 2;
+    SkipContentEvent skip_song = 3;
+  }
+}
+
+message PartyModeResponse {
+  string message = 1;
+  Playlist playlist = 2;
+}
 
 service PlaylistService {
   rpc Create(CreateRequest) returns (Playlist);
   rpc List(ListRequest) returns (ListResponse);
   rpc Get(PlaylistRequest) returns (Playlist);
   rpc AddContent (stream OperationRequest) returns (Playlist); // (client streaming)
+  rpc RemoveContent (stream OperationRequest) returns (Playlist); // (client streaming)
+  rpc PartyMode(stream PartyModeRequest) returns (stream PartyModeResponse); // (bidirectional streaming)
 }

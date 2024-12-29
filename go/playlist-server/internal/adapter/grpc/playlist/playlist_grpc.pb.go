@@ -19,10 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	PlaylistService_Create_FullMethodName     = "/PlaylistService/Create"
-	PlaylistService_List_FullMethodName       = "/PlaylistService/List"
-	PlaylistService_Get_FullMethodName        = "/PlaylistService/Get"
-	PlaylistService_AddContent_FullMethodName = "/PlaylistService/AddContent"
+	PlaylistService_Create_FullMethodName        = "/PlaylistService/Create"
+	PlaylistService_List_FullMethodName          = "/PlaylistService/List"
+	PlaylistService_Get_FullMethodName           = "/PlaylistService/Get"
+	PlaylistService_AddContent_FullMethodName    = "/PlaylistService/AddContent"
+	PlaylistService_RemoveContent_FullMethodName = "/PlaylistService/RemoveContent"
+	PlaylistService_PartyMode_FullMethodName     = "/PlaylistService/PartyMode"
 )
 
 // PlaylistServiceClient is the client API for PlaylistService service.
@@ -33,6 +35,8 @@ type PlaylistServiceClient interface {
 	List(ctx context.Context, in *ListRequest, opts ...grpc.CallOption) (*ListResponse, error)
 	Get(ctx context.Context, in *PlaylistRequest, opts ...grpc.CallOption) (*Playlist, error)
 	AddContent(ctx context.Context, opts ...grpc.CallOption) (PlaylistService_AddContentClient, error)
+	RemoveContent(ctx context.Context, opts ...grpc.CallOption) (PlaylistService_RemoveContentClient, error)
+	PartyMode(ctx context.Context, opts ...grpc.CallOption) (PlaylistService_PartyModeClient, error)
 }
 
 type playlistServiceClient struct {
@@ -104,6 +108,71 @@ func (x *playlistServiceAddContentClient) CloseAndRecv() (*Playlist, error) {
 	return m, nil
 }
 
+func (c *playlistServiceClient) RemoveContent(ctx context.Context, opts ...grpc.CallOption) (PlaylistService_RemoveContentClient, error) {
+	stream, err := c.cc.NewStream(ctx, &PlaylistService_ServiceDesc.Streams[1], PlaylistService_RemoveContent_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &playlistServiceRemoveContentClient{stream}
+	return x, nil
+}
+
+type PlaylistService_RemoveContentClient interface {
+	Send(*OperationRequest) error
+	CloseAndRecv() (*Playlist, error)
+	grpc.ClientStream
+}
+
+type playlistServiceRemoveContentClient struct {
+	grpc.ClientStream
+}
+
+func (x *playlistServiceRemoveContentClient) Send(m *OperationRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *playlistServiceRemoveContentClient) CloseAndRecv() (*Playlist, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(Playlist)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func (c *playlistServiceClient) PartyMode(ctx context.Context, opts ...grpc.CallOption) (PlaylistService_PartyModeClient, error) {
+	stream, err := c.cc.NewStream(ctx, &PlaylistService_ServiceDesc.Streams[2], PlaylistService_PartyMode_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &playlistServicePartyModeClient{stream}
+	return x, nil
+}
+
+type PlaylistService_PartyModeClient interface {
+	Send(*PartyModeRequest) error
+	Recv() (*PartyModeResponse, error)
+	grpc.ClientStream
+}
+
+type playlistServicePartyModeClient struct {
+	grpc.ClientStream
+}
+
+func (x *playlistServicePartyModeClient) Send(m *PartyModeRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *playlistServicePartyModeClient) Recv() (*PartyModeResponse, error) {
+	m := new(PartyModeResponse)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // PlaylistServiceServer is the server API for PlaylistService service.
 // All implementations must embed UnimplementedPlaylistServiceServer
 // for forward compatibility
@@ -112,6 +181,8 @@ type PlaylistServiceServer interface {
 	List(context.Context, *ListRequest) (*ListResponse, error)
 	Get(context.Context, *PlaylistRequest) (*Playlist, error)
 	AddContent(PlaylistService_AddContentServer) error
+	RemoveContent(PlaylistService_RemoveContentServer) error
+	PartyMode(PlaylistService_PartyModeServer) error
 	mustEmbedUnimplementedPlaylistServiceServer()
 }
 
@@ -130,6 +201,12 @@ func (UnimplementedPlaylistServiceServer) Get(context.Context, *PlaylistRequest)
 }
 func (UnimplementedPlaylistServiceServer) AddContent(PlaylistService_AddContentServer) error {
 	return status.Errorf(codes.Unimplemented, "method AddContent not implemented")
+}
+func (UnimplementedPlaylistServiceServer) RemoveContent(PlaylistService_RemoveContentServer) error {
+	return status.Errorf(codes.Unimplemented, "method RemoveContent not implemented")
+}
+func (UnimplementedPlaylistServiceServer) PartyMode(PlaylistService_PartyModeServer) error {
+	return status.Errorf(codes.Unimplemented, "method PartyMode not implemented")
 }
 func (UnimplementedPlaylistServiceServer) mustEmbedUnimplementedPlaylistServiceServer() {}
 
@@ -224,6 +301,58 @@ func (x *playlistServiceAddContentServer) Recv() (*OperationRequest, error) {
 	return m, nil
 }
 
+func _PlaylistService_RemoveContent_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(PlaylistServiceServer).RemoveContent(&playlistServiceRemoveContentServer{stream})
+}
+
+type PlaylistService_RemoveContentServer interface {
+	SendAndClose(*Playlist) error
+	Recv() (*OperationRequest, error)
+	grpc.ServerStream
+}
+
+type playlistServiceRemoveContentServer struct {
+	grpc.ServerStream
+}
+
+func (x *playlistServiceRemoveContentServer) SendAndClose(m *Playlist) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *playlistServiceRemoveContentServer) Recv() (*OperationRequest, error) {
+	m := new(OperationRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
+func _PlaylistService_PartyMode_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(PlaylistServiceServer).PartyMode(&playlistServicePartyModeServer{stream})
+}
+
+type PlaylistService_PartyModeServer interface {
+	Send(*PartyModeResponse) error
+	Recv() (*PartyModeRequest, error)
+	grpc.ServerStream
+}
+
+type playlistServicePartyModeServer struct {
+	grpc.ServerStream
+}
+
+func (x *playlistServicePartyModeServer) Send(m *PartyModeResponse) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *playlistServicePartyModeServer) Recv() (*PartyModeRequest, error) {
+	m := new(PartyModeRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // PlaylistService_ServiceDesc is the grpc.ServiceDesc for PlaylistService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -248,6 +377,17 @@ var PlaylistService_ServiceDesc = grpc.ServiceDesc{
 		{
 			StreamName:    "AddContent",
 			Handler:       _PlaylistService_AddContent_Handler,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "RemoveContent",
+			Handler:       _PlaylistService_RemoveContent_Handler,
+			ClientStreams: true,
+		},
+		{
+			StreamName:    "PartyMode",
+			Handler:       _PlaylistService_PartyMode_Handler,
+			ServerStreams: true,
 			ClientStreams: true,
 		},
 	},

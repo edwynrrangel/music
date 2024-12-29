@@ -69,9 +69,9 @@ func (u *usecase) Get(ctx context.Context, userId string, playlistId string) (*P
 	return got, nil
 }
 
-func (u *usecase) AddContent(ctx context.Context, userId string, playlistId, contentId string) (*Playlist, error) {
-	log.Printf("AddContent received userId: %s playlistId: %s contentId: %s", userId, playlistId, contentId)
-	err := u.playlistRepo.Update(ctx, userId, playlistId, contentId)
+func (u *usecase) AddContent(ctx context.Context, userId string, playlistId string, content Content) (*Playlist, error) {
+	log.Printf("AddContent received userId: %s playlistId: %s contentId: %s", userId, playlistId, content.ID)
+	err := u.playlistRepo.Update(ctx, userId, playlistId, content)
 	if err != nil {
 		return nil, err
 	}

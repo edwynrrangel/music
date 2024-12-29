@@ -10,7 +10,7 @@ type UseCase interface {
 	Create(ctx context.Context, data *CreateRequest) (*Playlist, error)
 	List(ctx context.Context, data ListRequest) (*shared.Paginated[Playlist], error)
 	Get(ctx context.Context, userId string, playlistId string) (*Playlist, error)
-	AddContent(ctx context.Context, userId string, playlistId, contentId string) (*Playlist, error)
+	AddContent(ctx context.Context, userId string, playlistId string, content Content) (*Playlist, error)
 }
 
 type Repository interface {
@@ -18,5 +18,5 @@ type Repository interface {
 	Count(ctx context.Context, userId, query string) (int64, error)
 	List(ctx context.Context, userId, query string) (Playlists, error)
 	Get(ctx context.Context, userId, playlistId string) (*Playlist, error)
-	Update(ctx context.Context, userId, playlistId, content string) error
+	Update(ctx context.Context, userId, playlistId string, content Content) error
 }

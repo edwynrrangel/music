@@ -11,11 +11,15 @@ type (
 		Page   int32
 		Limit  int32
 	}
+	Content struct {
+		ID    string
+		Order int32
+	}
 	Playlist struct {
 		ID     string
 		UserId string
 		Name   string
-		Data   []string
+		Data   []Content
 	}
 	Playlists []Playlist
 )
