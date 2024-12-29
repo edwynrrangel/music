@@ -3,7 +3,7 @@ package playlist
 type (
 	Playlist struct {
 		ID       string   `bson:"_id,omitempty"`
-		UserID   string   `bson:"user_id"`
+		UserId   string   `bson:"user_id"`
 		Name     string   `bson:"name"`
 		Contents []string `bson:"contents,omitempty"`
 	}

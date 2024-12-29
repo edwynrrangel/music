@@ -19,9 +19,10 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	PlaylistService_Create_FullMethodName = "/PlaylistService/Create"
-	PlaylistService_List_FullMethodName   = "/PlaylistService/List"
-	PlaylistService_Get_FullMethodName    = "/PlaylistService/Get"
+	PlaylistService_Create_FullMethodName     = "/PlaylistService/Create"
+	PlaylistService_List_FullMethodName       = "/PlaylistService/List"
+	PlaylistService_Get_FullMethodName        = "/PlaylistService/Get"
+	PlaylistService_AddContent_FullMethodName = "/PlaylistService/AddContent"
 )
 
 // PlaylistServiceClient is the client API for PlaylistService service.
@@ -31,6 +32,7 @@ type PlaylistServiceClient interface {
 	Create(ctx context.Context, in *CreateRequest, opts ...grpc.CallOption) (*Playlist, error)
 	List(ctx context.Context, in *ListRequest, opts ...grpc.CallOption) (*ListResponse, error)
 	Get(ctx context.Context, in *PlaylistRequest, opts ...grpc.CallOption) (*Playlist, error)
+	AddContent(ctx context.Context, opts ...grpc.CallOption) (PlaylistService_AddContentClient, error)
 }
 
 type playlistServiceClient struct {
@@ -68,6 +70,40 @@ func (c *playlistServiceClient) Get(ctx context.Context, in *PlaylistRequest, op
 	return out, nil
 }
 
+func (c *playlistServiceClient) AddContent(ctx context.Context, opts ...grpc.CallOption) (PlaylistService_AddContentClient, error) {
+	stream, err := c.cc.NewStream(ctx, &PlaylistService_ServiceDesc.Streams[0], PlaylistService_AddContent_FullMethodName, opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &playlistServiceAddContentClient{stream}
+	return x, nil
+}
+
+type PlaylistService_AddContentClient interface {
+	Send(*OperationRequest) error
+	CloseAndRecv() (*Playlist, error)
+	grpc.ClientStream
+}
+
+type playlistServiceAddContentClient struct {
+	grpc.ClientStream
+}
+
+func (x *playlistServiceAddContentClient) Send(m *OperationRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *playlistServiceAddContentClient) CloseAndRecv() (*Playlist, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(Playlist)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // PlaylistServiceServer is the server API for PlaylistService service.
 // All implementations must embed UnimplementedPlaylistServiceServer
 // for forward compatibility
@@ -75,6 +111,7 @@ type PlaylistServiceServer interface {
 	Create(context.Context, *CreateRequest) (*Playlist, error)
 	List(context.Context, *ListRequest) (*ListResponse, error)
 	Get(context.Context, *PlaylistRequest) (*Playlist, error)
+	AddContent(PlaylistService_AddContentServer) error
 	mustEmbedUnimplementedPlaylistServiceServer()
 }
 
@@ -90,6 +127,9 @@ func (UnimplementedPlaylistServiceServer) List(context.Context, *ListRequest) (*
 }
 func (UnimplementedPlaylistServiceServer) Get(context.Context, *PlaylistRequest) (*Playlist, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedPlaylistServiceServer) AddContent(PlaylistService_AddContentServer) error {
+	return status.Errorf(codes.Unimplemented, "method AddContent not implemented")
 }
 func (UnimplementedPlaylistServiceServer) mustEmbedUnimplementedPlaylistServiceServer() {}
 
@@ -158,6 +198,32 @@ func _PlaylistService_Get_Handler(srv interface{}, ctx context.Context, dec func
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PlaylistService_AddContent_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(PlaylistServiceServer).AddContent(&playlistServiceAddContentServer{stream})
+}
+
+type PlaylistService_AddContentServer interface {
+	SendAndClose(*Playlist) error
+	Recv() (*OperationRequest, error)
+	grpc.ServerStream
+}
+
+type playlistServiceAddContentServer struct {
+	grpc.ServerStream
+}
+
+func (x *playlistServiceAddContentServer) SendAndClose(m *Playlist) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *playlistServiceAddContentServer) Recv() (*OperationRequest, error) {
+	m := new(OperationRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 // PlaylistService_ServiceDesc is the grpc.ServiceDesc for PlaylistService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -178,6 +244,12 @@ var PlaylistService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _PlaylistService_Get_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "AddContent",
+			Handler:       _PlaylistService_AddContent_Handler,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "proto/playlist.proto",
 }

@@ -9,7 +9,7 @@ type (
 func (p *PlaylistEntity) toModel() *Playlist {
 	return &Playlist{
 		ID:     p.ID,
-		UserID: p.UserID,
+		UserId: p.UserId,
 		Name:   p.Name,
 	}
 }
@@ -17,7 +17,7 @@ func (p *PlaylistEntity) toModel() *Playlist {
 func (p *Playlist) toEntity() *playlist.Playlist {
 	return &playlist.Playlist{
 		ID:     p.ID,
-		UserID: p.UserID,
+		UserId: p.UserId,
 		Name:   p.Name,
 		Data:   p.Contents,
 	}
@@ -30,17 +30,3 @@ func (p Playlists) toEntity() playlist.Playlists {
 	}
 	return playlists
 }
-
-/*
-func (p *PlaylistRequest) ToEntity() *Playlist {
-	contents := make([]Content, 0)
-	for _, content := range p.Contents {
-		contents = append(contents, *content.ToEntity())
-	}
-	return &Playlist{
-		ID:       p.ID,
-		UserID:   p.UserID,
-		Name:     p.Name,
-		Contents: contents,
-	}
-} */

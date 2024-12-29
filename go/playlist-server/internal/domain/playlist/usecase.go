@@ -21,8 +21,11 @@ func NewUseCase(
 
 func (u *usecase) Create(ctx context.Context, data *CreateRequest) (*Playlist, error) {
 	log.Printf("Create received request: %+v", data)
+	if data.Name == "" {
+		data.Name = "New Playlist"
+	}
 	playlist := &Playlist{
-		UserID: data.UserID,
+		UserId: data.UserId,
 		Name:   data.Name,
 	}
 	err := u.playlistRepo.Create(ctx, playlist)
@@ -34,7 +37,7 @@ func (u *usecase) Create(ctx context.Context, data *CreateRequest) (*Playlist, e
 }
 
 func (u *usecase) List(ctx context.Context, data ListRequest) (*shared.Paginated[Playlist], error) {
-	total, err := u.playlistRepo.Count(ctx, data.UserID, data.Query)
+	total, err := u.playlistRepo.Count(ctx, data.UserId, data.Query)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +46,7 @@ func (u *usecase) List(ctx context.Context, data ListRequest) (*shared.Paginated
 		return nil, nil
 	}
 
-	playlists, err := u.playlistRepo.List(ctx, data.UserID, data.Query)
+	playlists, err := u.playlistRepo.List(ctx, data.UserId, data.Query)
 	if err != nil {
 		return nil, err
 	}
@@ -56,9 +59,9 @@ func (u *usecase) List(ctx context.Context, data ListRequest) (*shared.Paginated
 	}, nil
 }
 
-func (u *usecase) Get(ctx context.Context, userID string, playlistID string) (*Playlist, error) {
-	log.Printf("Get received userID: %s playlistID: %s", userID, playlistID)
-	got, err := u.playlistRepo.Get(ctx, userID, playlistID)
+func (u *usecase) Get(ctx context.Context, userId string, playlistId string) (*Playlist, error) {
+	log.Printf("Get received userId: %s playlistId: %s", userId, playlistId)
+	got, err := u.playlistRepo.Get(ctx, userId, playlistId)
 	if err != nil {
 		return nil, err
 	}
@@ -66,57 +69,12 @@ func (u *usecase) Get(ctx context.Context, userID string, playlistID string) (*P
 	return got, nil
 }
 
-/*
-func (u *usecase) Manage(ctx context.Context, request *PlaylistRequest) (*Playlist, error) {
-	log.Printf("Manage received request: %+v", request)
-	switch request.Operation {
-	case OperationKeyAdd:
-		return u.add(ctx, request.ToEntity())
-	case OperationKeyRemove:
-		return u.removeContent(ctx, request.ToEntity())
-	case OperationKeyGet:
-		return u.Get(ctx, request.UserID, request.ID)
-	default:
-		return nil, errors.New("invalid operation")
-	}
-}
-
-
-
-
-
-func (u *usecase) Remove(ctx context.Context, userID, playlistID string) error {
-	log.Printf("Remove received userID: %s playlist: %s", userID, playlistID)
-	return u.playlistRepo.Remove(ctx, userID, playlistID)
-}
-
-func (u *usecase) add(ctx context.Context, data *Playlist) (*Playlist, error) {
-	log.Printf("Add received request: %+v", data)
-	if data.ID != "" {
-		if err := u.playlistRepo.Update(ctx, data.UserID, data.ID, data.Contents); err != nil {
-			return nil, err
-		}
-		return u.playlistRepo.Get(ctx, data.UserID, data.ID)
-	}
-
-	if data.Name == "" {
-		data.Name = "New Playlist"
-	}
-
-	if err := u.playlistRepo.Add(ctx, data); err != nil {
+func (u *usecase) AddContent(ctx context.Context, userId string, playlistId, contentId string) (*Playlist, error) {
+	log.Printf("AddContent received userId: %s playlistId: %s contentId: %s", userId, playlistId, contentId)
+	err := u.playlistRepo.Update(ctx, userId, playlistId, contentId)
+	if err != nil {
 		return nil, err
 	}
-	return data, nil
-}
 
-func (u *usecase) removeContent(ctx context.Context, data *Playlist) (*Playlist, error) {
-	log.Printf("Remove content received data: %+v", data)
-	contentIDs := make([]string, 0)
-	for _, content := range data.Contents {
-		contentIDs = append(contentIDs, content.ID)
-	}
-	if err := u.playlistRepo.RemoveContent(ctx, data.UserID, data.ID, contentIDs); err != nil {
-		return nil, err
-	}
-	return u.playlistRepo.Get(ctx, data.UserID, data.ID)
-} */
+	return u.playlistRepo.Get(ctx, userId, playlistId)
+}

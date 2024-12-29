@@ -2,6 +2,7 @@ package playlist
 
 import (
 	"context"
+	"io"
 	"log"
 
 	"github.com/edwynrrangel/grpc/go/playlist_server/internal/domain/playlist"
@@ -46,36 +47,23 @@ func (a *adapter) Get(ctx context.Context, data *PlaylistRequest) (*Playlist, er
 	return (*PlaylistEntity)(got).toResponse(), nil
 }
 
-/*
-func (a *adapter) Manage(stream PlaylistService_ManageServer) error {
-	log.Printf("Manage received request: %+v", stream)
+func (a *adapter) AddContent(stream PlaylistService_AddContentServer) error {
+	log.Printf("AddContent received request")
+	var got *Playlist
 	for {
-		req, err := stream.Recv()
+		data, err := stream.Recv()
 		if err == io.EOF {
-			return nil
+			return stream.SendAndClose(got)
 		}
 		if err != nil {
 			return err
 		}
-		got, err := a.usecase.Manage(stream.Context(), req.toPlayListRequest())
-		if err != nil {
-			log.Printf("Error: %v", err)
-			continue
-		}
 
-		stream.Send(convertToPlaylistResponse(got))
+		log.Printf("AddContent received request: %+v", data)
+		playlist, err := a.usecase.AddContent(stream.Context(), data.UserId, data.PlaylistId, data.ContentId)
+		if err != nil {
+			return err
+		}
+		got = (*PlaylistEntity)(playlist).toResponse()
 	}
 }
-
-
-
-func (a *adapter) Remove(ctx context.Context, req *RemovePlaylistRequest) (*RemovePlaylistResponse, error) {
-	log.Printf("Remove received request: %+v", req)
-	err := a.usecase.Remove(ctx, req.UserID, req.Id)
-	if err != nil {
-		return nil, err
-	}
-	return &RemovePlaylistResponse{
-		Message: "Playlist removed",
-	}, nil
-} */

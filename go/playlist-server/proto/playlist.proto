@@ -33,9 +33,17 @@ message PlaylistRequest {
 }
 
 
+message OperationRequest {
+  string user_id = 1;
+  string playlist_id = 2;
+  string content_id = 3;
+}
+
+
 
 service PlaylistService {
   rpc Create(CreateRequest) returns (Playlist);
   rpc List(ListRequest) returns (ListResponse);
   rpc Get(PlaylistRequest) returns (Playlist);
+  rpc AddContent (stream OperationRequest) returns (Playlist); // (client streaming)
 }
