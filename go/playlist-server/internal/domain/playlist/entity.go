@@ -1,18 +1,21 @@
 package playlist
 
 type (
-	Content struct {
-		ID       string `bson:"id"`
-		Title    string `bson:"title"`
-		Creator  string `bson:"creator"`
-		Genre    string `bson:"genre"`
-		Duration string `bson:"duration"`
+	CreateRequest struct {
+		UserID string
+		Name   string
 	}
-
+	ListRequest struct {
+		UserID string
+		Query  string
+		Page   int32
+		Limit  int32
+	}
 	Playlist struct {
-		ID       string    `bson:"_id,omitempty"`
-		UserID   string    `bson:"user_id"`
-		Name     string    `bson:"name"`
-		Contents []Content `bson:"contents"`
+		ID     string
+		UserID string
+		Name   string
+		Data   []string
 	}
+	Playlists []Playlist
 )

@@ -2,66 +2,40 @@ syntax = "proto3";
 
 option go_package = "./playlist";
 
-enum Operation {
-  ADD = 0;
-  REMOVE = 1;
-  GET = 2;
-}
-
-// Content message
-message Content {
-  string id = 1;
-  string title = 2;
-  string genre = 3;
-  string creator = 4; // Artist or Director
-  string duration = 5;
-}
-
-// Playlist request message
-message PlaylistRequest {
-  string id = 1;
-  string userID = 2;
-  string name = 3;
-  repeated Content contents = 4;
-  Operation operation = 5;
-}
-
-// List playlist request message
-message ListPlaylistRequest {
-  string userID = 1;
-}
-
-// Remove content request message
-message RemovePlaylistRequest {
-  string id = 1;
-  string userID = 2;
-}
-
-// Playlist response message
-message PlaylistResponse {
+message Playlist {
   string id = 1;
   string name = 2;
-  repeated Content contents = 3;
+  repeated string content = 3;
 }
 
-message ListPlaylistResponse {
-  message Playlist {
-    string id = 1;
-    string name = 2;
-  }
-  repeated Playlist data = 1;
+message CreateRequest {
+  string user_id = 1;
+  string name = 2;
 }
 
-message RemovePlaylistResponse {
-  string message = 1;
+message ListRequest {
+  string user_id = 1;
+  string query = 2;
+  int32 page = 3;
+  int32 limit = 4;
 }
 
-// gRPC service
+message ListResponse {
+  int32 page = 1;
+  int32 limit = 2;
+  int64 total = 3;
+  repeated Playlist data = 4;
+}
+
+message PlaylistRequest {
+  string user_id = 1;
+  string playlist_id = 2;
+}
+
+
+
 service PlaylistService {
-  // Playlist management
-  rpc Manage (stream PlaylistRequest) returns (stream PlaylistResponse);
-  // List playlists
-  rpc List (ListPlaylistRequest) returns (ListPlaylistResponse);
-  // Remove playlist
-  rpc Remove (RemovePlaylistRequest) returns (RemovePlaylistResponse);
+  rpc Create(CreateRequest) returns (Playlist);
+  rpc List(ListRequest) returns (ListResponse);
+  rpc Get(PlaylistRequest) returns (Playlist);
 }

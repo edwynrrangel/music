@@ -24,11 +24,52 @@ func NewRepository(dbClient *mongo.Client, dbName string, collectionName string)
 	}
 }
 
+func (r *repository) Create(ctx context.Context, data *playlist.Playlist) error {
+	result, err := r.dbClient.Database(r.dbName).Collection(r.collectionName).InsertOne(ctx, (*PlaylistEntity)(data).toModel())
+	if err != nil {
+		return err
+	}
+
+	if oid, ok := result.InsertedID.(primitive.ObjectID); ok {
+		data.ID = oid.Hex()
+	}
+
+	return nil
+}
+
+func (r *repository) Count(ctx context.Context, userID, query string) (int64, error) {
+	filter := bson.M{"user_id": userID}
+	if query != "" {
+		filter["name"] = bson.M{"$regex": query, "$options": "i"}
+	}
+
+	return r.dbClient.Database(r.dbName).Collection(r.collectionName).CountDocuments(ctx, filter)
+}
+
+func (r *repository) List(ctx context.Context, userID, query string) (playlist.Playlists, error) {
+	filter := bson.M{"user_id": userID}
+	if query != "" {
+		filter["name"] = bson.M{"$regex": query, "$options": "i"}
+	}
+	cursor, err := r.dbClient.Database(r.dbName).Collection(r.collectionName).Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var playlists Playlists
+	if err := cursor.All(ctx, &playlists); err != nil {
+		return nil, err
+	}
+
+	return playlists.toEntity(), nil
+}
+
 func (r *repository) Get(ctx context.Context, userID, playlistID string) (*playlist.Playlist, error) {
 	objID, _ := primitive.ObjectIDFromHex(playlistID)
 	filter := bson.M{"_id": objID, "user_id": userID}
 
-	var playlist = new(playlist.Playlist)
+	var playlist = new(Playlist)
 	if err := r.dbClient.Database(r.dbName).Collection(r.collectionName).FindOne(ctx, filter).Decode(playlist); err != nil {
 		if err == mongo.ErrNoDocuments {
 			return nil, nil
@@ -36,25 +77,10 @@ func (r *repository) Get(ctx context.Context, userID, playlistID string) (*playl
 		return nil, err
 	}
 
-	return playlist, nil
+	return playlist.toEntity(), nil
 }
 
-func (r *repository) List(ctx context.Context, userID string) ([]playlist.Playlist, error) {
-	filter := bson.M{"user_id": userID}
-	cursor, err := r.dbClient.Database(r.dbName).Collection(r.collectionName).Find(ctx, filter)
-	if err != nil {
-		return nil, err
-	}
-	defer cursor.Close(ctx)
-
-	var playlists []playlist.Playlist
-	if err := cursor.All(ctx, &playlists); err != nil {
-		return nil, err
-	}
-
-	return playlists, nil
-}
-
+/*
 func (r *repository) Add(ctx context.Context, playlist *playlist.Playlist) error {
 	result, err := r.dbClient.Database(r.dbName).Collection(r.collectionName).InsertOne(ctx, playlist)
 	if err != nil {
@@ -93,4 +119,4 @@ func (r *repository) Remove(ctx context.Context, userID, playlistID string) erro
 
 	_, err := r.dbClient.Database(r.dbName).Collection(r.collectionName).DeleteOne(ctx, filter)
 	return err
-}
+} */
