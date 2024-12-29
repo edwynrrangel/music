@@ -32,15 +32,10 @@ func (r *repository) Count(ctx context.Context, query string) (int64, error) {
 		{"artists": bson.M{"$elemMatch": bson.M{"$regex": query, "$options": "i"}}},
 	}}
 
-	count, err := r.dbClient.Database(r.dbName).Collection(r.collectionName).CountDocuments(ctx, filter)
-	if err != nil {
-		return 0, err
-	}
-
-	return count, nil
+	return r.dbClient.Database(r.dbName).Collection(r.collectionName).CountDocuments(ctx, filter)
 }
 
-func (r *repository) Search(ctx context.Context, query string) ([]content.Content, error) {
+func (r *repository) Search(ctx context.Context, query string) (content.Contents, error) {
 	filter := bson.M{"$or": []bson.M{
 		{"title": bson.M{"$regex": query, "$options": "i"}},
 		{"genre": bson.M{"$regex": query, "$options": "i"}},
@@ -58,7 +53,7 @@ func (r *repository) Search(ctx context.Context, query string) ([]content.Conten
 		return nil, err
 	}
 
-	return contents.toArrayEntity(), nil
+	return contents.toEntity(), nil
 }
 
 func (r *repository) Get(ctx context.Context, id string) (*content.Content, error) {

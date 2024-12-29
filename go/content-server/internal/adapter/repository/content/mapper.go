@@ -23,10 +23,10 @@ func (c *Content) toEntity() *content.Content {
 	}
 }
 
-func (c Contents) toArrayEntity() content.Contents {
-	var result content.Contents
+func (c Contents) toEntity() content.Contents {
+	var contents content.Contents
 	for _, item := range c {
-		result = append(result, *item.toEntity())
+		contents = append(contents, *item.toEntity())
 	}
-	return result
+	return contents
 }
