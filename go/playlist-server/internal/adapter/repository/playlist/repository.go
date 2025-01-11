@@ -80,6 +80,21 @@ func (r *repository) Get(ctx context.Context, userId, playlistId string) (*playl
 	return playlist.toEntity(), nil
 }
 
+func (r *repository) GetByType(ctx context.Context, mode string, playlistId string) (*playlist.Playlist, error) {
+	objID, _ := primitive.ObjectIDFromHex(playlistId)
+	filter := bson.M{"_id": objID, "mode": mode}
+
+	var playlist = new(Playlist)
+	if err := r.dbClient.Database(r.dbName).Collection(r.collectionName).FindOne(ctx, filter).Decode(playlist); err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return playlist.toEntity(), nil
+}
+
 func (r *repository) Update(ctx context.Context, userId, playlistId string, playlist *playlist.Playlist) error {
 	objID, _ := primitive.ObjectIDFromHex(playlistId)
 	filter := bson.M{"_id": objID, "user_id": userId}
@@ -89,6 +104,15 @@ func (r *repository) Update(ctx context.Context, userId, playlistId string, play
 			"contents": playlist.Data,
 		},
 	}
+
+	_, err := r.dbClient.Database(r.dbName).Collection(r.collectionName).UpdateOne(ctx, filter, update)
+	return err
+}
+
+func (r *repository) AddContent(ctx context.Context, playlistId string, content []playlist.Content) error {
+	objID, _ := primitive.ObjectIDFromHex(playlistId)
+	filter := bson.M{"_id": objID}
+	update := bson.M{"$set": bson.M{"contents": content}}
 
 	_, err := r.dbClient.Database(r.dbName).Collection(r.collectionName).UpdateOne(ctx, filter, update)
 	return err

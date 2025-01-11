@@ -28,6 +28,7 @@ func (u *usecase) Create(ctx context.Context, data *CreateRequest) (*Playlist, e
 	playlist := &Playlist{
 		UserId: data.UserId,
 		Name:   data.Name,
+		Mode:   data.Mode,
 	}
 	err := u.playlistRepo.Create(ctx, playlist)
 	if err != nil {
@@ -110,4 +111,57 @@ func (u *usecase) RemoveContent(ctx context.Context, userId string, playlistId s
 	}
 
 	return u.playlistRepo.Get(ctx, userId, playlistId)
+}
+
+func (u *usecase) PartyMode(ctx context.Context, data *PartyModeRequest) (*Playlist, error) {
+	log.Printf("PartyMode received request: %+v", data)
+
+	switch {
+	case data.Action.AddContent != nil:
+		return u.processAddContent(ctx, data.PlaylistId, data.Action.AddContent)
+	case data.Action.SkipContent != nil:
+		return u.processSkipContent(ctx, data.Action.SkipContent)
+	default:
+		return nil, fmt.Errorf("invalid action")
+	}
+}
+
+func (u *usecase) processAddContent(ctx context.Context, contentId string, data *AddContentEvent) (*Playlist, error) {
+	log.Printf("PartyMode AddContent received request: %+v", data)
+	playlist, err := u.playlistRepo.GetByType(ctx, "party", contentId)
+	if err != nil {
+		return nil, err
+	}
+
+	if playlist == nil {
+		return nil, fmt.Errorf("playlist not found")
+	}
+
+	contentExists := false
+	for i, c := range playlist.Data {
+		if c.ID == data.ContentId {
+			contentExists = true
+			playlist.Data[i].Order = data.Order
+			break
+		}
+	}
+
+	if !contentExists {
+		playlist.Data = append(playlist.Data, Content{
+			ID:    data.ContentId,
+			Order: data.Order,
+		})
+	}
+
+	err = u.playlistRepo.AddContent(ctx, data.ContentId, playlist.Data)
+	if err != nil {
+		return nil, err
+	}
+
+	return playlist, nil
+}
+
+func (u *usecase) processSkipContent(ctx context.Context, data *SkipContentEvent) (*Playlist, error) {
+	log.Printf("PartyMode SkipContent received request: %+v", data)
+	return nil, fmt.Errorf("not implemented")
 }

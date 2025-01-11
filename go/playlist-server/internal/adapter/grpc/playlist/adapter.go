@@ -93,24 +93,25 @@ func (a *adapter) RemoveContent(stream PlaylistService_RemoveContentServer) erro
 
 }
 
-/*
-func (a *adapter) Manage(stream PlaylistService_ManageServer) error {
-	log.Printf("Manage received request: %+v", stream)
+func (a *adapter) PartyMode(stream PlaylistService_PartyModeServer) error {
+	log.Printf("PartyMode received request")
 	for {
-		req, err := stream.Recv()
+		data, err := stream.Recv()
 		if err == io.EOF {
 			return nil
 		}
 		if err != nil {
 			return err
 		}
-		got, err := a.usecase.Manage(stream.Context(), req.toPlayListRequest())
+		got, err := a.usecase.PartyMode(stream.Context(), data.toRequest())
 		if err != nil {
 			log.Printf("Error: %v", err)
 			continue
 		}
 
-		stream.Send(convertToPlaylistResponse(got))
+		stream.Send(&PartyModeResponse{
+			Message:  "Success",
+			Playlist: (*PlaylistEntity)(got).toResponse(),
+		})
 	}
 }
-*/

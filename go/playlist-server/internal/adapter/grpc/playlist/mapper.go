@@ -15,6 +15,7 @@ func (c *CreateRequest) toRequest() *playlist.CreateRequest {
 	return &playlist.CreateRequest{
 		UserId: c.UserId,
 		Name:   c.Name,
+		Mode:   c.Mode,
 	}
 }
 
@@ -65,5 +66,25 @@ func (p *Paginated) toResponse() *ListResponse {
 		Limit: p.Limit,
 		Total: p.Total,
 		Data:  playlists,
+	}
+}
+
+func (p *PartyModeRequest) toRequest() *playlist.PartyModeRequest {
+	var action playlist.Action
+	switch x := p.GetAction().(type) {
+	case *PartyModeRequest_AddContent:
+		action.AddContent = &playlist.AddContentEvent{
+			ContentId: x.AddContent.GetContentId(),
+			Order:     x.AddContent.GetOrder(),
+		}
+	case *PartyModeRequest_SkipContent:
+		action.SkipContent = &playlist.SkipContentEvent{
+			ForceSkip: x.SkipContent.GetForceSkip(),
+		}
+	}
+
+	return &playlist.PartyModeRequest{
+		PlaylistId: p.GetPlaylistId(),
+		Action:     action,
 	}
 }

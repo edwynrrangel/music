@@ -16,6 +16,7 @@ message Playlist {
 message CreateRequest {
   string user_id = 1;
   string name = 2;
+  string mode = 3;
 }
 
 message ListRequest {
@@ -46,7 +47,8 @@ message OperationRequest {
 }
 
 message AddContentEvent {
-  string song_id = 1;
+  string content_id = 1;
+  int32 order = 2;
 }
 
 message SkipContentEvent {
@@ -56,8 +58,8 @@ message SkipContentEvent {
 message PartyModeRequest {
   string playlist_id = 1;
   oneof action {
-    AddContentEvent add_song = 2;
-    SkipContentEvent skip_song = 3;
+    AddContentEvent add_content = 2;
+    SkipContentEvent skip_content = 3;
   }
 }
 

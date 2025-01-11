@@ -12,6 +12,7 @@ func (p *PlaylistEntity) toModel() *Playlist {
 		ID:     p.ID,
 		UserId: p.UserId,
 		Name:   p.Name,
+		Mode:   p.Mode,
 	}
 }
 
