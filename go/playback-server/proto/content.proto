@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package content;
+
+option go_package = "./content";
+
+// Search request message
+message SearchRequest {
+  string query = 1;
+  int32 page = 2;
+  int32 limit = 3;
+}
+
+message ContentRequest {
+  string id = 1;
+}
+
+message Location {
+  string bucket = 1;
+  string key = 2;
+}
+
+// Content response message
+message Content {
+  string id = 1; 
+  string title = 2;
+  repeated string artists = 3;
+  string album = 4;
+  string genre = 5;
+  int32 duration = 6;
+  string cover_url = 7;
+  repeated Location locations = 8;
+}
+
+// Search response message
+message SearchResponse {
+  int32 page = 1;
+  int32 limit = 2;
+  int64 total = 3;
+  repeated Content data = 4;
+}
+
+// gRPC service
+service ContentService {
+  rpc Search (SearchRequest) returns (SearchResponse);
+  rpc Get (ContentRequest) returns (Content);
+}
