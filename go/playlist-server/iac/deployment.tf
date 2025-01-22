@@ -1,4 +1,4 @@
-resource "kubernetes_deployment" "multimedia_server" {
+resource "kubernetes_deployment" "playlist_server" {
   timeouts {
     create = "2m"
     delete = "5m"
@@ -68,10 +68,6 @@ resource "kubernetes_deployment" "multimedia_server" {
           env {
             name  = "MONGO_PLAYLIST_COLLECTION_NAME"
             value = "playlists"
-          }
-          env {
-            name  = "CONTENT_SERVER_URI"
-            value = data.terraform_remote_state.content_server.outputs.url
           }
           env {
             name = "MONGO_USERNAME"
