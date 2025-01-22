@@ -1,8 +1,8 @@
 package playlist
 
 import (
-	"github.com/edwynrrangel/grpc/go/playlist_server/internal/domain/playlist"
-	"github.com/edwynrrangel/grpc/go/playlist_server/internal/shared"
+	"github.com/edwynrrangel/grpc/go/playlist-server/internal/domain/playlist"
+	"github.com/edwynrrangel/grpc/go/playlist-server/internal/shared"
 )
 
 type (

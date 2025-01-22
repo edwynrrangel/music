@@ -7,7 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 
-	"github.com/edwynrrangel/grpc/go/playlist_server/internal/domain/playlist"
+	"github.com/edwynrrangel/grpc/go/playlist-server/internal/domain/playlist"
 )
 
 type repository struct {

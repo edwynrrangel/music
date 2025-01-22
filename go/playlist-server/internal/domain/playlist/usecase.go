@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/edwynrrangel/grpc/go/playlist_server/internal/shared"
+	"github.com/edwynrrangel/grpc/go/playlist-server/internal/shared"
 )
 
 type usecase struct {

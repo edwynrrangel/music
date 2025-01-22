@@ -1,6 +1,6 @@
 package playlist
 
-import "github.com/edwynrrangel/grpc/go/playlist_server/internal/domain/playlist"
+import "github.com/edwynrrangel/grpc/go/playlist-server/internal/domain/playlist"
 
 type (
 	PlaylistEntity playlist.Playlist

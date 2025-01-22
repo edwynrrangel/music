@@ -8,9 +8,9 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/edwynrrangel/grpc/go/playlist_server/cmd/server/database"
-	"github.com/edwynrrangel/grpc/go/playlist_server/config"
-	"github.com/edwynrrangel/grpc/go/playlist_server/internal/adapter/grpc/playlist"
+	"github.com/edwynrrangel/grpc/go/playlist-server/cmd/server/database"
+	"github.com/edwynrrangel/grpc/go/playlist-server/config"
+	"github.com/edwynrrangel/grpc/go/playlist-server/internal/adapter/grpc/playlist"
 )
 
 // Run function starts the server
