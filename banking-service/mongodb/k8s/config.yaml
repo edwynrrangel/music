@@ -1,7 +1,0 @@
-deploy:
-  namespace: "banking-service"
-  helm:
-    chart: "edwynrrangel/banking-service"
-    chartVersion: "0.1.0"
-  pvc:
-    name: "banking-service-mongodb-pvc"
