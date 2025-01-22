@@ -7,8 +7,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 
-	"github.com/edwynrrangel/music/go/multimedia_server/config"
-	"github.com/edwynrrangel/music/go/multimedia_server/internal/domain/content"
+	"github.com/edwynrrangel/music/go/content-server/config"
+	"github.com/edwynrrangel/music/go/content-server/internal/domain/content"
 )
 
 type repository struct {

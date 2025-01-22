@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	"github.com/edwynrrangel/music/go/multimedia_server/internal/domain/content"
+	"github.com/edwynrrangel/music/go/content-server/internal/domain/content"
 )
 
 type adapter struct {

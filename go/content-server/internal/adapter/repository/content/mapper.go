@@ -1,6 +1,6 @@
 package content
 
-import "github.com/edwynrrangel/music/go/multimedia_server/internal/domain/content"
+import "github.com/edwynrrangel/music/go/content-server/internal/domain/content"
 
 func (l Locations) toEntity() content.Locations {
 	var result content.Locations

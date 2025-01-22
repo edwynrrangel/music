@@ -1,8 +1,8 @@
 package content
 
 import (
-	"github.com/edwynrrangel/music/go/multimedia_server/internal/domain/content"
-	"github.com/edwynrrangel/music/go/multimedia_server/internal/shared"
+	"github.com/edwynrrangel/music/go/content-server/internal/domain/content"
+	"github.com/edwynrrangel/music/go/content-server/internal/shared"
 )
 
 type (

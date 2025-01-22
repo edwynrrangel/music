@@ -4,10 +4,10 @@ import (
 	"context"
 	"log"
 
+	"github.com/edwynrrangel/go-mongodb"
 	"go.mongodb.org/mongo-driver/mongo"
 
-	"github.com/edwynrrangel/music/go/multimedia_server/config"
-	"github.com/edwynrrangel/music/go/multimedia_server/pkg/mongodb"
+	"github.com/edwynrrangel/music/go/content-server/config"
 )
 
 // GetMongoClient function returns a mongo client

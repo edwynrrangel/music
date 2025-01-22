@@ -3,18 +3,15 @@ package content
 import (
 	"context"
 
-	"github.com/edwynrrangel/music/go/multimedia_server/internal/shared"
-	"github.com/edwynrrangel/music/go/multimedia_server/pkg/bucket"
+	"github.com/edwynrrangel/music/go/content-server/internal/shared"
 )
 
 type usecase struct {
-	bucketStrategy    bucket.Strategy
 	contentRepository Repository
 }
 
-func NewUseCase(bucketStrategy bucket.Strategy, contentRepository Repository) UseCase {
+func NewUseCase(contentRepository Repository) UseCase {
 	return &usecase{
-		bucketStrategy:    bucketStrategy,
 		contentRepository: contentRepository,
 	}
 }

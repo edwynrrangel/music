@@ -8,10 +8,9 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/edwynrrangel/music/go/multimedia_server/cmd/server/bucket"
-	"github.com/edwynrrangel/music/go/multimedia_server/cmd/server/database"
-	"github.com/edwynrrangel/music/go/multimedia_server/config"
-	"github.com/edwynrrangel/music/go/multimedia_server/internal/adapter/grpc/content"
+	"github.com/edwynrrangel/music/go/content-server/cmd/server/database"
+	"github.com/edwynrrangel/music/go/content-server/config"
+	"github.com/edwynrrangel/music/go/content-server/internal/adapter/grpc/content"
 )
 
 // Run function starts the server
@@ -21,10 +20,8 @@ func Run() {
 	dbClient := database.GetMongoClient(cfg)
 	defer dbClient.Disconnect(context.Background())
 
-	bucketClient := bucket.GetClient(cfg)
-
 	grpcServer := grpc.NewServer()
-	content.Register(grpcServer, &cfg, dbClient, bucketClient)
+	content.Register(grpcServer, &cfg, dbClient)
 
 	log.Printf("Starting server on port %s", cfg.App.Port)
 	listen, err := net.Listen("tcp", fmt.Sprintf(":%s", cfg.App.Port))

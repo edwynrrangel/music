@@ -3,7 +3,7 @@ package content
 import (
 	"context"
 
-	"github.com/edwynrrangel/music/go/multimedia_server/internal/shared"
+	"github.com/edwynrrangel/music/go/content-server/internal/shared"
 )
 
 type UseCase interface {
