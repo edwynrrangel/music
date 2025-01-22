@@ -17,8 +17,8 @@ variable "selector_labels" {
   description = "The labels to apply to the selector"
   type        = map(string)
   default     = {
-    "app.kubernetes.io/name" = "multimedia-server"
-    "app.kubernetes.io/instance" = "multimedia-server-0"
+    "app.kubernetes.io/name" = "content-server"
+    "app.kubernetes.io/instance" = "content-server-0"
   }
 }
 

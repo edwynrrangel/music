@@ -1,4 +1,4 @@
-resource "kubernetes_deployment" "multimedia_server" {
+resource "kubernetes_deployment" "content_server" {
   timeouts {
     create = "2m"
     delete = "5m"
@@ -70,22 +70,6 @@ resource "kubernetes_deployment" "multimedia_server" {
             value = "contents"
           }
           env {
-            name  = "MONGO_PLAYLIST_COLLECTION_NAME"
-            value = "playlists"
-          }
-          env {
-            name  = "MINIO_ENDPOINT"
-            value = "${data.terraform_remote_state.infra.outputs.banking_service_minio_url}:${data.terraform_remote_state.infra.outputs.banking_service_minio_port}"
-          }
-          env {
-            name  = "MINIO_SSL"
-            value = "false"
-          }
-          env {
-            name  = "BUCKET_TYPE"
-            value = "minio"
-          }
-          env {
             name = "MONGO_USERNAME"
             value_from {
               secret_key_ref {
@@ -112,25 +96,7 @@ resource "kubernetes_deployment" "multimedia_server" {
               }
             }
           }
-          env {
-            name = "MINIO_READONLY_ACCESS_KEY"
-            value_from {
-              secret_key_ref {
-                name = var.multimedia_server_secrets
-                key  = "MINIO_READONLY_ACCESS_KEY"
-              }
-            }
-          }
-          env {
-            name = "MINIO_READONLY_SECRET_KEY"
-            value_from {
-              secret_key_ref {
-                name = var.multimedia_server_secrets
-                key  = "MINIO_READONLY_SECRET_KEY"
-              }
-            }
-          }
-          
+
           security_context {
             run_as_user = 1000
             run_as_group = 1000
