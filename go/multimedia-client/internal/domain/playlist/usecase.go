@@ -2,9 +2,8 @@ package playlist
 
 import (
 	"context"
-	"io"
 
-	"github.com/edwynrrangel/grpc/go/multimedia_client/internal/adapter/grpc/playlist"
+	"github.com/edwynrrangel/grpc/go/multimedia-client/internal/adapter/grpc/playlist"
 )
 
 type usecase struct {
@@ -18,30 +17,34 @@ func NewUseCase(playlist playlist.PlaylistServiceClient) UseCase {
 	}
 }
 
-// List returns a list of playlists
-func (u *usecase) List(ctx context.Context, filters ListFilter) (*ListResponse, error) {
-	got, err := u.playlist.List(ctx, &playlist.ListPlaylistRequest{
-		UserID: filters.UserID,
-	})
+// Create creates a new playlist
+func (u *usecase) Create(ctx context.Context, data *CreateRequest) (*Playlist, error) {
+	got, err := u.playlist.Create(ctx, (*playlist.CreateRequest)(data))
 	if err != nil {
 		return nil, err
 	}
-	return convertToListResponse(got), nil
+	return (*Playlist)(got), nil
 }
 
-func (u *usecase) Remove(ctx context.Context, params RemoveRequest) error {
-	_, err := u.playlist.Remove(ctx, &playlist.RemovePlaylistRequest{
-		Id:     params.ID,
-		UserID: params.UserID,
-	})
+// List returns a list of playlists
+func (u *usecase) List(ctx context.Context, data *ListRequest) (*List, error) {
+	got, err := u.playlist.List(ctx, (*playlist.ListRequest)(data))
 	if err != nil {
-		return err
+		return nil, err
 	}
-
-	return nil
+	return (*List)(got), nil
 }
 
-func (u *usecase) Manage(ctx context.Context, comm Communication, id string) error {
+// Get returns a playlist
+func (u *usecase) Get(ctx context.Context, data *PlaylistRequest) (*Playlist, error) {
+	got, err := u.playlist.Get(ctx, (*playlist.PlaylistRequest)(data))
+	if err != nil {
+		return nil, err
+	}
+	return (*Playlist)(got), nil
+}
+
+/* func (u *usecase) Manage(ctx context.Context, comm Communication, id string) error {
 	stream, err := u.playlist.Manage(ctx)
 	if err != nil {
 		return err
@@ -72,7 +75,7 @@ func (u *usecase) Manage(ctx context.Context, comm Communication, id string) err
 		}
 
 		if bodyRequest.UserID == "" {
-			comm.WriteJSON(map[string]string{"error": "user_id is required"})
+			comm.WriteJSON(map[string]string{"error": "userID is required"})
 			break
 		}
 
@@ -88,4 +91,4 @@ func (u *usecase) Manage(ctx context.Context, comm Communication, id string) err
 	}
 
 	return nil
-}
+} */

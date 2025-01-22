@@ -1,68 +1,80 @@
 syntax = "proto3";
 
+package playlist;
+
 option go_package = "./playlist";
 
-enum Operation {
-  ADD = 0;
-  REMOVE = 1;
-  GET = 2;
-  CLOSED = 3;
-}
-
-// Content message
 message Content {
   string id = 1;
-  string title = 2;
-  string genre = 3;
-  string creator = 4; // Artist or Director
-  string duration = 5;
+  int32 order = 2;
 }
 
-// Playlist request message
-message PlaylistRequest {
-  string id = 1;
-  string userID = 2;
-  string name = 3;
-  repeated Content contents = 4;
-  Operation operation = 5;
-}
-
-// List playlist request message
-message ListPlaylistRequest {
-  string userID = 1;
-}
-
-// Remove content request message
-message RemovePlaylistRequest {
-  string id = 1;
-  string userID = 2;
-}
-
-// Playlist response message
-message PlaylistResponse {
+message Playlist {
   string id = 1;
   string name = 2;
   repeated Content contents = 3;
 }
 
-message ListPlaylistResponse {
-  message Playlist {
-    string id = 1;
-    string name = 2;
+message CreateRequest {
+  string user_id = 1;
+  string name = 2;
+  string mode = 3;
+}
+
+message ListRequest {
+  string user_id = 1;
+  string query = 2;
+  int32 page = 3;
+  int32 limit = 4;
+}
+
+message ListResponse {
+  int32 page = 1;
+  int32 limit = 2;
+  int64 total = 3;
+  repeated Playlist data = 4;
+}
+
+message PlaylistRequest {
+  string user_id = 1;
+  string playlist_id = 2;
+}
+
+
+message OperationRequest {
+  string user_id = 1;
+  string playlist_id = 2;
+  string content_id = 3;
+  int32 order = 4;
+}
+
+message AddContentEvent {
+  string content_id = 1;
+  int32 order = 2;
+}
+
+message SkipContentEvent {
+  bool force_skip = 1;
+}
+
+message PartyModeRequest {
+  string playlist_id = 1;
+  oneof action {
+    AddContentEvent add_content = 2;
+    SkipContentEvent skip_content = 3;
   }
-  repeated Playlist data = 1;
 }
 
-message RemovePlaylistResponse {
+message PartyModeResponse {
   string message = 1;
+  Playlist playlist = 2;
 }
 
-// gRPC service
 service PlaylistService {
-  // Playlist management
-  rpc Manage (stream PlaylistRequest) returns (stream PlaylistResponse);
-  // List playlists
-  rpc List (ListPlaylistRequest) returns (ListPlaylistResponse);
-  // Remove playlist
-  rpc Remove (RemovePlaylistRequest) returns (RemovePlaylistResponse);
+  rpc Create(CreateRequest) returns (Playlist);
+  rpc List(ListRequest) returns (ListResponse);
+  rpc Get(PlaylistRequest) returns (Playlist);
+  rpc AddContent (stream OperationRequest) returns (Playlist); // (client streaming)
+  rpc RemoveContent (stream OperationRequest) returns (Playlist); // (client streaming)
+  rpc PartyMode(stream PartyModeRequest) returns (stream PartyModeResponse); // (bidirectional streaming)
 }

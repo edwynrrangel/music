@@ -3,8 +3,7 @@ package playlist
 import (
 	"net/http"
 
-	wsPlaylist "github.com/edwynrrangel/grpc/go/multimedia_client/internal/adapter/websocket/playlist"
-	domainPlaylist "github.com/edwynrrangel/grpc/go/multimedia_client/internal/domain/playlist"
+	domainPlaylist "github.com/edwynrrangel/grpc/go/multimedia-client/internal/domain/playlist"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 )
@@ -25,9 +24,28 @@ func NewHandler(usecase domainPlaylist.UseCase) domainPlaylist.Handler {
 	}
 }
 
+func (h *handler) Create(c *gin.Context) {
+	var req domainPlaylist.CreateRequest
+	if err := c.BindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	got, err := h.usecase.Create(c.Request.Context(), &req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, got)
+}
+
 func (h *handler) List(c *gin.Context) {
-	got, err := h.usecase.List(c.Request.Context(), domainPlaylist.ListFilter{
-		UserID: c.Param("user_id"),
+	got, err := h.usecase.List(c.Request.Context(), &domainPlaylist.ListRequest{
+		UserId: c.Param("user_id"),
+		Query:  c.Query("query"),
+		Page:   int32(c.GetInt("page")),
+		Limit:  int32(c.GetInt("limit")),
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -37,20 +55,20 @@ func (h *handler) List(c *gin.Context) {
 	c.JSON(http.StatusOK, got)
 }
 
-func (h *handler) Remove(c *gin.Context) {
-	err := h.usecase.Remove(c.Request.Context(), domainPlaylist.RemoveRequest{
-		ID:     c.Param("id"),
-		UserID: c.Param("user_id"),
+func (h *handler) Get(c *gin.Context) {
+	got, err := h.usecase.Get(c.Request.Context(), &domainPlaylist.PlaylistRequest{
+		PlaylistId: c.Param("id"),
+		UserId:     c.Param("user_id"),
 	})
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.Status(http.StatusNoContent)
+	c.JSON(http.StatusOK, got)
 }
 
-func (h *handler) Manage(c *gin.Context) {
+/* func (h *handler) Manage(c *gin.Context) {
 	conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
@@ -63,4 +81,4 @@ func (h *handler) Manage(c *gin.Context) {
 		conn.WriteJSON(gin.H{"error": err.Error()})
 		return
 	}
-}
+} */

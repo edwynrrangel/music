@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package playback;
+
+option go_package = "./playback";
+
+message ContentRequest {
+  string content_id = 1;
+}
+
+message Song {
+  bytes data = 1;
+  bool is_last_chunk = 2;
+}
+
+service PlaybackService {
+  rpc StreamSong (ContentRequest) returns (stream Song);
+}

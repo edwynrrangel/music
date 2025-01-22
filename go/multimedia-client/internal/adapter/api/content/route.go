@@ -4,14 +4,18 @@ import (
 	"github.com/gin-gonic/gin"
 	"google.golang.org/grpc"
 
-	"github.com/edwynrrangel/grpc/go/multimedia_client/config"
-	"github.com/edwynrrangel/grpc/go/multimedia_client/internal/adapter/grpc/content"
+	grpcContent "github.com/edwynrrangel/grpc/go/multimedia-client/internal/adapter/grpc/content"
+	domainContent "github.com/edwynrrangel/grpc/go/multimedia-client/internal/domain/content"
 )
 
-func RegisterRoutes(api *gin.RouterGroup, cfg *config.Config, conn *grpc.ClientConn) {
-	h := NewHandler(content.NewContentServiceClient(conn))
-	group := api.Group("/contents")
-	group.GET(":id", h.Get)
+func RegisterRoutes(api *gin.RouterGroup, conn *grpc.ClientConn) {
+	h := NewHandler(
+		domainContent.NewUseCase(
+			grpcContent.NewContentServiceClient(conn),
+		),
+	)
+
+	group := api.Group("/content")
 	group.GET("", h.Search)
-	group.GET(":id/stream", h.Stream)
+	group.GET(":id", h.Get)
 }

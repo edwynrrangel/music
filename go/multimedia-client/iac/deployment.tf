@@ -58,6 +58,10 @@ resource "kubernetes_deployment" "multimedia_client" {
             name  = "PLAYLIST_SERVER_URI"
             value = data.terraform_remote_state.playlist_server.outputs.url
           }
+          env {
+            name  = "PLAYBACK_SERVER_URI"
+            value = data.terraform_remote_state.playback_server.outputs.url
+          }
 
           security_context {
             run_as_user = 1000

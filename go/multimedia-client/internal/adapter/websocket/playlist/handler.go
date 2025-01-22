@@ -1,7 +1,7 @@
 package playlist
 
 import (
-	"github.com/edwynrrangel/grpc/go/multimedia_client/internal/domain/playlist"
+	"github.com/edwynrrangel/grpc/go/multimedia-client/internal/domain/playlist"
 	"github.com/gorilla/websocket"
 )
 

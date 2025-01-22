@@ -3,7 +3,7 @@ package resource
 import (
 	"path/filepath"
 
-	"github.com/edwynrrangel/grpc/go/multimedia_client/internal/domain/resource"
+	"github.com/edwynrrangel/grpc/go/multimedia-client/internal/domain/resource"
 	"github.com/gin-gonic/gin"
 )
 

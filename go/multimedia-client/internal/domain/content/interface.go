@@ -1,9 +1,17 @@
 package content
 
-import "github.com/gin-gonic/gin"
+import (
+	"context"
+
+	"github.com/gin-gonic/gin"
+)
 
 type Handler interface {
-	Get(c *gin.Context)
 	Search(c *gin.Context)
-	Stream(c *gin.Context)
+	Get(c *gin.Context)
+}
+
+type UseCase interface {
+	Search(ctx context.Context, data *SearchRequest) (*ContentList, error)
+	Get(ctx context.Context, data *ContentRequest) (*Content, error)
 }
