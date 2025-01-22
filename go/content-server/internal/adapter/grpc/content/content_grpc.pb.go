@@ -19,8 +19,8 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	ContentService_Search_FullMethodName = "/ContentService/Search"
-	ContentService_Get_FullMethodName    = "/ContentService/Get"
+	ContentService_Search_FullMethodName = "/content.ContentService/Search"
+	ContentService_Get_FullMethodName    = "/content.ContentService/Get"
 )
 
 // ContentServiceClient is the client API for ContentService service.
@@ -129,7 +129,7 @@ func _ContentService_Get_Handler(srv interface{}, ctx context.Context, dec func(
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var ContentService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "ContentService",
+	ServiceName: "content.ContentService",
 	HandlerType: (*ContentServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
