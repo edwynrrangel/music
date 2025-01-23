@@ -1,6 +1,7 @@
 ### VsCode ###
 .vscode/
 __debug_bin*
+guia.txt
 
 ### Go ###
 # Binaries for programs and plugins
