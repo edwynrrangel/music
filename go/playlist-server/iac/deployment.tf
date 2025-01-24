@@ -39,6 +39,7 @@ resource "kubernetes_deployment" "playlist_server" {
         container {
           name  = var.project_name
           image = "edwynrangel/playlist-server:latest"
+          image_pull_policy = "Always"
 
           port {
             container_port = var.app_port
