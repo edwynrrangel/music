@@ -19,12 +19,12 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	PlaylistService_Create_FullMethodName        = "/PlaylistService/Create"
-	PlaylistService_List_FullMethodName          = "/PlaylistService/List"
-	PlaylistService_Get_FullMethodName           = "/PlaylistService/Get"
-	PlaylistService_AddContent_FullMethodName    = "/PlaylistService/AddContent"
-	PlaylistService_RemoveContent_FullMethodName = "/PlaylistService/RemoveContent"
-	PlaylistService_PartyMode_FullMethodName     = "/PlaylistService/PartyMode"
+	PlaylistService_Create_FullMethodName        = "/playlist.PlaylistService/Create"
+	PlaylistService_List_FullMethodName          = "/playlist.PlaylistService/List"
+	PlaylistService_Get_FullMethodName           = "/playlist.PlaylistService/Get"
+	PlaylistService_AddContent_FullMethodName    = "/playlist.PlaylistService/AddContent"
+	PlaylistService_RemoveContent_FullMethodName = "/playlist.PlaylistService/RemoveContent"
+	PlaylistService_PartyMode_FullMethodName     = "/playlist.PlaylistService/PartyMode"
 )
 
 // PlaylistServiceClient is the client API for PlaylistService service.
@@ -357,7 +357,7 @@ func (x *playlistServicePartyModeServer) Recv() (*PartyModeRequest, error) {
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var PlaylistService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "PlaylistService",
+	ServiceName: "playlist.PlaylistService",
 	HandlerType: (*PlaylistServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
